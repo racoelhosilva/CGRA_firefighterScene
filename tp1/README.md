@@ -1,12 +1,9 @@
 # CG 2024/2025
 
-## Group T0xG0y
+## Group T13G01
 
 ## TP 1 Notes
 
-(add your main observations/remarks about your experiments here, in a bulleted list, and remove this line. Some examples below)
+In general, we found the exercises in this class pretty simple.
 
-- In exercise 1 we observed X
-- In exercise 2 we had difficulties in Y
-
-![Screenshot 1](screenshots/cg-t0xgxx-tp1-n.png)
+![Screenshot 1](./screenshots/cg-t13g01-tp1-1.png)

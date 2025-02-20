@@ -1,10 +1,11 @@
 # CG 2024/2025
 
-## Group T0xG0y
-| Name             | Number    | E-Mail             |
-| ---------------- | --------- | ------------------ |
-| John Doe         | 201901010 | ...                |
-| Jane Doe         | 201901011 | ...                |
+## Group T13G01
+
+| Name                                           | Number    | E-Mail            |
+| ---------------------------------------------- | --------- | ----------------- |
+| Bruno Ricardo Soares Pereira de Sousa Oliveira | 202208700 | up202208700@up.pt |
+| Rodrigo Albergaria Coelho e Silva              | 202205188 | up202205188@up.pt |
 
 ----
 
