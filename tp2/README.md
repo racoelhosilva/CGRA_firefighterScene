@@ -2,10 +2,24 @@
 
 ## Group T13G01
 
-## TP21 Notes
+## TP2 Notes
 
-In general, we found the exercises in this class pretty simple.
+In comparison to last week's exercise, we found this one to be a little trickier, mostly due to the following points:
 
-![Screenshot 1](./screenshots/cg-t13g01-tp2-1.png)
-![Screenshot 2](./screenshots/cg-t13g01-tp2-2.png)
-![Screenshot 3](./screenshots/cg-t13g01-tp2-3.png)
+- Having to calculate each measure manually for the transformations
+- In exercise 2, needing to define the transformation matrices also manually, accompanied by having to define the matrices with their transpose.
+
+Other than that, the exercises were relatively simple.
+
+<figure>
+    <img src="./screenshots/cg-t13g01-tp2-1.png" alt="Exercise 2">
+    <figcaption>Fig. 1: Screenshot of exercise 2.</figcaption>
+</figure>
+<figure>
+    <img src="./screenshots/cg-t13g01-tp2-2.png" alt="Exercise 3">
+    <figcaption>Fig. 2: Screenshot of exercise 3.</figcaption>
+</figure>
+<figure>
+    <img src="./screenshots/cg-t13g01-tp2-3.png" alt="Exercise 4">
+    <figcaption>Fig. 3: Screenshot of exercise 4.</figcaption>
+</figure>
