@@ -2,6 +2,8 @@ import { CGFscene, CGFcamera, CGFaxis, CGFappearance } from "../lib/CGF.js";
 import { MyPyramid } from "./MyPyramid.js";
 import { MyCone } from "./MyCone.js";
 import { MyPlane } from "./MyPlane.js";
+import { MyTangram } from "./MyTangram.js";
+import { MyUnitCube } from "./MyUnitCube.js";
 
 /**
 * MyScene
@@ -30,11 +32,13 @@ export class MyScene extends CGFscene {
         this.plane = new MyPlane(this, 5);
         this.cone = new MyCone(this, 3, 1);
         this.pyramid = new MyPyramid(this, 3, 1);
+        this.tangram = new MyTangram(this);
+        this.unitCube = new MyUnitCube(this);
         
-        this.objects = [this.plane, this.pyramid, this.cone];
+        this.objects = [this.plane, this.pyramid, this.cone, this.unitCube, this.tangram];
 
         // Labels and ID's for object selection on MyInterface
-        this.objectIDs = { 'Plane': 0 , 'Pyramid': 1, 'Cone': 2};
+        this.objectIDs = { 'Plane': 0 , 'Pyramid': 1, 'Cone': 2, 'Cube': 3, 'Tangram': 4};
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
@@ -125,6 +129,12 @@ export class MyScene extends CGFscene {
 
         // Custom material (can be changed in the interface)
         // initially midrange values on ambient, diffuse and specular, on R, G and B respectively
+        // Wood (low ambient, low specular)
+        this.material4 = new CGFappearance(this);
+        this.material4.setAmbient(0.1, 0.07, 0.05, 1.0);
+        this.material4.setDiffuse(0.6, 0.4, 0.2, 1.0);
+        this.material4.setSpecular(0.05, 0.03, 0.02, 1.0);
+        this.material4.setShininess(5.0);
 
         this.customMaterialValues = {
             'Ambient': '#0000ff',
@@ -136,10 +146,10 @@ export class MyScene extends CGFscene {
 
         this.updateCustomMaterial();
 
-        this.materials = [this.material1, this.material2, this.material3, this.customMaterial];
+        this.materials = [this.material1, this.material2, this.material3, this.material4, this.customMaterial];
 
         // Labels and ID's for object selection on MyInterface
-        this.materialIDs = {'Red Ambient': 0, 'Red Diffuse': 1, 'Red Specular': 2, 'Custom': 3 };
+        this.materialIDs = {'Red Ambient': 0, 'Red Diffuse': 1, 'Red Specular': 2, 'Wood': 3, 'Custom': 4 };
     }
     display() {
         // ---- BEGIN Background, camera and axis setup
