@@ -26,6 +26,7 @@ export class MyInterface extends CGFinterface {
 
         this.gui.add(this.scene, 'scaleFactor', 0.1, 10.0).name('Scale');
         this.gui.add(this.scene, 'objectComplexity', 0.01, 1.0).onChange(this.scene.updateObjectComplexity.bind(this.scene));
+        this.gui.add(this.scene, 'globalIllumination', 0, 1).name('GlobalIllumination');
 
         this.gui.add(this.scene, 'selectedMaterial', this.scene.materialIDs).name('Selected Material');
 

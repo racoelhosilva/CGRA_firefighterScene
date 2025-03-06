@@ -38,6 +38,7 @@ export class MyScene extends CGFscene {
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
+        this.globalIllumination = 0.3;
         this.selectedMaterial = 0;
         this.displayAxis = true;
         this.displayNormals = false;
@@ -46,8 +47,6 @@ export class MyScene extends CGFscene {
 
     }
     initLights() {
-        this.setGlobalAmbientLight(0.3, 0.3, 0.3, 1.0);
-
         this.lights[0].setPosition(2.0, 2.0, -1.0, 1.0);
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
         this.lights[0].setSpecular(1.0, 1.0, 1.0, 1.0);
@@ -152,7 +151,8 @@ export class MyScene extends CGFscene {
         this.loadIdentity();
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
-        
+
+        this.setGlobalAmbientLight(this.globalIllumination, this.globalIllumination, this.globalIllumination, 1.0)
         this.lights[0].update();
         this.lights[1].update();
 
