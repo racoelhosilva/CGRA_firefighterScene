@@ -34,7 +34,7 @@ export class MyScene extends CGFscene {
         this.pyramid = new MyPyramid(this, 3, 1);
         this.tangram = new MyTangram(this);
         this.unitCube = new MyUnitCube(this);
-        
+
         this.objects = [this.plane, this.pyramid, this.cone, this.unitCube, this.tangram];
 
         // Labels and ID's for object selection on MyInterface
@@ -49,6 +49,7 @@ export class MyScene extends CGFscene {
         this.objectComplexity = 0.5;
         this.scaleFactor = 2.0;
 
+        this.customizeDiamond = false;
     }
     initLights() {
         this.lights[0].setPosition(2.0, 2.0, -1.0, 1.0);
@@ -103,7 +104,6 @@ export class MyScene extends CGFscene {
     updateObjectComplexity(){
         this.objects[this.selectedObject].updateBuffers(this.objectComplexity);
     }
-
 
     initMaterials() {
         // Red Ambient (no diffuse, no specular)
@@ -176,12 +176,12 @@ export class MyScene extends CGFscene {
 
         this.pushMatrix();
         this.scale(this.scaleFactor,this.scaleFactor,this.scaleFactor);
-        
+
         if (this.displayNormals)
             this.objects[this.selectedObject].enableNormalViz();
         else
             this.objects[this.selectedObject].disableNormalViz();
-        
+
         this.objects[this.selectedObject].display();
         this.popMatrix();
         // ---- END Primitive drawing section
