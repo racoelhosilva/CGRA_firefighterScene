@@ -4,6 +4,7 @@ import { MyCone } from "./MyCone.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyTangram } from "./MyTangram.js";
 import { MyUnitCube } from "./MyUnitCube.js";
+import { MyPrism } from "./MyPrism.js";
 
 /**
 * MyScene
@@ -34,11 +35,12 @@ export class MyScene extends CGFscene {
         this.pyramid = new MyPyramid(this, 3, 1);
         this.tangram = new MyTangram(this);
         this.unitCube = new MyUnitCube(this);
+        this.prism = new MyPrism(this, 8, 20);
 
-        this.objects = [this.plane, this.pyramid, this.cone, this.unitCube, this.tangram];
+        this.objects = [this.plane, this.pyramid, this.cone, this.unitCube, this.tangram, this.prism];
 
         // Labels and ID's for object selection on MyInterface
-        this.objectIDs = { 'Plane': 0 , 'Pyramid': 1, 'Cone': 2, 'Cube': 3, 'Tangram': 4};
+        this.objectIDs = { 'Plane': 0 , 'Pyramid': 1, 'Cone': 2, 'Cube': 3, 'Tangram': 4, 'Prism': 5};
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
@@ -163,8 +165,8 @@ export class MyScene extends CGFscene {
         this.applyViewMatrix();
 
         this.setGlobalAmbientLight(this.globalIllumination, this.globalIllumination, this.globalIllumination, 1.0)
-        this.lights[0].update();
-        this.lights[1].update();
+        // this.lights[0].update();
+        // this.lights[1].update();
 
         // Draw axis
         if (this.displayAxis)
@@ -182,6 +184,10 @@ export class MyScene extends CGFscene {
         else
             this.objects[this.selectedObject].disableNormalViz();
 
+        if (this.objects[this.selectedObject] == this.prism) {
+            this.scale(1.0, 4.0, 1.0);
+            this.rotate(-Math.PI/2, 1, 0, 0);
+        }
         this.objects[this.selectedObject].display();
         this.popMatrix();
         // ---- END Primitive drawing section
