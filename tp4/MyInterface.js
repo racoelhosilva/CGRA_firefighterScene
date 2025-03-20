@@ -12,11 +12,11 @@ export class MyInterface extends CGFinterface {
     init(application) {
         // call CGFinterface init
         super.init(application);
-        
+
         // init GUI. For more information on the methods, check:
         // https://github.com/dataarts/dat.gui/blob/master/API.md
         this.gui = new dat.GUI();
-        
+
         var obj = this;
 
         //Checkbox element in GUI
@@ -41,6 +41,9 @@ export class MyInterface extends CGFinterface {
         var f3 = this.gui.addFolder('Bottom Right Coords')
         f3.add(this.scene.texCoords, '2', -5.0, 5.0, 0.1).name('S Coord').onChange(this.scene.updateTexCoords.bind(this.scene)).step(0.001);
         f3.add(this.scene.texCoords, '3', -5.0, 5.0, 0.1).name('T Coord').onChange(this.scene.updateTexCoords.bind(this.scene)).step(0.001);
+
+        this.gui.add(this.scene, 'showQuad').name('Show Quad');
+        this.gui.add(this.scene, 'selectedObject', this.scene.objectIDs).name('Selected Object');
 
         return true;
     }

@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyQuad } from "./MyQuad.js";
 import { MyTangram } from "./MyTangram.js";
+import { MyUnitCubeQuad } from "./MyUnitCubeQuad.js";
 
 /**
  * MyScene
@@ -30,6 +31,17 @@ export class MyScene extends CGFscene {
         this.quad = new MyQuad(this);
         this.tangram = new MyTangram(this);
 
+        // Cube Textures
+        this.textureTop = new CGFtexture(this, 'images/mineTop.png');
+        this.textureSide = new CGFtexture(this, 'images/mineSide.png');
+        this.textureBottom = new CGFtexture(this, 'images/mineBottom.png');
+
+        this.unitCubeQuad = new MyUnitCubeQuad(this, this.textureTop, this.textureSide, this.textureSide, this.textureSide, this.textureSide, this.textureBottom);
+        this.objects = [this.tangram, this.unitCubeQuad];
+        this.objectIDs = {'Tangram': 0, 'UnitCubeQuad': 1};
+        this.selectedObject = 1;
+        this.showQuad = false;
+
         //------ Applied Material
         this.quadMaterial = new CGFappearance(this);
         this.quadMaterial.setAmbient(0.1, 0.1, 0.1, 1);
@@ -46,7 +58,7 @@ export class MyScene extends CGFscene {
         this.texture3 = new CGFtexture(this, 'images/window.jpg');
         //-------
 
-        //-------Objects connected to MyInterface
+        //-------Objects connected to MyInte;        this.setGlobalAmbientLight(this.globalIllumination, this.globalIllumination, this.globalIllumination, 1.0)rface
         this.displayAxis = true;
         this.scaleFactor = 5;
         this.selectedTexture = -1;
@@ -61,7 +73,7 @@ export class MyScene extends CGFscene {
         this.wrappingS = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
         this.wrappingT = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
 
-      }
+    }
 
     initLights() {
         this.lights[0].setPosition(5, 2, 5, 1);
@@ -118,17 +130,21 @@ export class MyScene extends CGFscene {
 
         // ---- BEGIN Primitive drawing section
 
-        // this.quadMaterial.apply();
+        this.setGlobalAmbientLight(0.5, 0.5, 0.5, 1);
 
-        // Default texture filtering in WebCGF is LINEAR.
-        // Uncomment next line for NEAREST when magnifying, or
-        // add a checkbox in the GUI to alternate in real time
+        if (this.showQuad) {
+            this.quadMaterial.apply();
 
-        // this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+            // Default texture filtering in WebCGF is LINEAR.
+            // Uncomment next line for NEAREST when magnifying, or
+            // add a checkbox in the GUI to alternate in real time
 
-        // this.quad.display();
+            // this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
 
-        this.tangram.display();
+            this.quad.display();
+        } else {
+            this.objects[this.selectedObject].display();
+        }
 
         // ---- END Primitive drawing section
     }
