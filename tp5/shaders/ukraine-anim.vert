@@ -12,7 +12,9 @@ uniform float timeFactor;
 uniform float normScale;
 
 void main() {
-	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+	vec3 offset = vec3(1.0, 0.0, 0.0) * sin(timeFactor) * normScale;
+
+	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + offset, 1.0);
 
 	coords=gl_Position;
 }
