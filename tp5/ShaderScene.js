@@ -9,9 +9,9 @@ import { MyPlane } from "./MyPlane.js";
 
 function getStringFromUrl(url) {
 	var xmlHttpReq = new XMLHttpRequest();
-    xmlHttpReq.open("GET", url, false);
-    xmlHttpReq.send();
-    return xmlHttpReq.responseText;
+	xmlHttpReq.open("GET", url, false);
+	xmlHttpReq.send();
+	return xmlHttpReq.responseText;
 }
 
 /**
@@ -52,7 +52,7 @@ export class ShaderScene extends CGFscene {
 		this.axis = new CGFaxis(this);
 		this.enableTextures(true);
 
-		this.objects=[
+		this.objects = [
 			new Teapot(this),
 			new MyPlane(this, 50)
 		];
@@ -72,10 +72,15 @@ export class ShaderScene extends CGFscene {
 		this.appearance.setShininess(120);
 
 		this.texture = new CGFtexture(this, "textures/texture.jpg");
-		this.appearance.setTexture(this.texture);
-		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
 		this.texture2 = new CGFtexture(this, "textures/FEUP.jpg");
+
+		this.waterTex = new CGFtexture(this, "textures/waterTex.jpg");
+
+		this.waterMap = new CGFtexture(this, "textures/waterMap.jpg");
+
+		this.appearance.setTexture(this.waterTex);
+		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
 		// shaders initialization
 
@@ -92,6 +97,7 @@ export class ShaderScene extends CGFscene {
 			new CGFshader(this.gl, "shaders/ukraine.vert", "shaders/ukraine.frag"),
 			new CGFshader(this.gl, "shaders/ukraine-anim.vert", "shaders/ukraine.frag"),
 			new CGFshader(this.gl, "shaders/texture1.vert", "shaders/grayscale.frag"),
+			new CGFshader(this.gl, "shaders/water.vert", "shaders/water.frag"),
 		];
 
 		// additional texture will have to be bound to texture unit 1 later, when using the shader, with "this.texture2.bind(1);"
@@ -101,6 +107,7 @@ export class ShaderScene extends CGFscene {
 		this.testShaders[6].setUniformsValues({ timeFactor: 0 });
 		this.testShaders[9].setUniformsValues({ timeFactor: 0 });
 		this.testShaders[10].setUniformsValues({ timeFactor: 0 });
+		this.testShaders[12].setUniformsValues({ uSampler2: 2, timeFactor: 0 });
 
 
 		// Shaders interface variables
@@ -117,7 +124,8 @@ export class ShaderScene extends CGFscene {
 			'Convolution': 8,
 			'Ukraine flag': 9,
 			'Ukraine flag animation': 10,
-			'Grayscale': 11
+			'Grayscale': 11,
+			'Water': 12
 		};
 
 		// shader code panels references
@@ -197,8 +205,7 @@ export class ShaderScene extends CGFscene {
 
 	// called periodically (as per setUpdatePeriod() in init())
 	update(t) {
-		// only shader 6 is using time factor
-		if (this.selectedExampleShader == 6 || this.selectedExampleShader == 10)
+		if (["6", "10", "12"].includes(this.selectedExampleShader))
 			// Dividing the time by 100 "slows down" the variation (i.e. in 100 ms timeFactor increases 1 unit).
 			// Doing the modulus (%) by 100 makes the timeFactor loop between 0 and 99
 			// ( so the loop period of timeFactor is 100 times 100 ms = 10s ; the actual animation loop depends on how timeFactor is used in the shader )
@@ -234,8 +241,9 @@ export class ShaderScene extends CGFscene {
 
 		// bind additional texture to texture unit 1
 		this.texture2.bind(1);
+		this.waterMap.bind(2);
 
-		if (this.selectedObject==0) {
+		if (this.selectedObject == 0) {
 			// teapot (scaled and rotated to conform to our axis)
 
 			this.pushMatrix();
