@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
 
 /**
@@ -24,6 +24,11 @@ export class MyScene extends CGFscene {
     this.gl.depthFunc(this.gl.LEQUAL);
 
     this.enableTextures(true);
+    this.appearance = new CGFappearance(this);
+
+    this.groundTex = new CGFtexture(this, "textures/ground.png");
+		this.appearance.setTexture(this.groundTex);
+		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
     this.setUpdatePeriod(50);
 
@@ -89,6 +94,8 @@ export class MyScene extends CGFscene {
     this.axis.display();
 
     this.setDefaultAppearance();
+
+    this.appearance.apply();
 
     this.scale(400, 1, 400);
     this.rotate(-Math.PI / 2, 1, 0, 0);
