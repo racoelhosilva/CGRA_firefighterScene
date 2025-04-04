@@ -1,5 +1,6 @@
 import { CGFscene, CGFcamera, CGFaxis } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
+import { MySphere } from "./MySphere.js"
 
 /**
  * MyScene
@@ -30,6 +31,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
+    this.skySphere = new MySphere(this, 4, 4);
   }
   initLights() {
     this.lights[0].setPosition(200, 200, 200, 1);
@@ -90,8 +92,16 @@ export class MyScene extends CGFscene {
 
     this.setDefaultAppearance();
 
-    this.scale(400, 1, 400);
+    // this.pushMatrix();
+    // this.scale(400, 1, 400);
+    // this.rotate(-Math.PI / 2, 1, 0, 0);
+    // this.plane.display();
+    // this.popMatrix();
+
+    this.pushMatrix();
     this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.plane.display();
+    this.scale(20, 20, 20);
+    this.skySphere.display();
+    this.popMatrix();
   }
 }
