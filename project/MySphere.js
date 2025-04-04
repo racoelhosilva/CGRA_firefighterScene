@@ -18,9 +18,18 @@ export class MySphere extends CGFobject {
     return [r * Math.cos(gamma), r * Math.sin(gamma), Math.sin(beta)]
   }
 
+  getTexVertex(stack, slice) {
+    return [slice / this.slices, (1 + stack / this.stacks) / 2]
+  }
+
   getVertexAndMirror(stack, slice) {
     const [x, y, z] = this.getVertex(stack, slice)
     return [x, y, z, x, y, -z]
+  }
+
+  getTexVertexAndMirror(stack, slice) {
+    const [x, y] = this.getTexVertex(stack, slice)
+    return [x, y, x, 1 - y]
   }
 
   initBuffers() {
@@ -28,78 +37,60 @@ export class MySphere extends CGFobject {
     this.indices = []
 
     // Equator
-    for (let slice = 0; slice < this.slices; slice++) {
+    for (let slice = 0; slice <= this.slices; slice++) {
       this.vertices.push(...this.getVertex(0, slice))
     }
 
     // Equator stacks
     this.vertices.push(...this.getVertexAndMirror(1, 0))
 
-    for (let slice = 1; slice < this.slices; slice++) {
+    for (let slice = 1; slice <= this.slices; slice++) {
       this.vertices.push(...this.getVertexAndMirror(1, slice))
 
       this.indices.push(
-        slice - 1, 2 * slice + this.slices - 2, 2 * slice + this.slices,
-        2 * slice + this.slices, slice, slice - 1,
-        slice - 1, slice, 2 * slice + this.slices + 1,
-        2 * slice + this.slices + 1, 2 * slice + this.slices - 1, slice - 1,
+        slice - 1, 2 * slice + this.slices - 1, 2 * slice + this.slices + 1,
+        2 * slice + this.slices + 1, slice, slice - 1,
+        slice - 1, slice, 2 * slice + this.slices + 2,
+        2 * slice + this.slices + 2, 2 * slice + this.slices, slice - 1,
       )
-    }
 
-    this.indices.push(
-      this.slices - 1, 3 * this.slices - 2, this.slices,
-      this.slices, 0, this.slices - 1,
-      this.slices - 1, 0, this.slices + 1,
-      this.slices + 1, 3 * this.slices - 1, this.slices - 1,
-    )
+    }
 
     // Hemisphere middle stacks
     for (let stack = 2; stack < this.stacks; stack++) {
       this.vertices.push(...this.getVertexAndMirror(stack, 0))
 
-      for (let slice = 1; slice < this.slices; slice++) {
+      for (let slice = 1; slice <= this.slices; slice++) {
         this.vertices.push(...this.getVertexAndMirror(stack, slice))
 
-        let upperPlaneTr = (2 * stack - 1) * this.slices + slice * 2;
+        let upperPlaneTr = (2 * stack - 1) * (this.slices + 1) + slice * 2;
         let lowerPlaneBr = upperPlaneTr + 1;
 
         this.indices.push(
-          upperPlaneTr - 2 * this.slices - 2, upperPlaneTr - 2, upperPlaneTr,
-          upperPlaneTr, upperPlaneTr - 2 * this.slices, upperPlaneTr - 2 * this.slices - 2,
-          lowerPlaneBr - 2 * this.slices - 2, lowerPlaneBr - 2 * this.slices, lowerPlaneBr,
-          lowerPlaneBr, lowerPlaneBr - 2, lowerPlaneBr - 2 * this.slices - 2,
-        )
+          upperPlaneTr - 2 * this.slices - 4, upperPlaneTr - 2, upperPlaneTr,
+          upperPlaneTr, upperPlaneTr - 2 * this.slices - 2, upperPlaneTr - 2 * this.slices - 4,
+          lowerPlaneBr - 2 * this.slices - 4, lowerPlaneBr - 2 * this.slices - 2, lowerPlaneBr,
+          lowerPlaneBr, lowerPlaneBr - 2, lowerPlaneBr - 2 * this.slices - 4,
+        );
+        console.log
       }
-
-      let upperPlaneTr = (2 * stack - 1) * this.slices;
-      let lowerPlaneBr = upperPlaneTr + 1;
-
-      this.indices.push(
-        upperPlaneTr - 2, upperPlaneTr + 2 * this.slices - 2, upperPlaneTr,
-        upperPlaneTr, upperPlaneTr - 2 * this.slices, upperPlaneTr - 2,
-        lowerPlaneBr - 2, lowerPlaneBr - 2 * this.slices, lowerPlaneBr,
-        lowerPlaneBr, lowerPlaneBr + 2 * this.slices - 2, lowerPlaneBr - 2,
-      )
     }
 
     // Poles
-    this.vertices.push(
-      0, 0, 1,   // North Pole
-      0, 0, -1  // South Pole
-    )
+    for (let slice = 0; slice < this.slices; slice++) {
+      this.vertices.push(
+        0, 0, 1,
+        0, 0, -1,
+      );
 
-    let northPole = (this.stacks * 2 - 1) * this.slices;
-    let southPole = northPole + 1;
-    for (let slice = 0; slice < this.slices - 1; slice++) {
+      let northPole = (2 * this.stacks - 1) * (this.slices + 1) + slice * 2;
+      let southPole = northPole + 1;
+
       this.indices.push(
-        northPole + 2 * (slice - this.slices) + 2, northPole + 2 * (slice - this.slices), northPole,
-        southPole + 2 * (slice - this.slices), southPole + 2 * (slice - this.slices) + 2, southPole,
+        northPole - 2 * this.slices, northPole - 2 * this.slices - 2, northPole,
+        southPole - 2 * this.slices - 2, southPole - 2 * this.slices, southPole,
       )
     }
-    this.indices.push(
-      northPole - 2 * this.slices, northPole - 2, northPole,
-      southPole - 2, southPole - 2 * this.slices, southPole,
-    )
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();

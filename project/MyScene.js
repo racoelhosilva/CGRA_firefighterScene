@@ -31,7 +31,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
-    this.skySphere = new MySphere(this, 128, 128);
+    this.skySphere = new MySphere(this, 8, 32);
   }
   initLights() {
     this.lights[0].setPosition(200, 200, 200, 1);
