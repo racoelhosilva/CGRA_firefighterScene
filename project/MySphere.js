@@ -67,7 +67,7 @@ export class MySphere extends CGFobject {
           upperPlaneTr - 2 * this.slices - 2, upperPlaneTr - 2, upperPlaneTr,
           upperPlaneTr, upperPlaneTr - 2 * this.slices, upperPlaneTr - 2 * this.slices - 2,
           lowerPlaneBr - 2 * this.slices - 2, lowerPlaneBr - 2 * this.slices, lowerPlaneBr,
-          lowerPlaneBr, lowerPlaneBr - 2, lowerPlaneBr,
+          lowerPlaneBr, lowerPlaneBr - 2, lowerPlaneBr - 2 * this.slices - 2,
         )
       }
 
