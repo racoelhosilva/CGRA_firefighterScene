@@ -82,6 +82,25 @@ export class MySphere extends CGFobject {
       )
     }
 
+    // Poles
+    this.vertices.push(
+      0, 0, 1,   // North Pole
+      0, 0, -1  // South Pole
+    )
+
+    let northPole = (this.stacks * 2 - 1) * this.slices;
+    let southPole = northPole + 1;
+    for (let slice = 0; slice < this.slices - 1; slice++) {
+      this.indices.push(
+        northPole + 2 * (slice - this.slices) + 2, northPole + 2 * (slice - this.slices), northPole,
+        southPole + 2 * (slice - this.slices), southPole + 2 * (slice - this.slices) + 2, southPole,
+      )
+    }
+    this.indices.push(
+      northPole - 2 * this.slices, northPole - 2, northPole,
+      southPole - 2, southPole - 2 * this.slices, southPole,
+    )
+
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
   }
