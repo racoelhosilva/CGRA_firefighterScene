@@ -1,11 +1,12 @@
 import { CGFobject } from "../lib/CGF.js";
 
 export class MySphere extends CGFobject {
-  constructor(scene, stacks, slices) {
+  constructor(scene, stacks, slices, inverted) {
     super(scene)
 
     this.stacks = stacks;
     this.slices = slices;
+    this.inverted = inverted;
 
     this.initBuffers()
   }
@@ -104,6 +105,9 @@ export class MySphere extends CGFobject {
         southPole - 2 * this.slices, southPole - 2 * this.slices - 2, southPole,
       )
     }
+
+    if (this.inverted)
+      this.indices.reverse()
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();

@@ -31,7 +31,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
-    this.skySphere = new MySphere(this, 64, 64);
+    this.skySphere = new MySphere(this, 64, 64, true);
 
     this.earthMaterial = new CGFappearance(this);
     this.earthTexture = new CGFtexture(this, 'textures/earth.jpg');
