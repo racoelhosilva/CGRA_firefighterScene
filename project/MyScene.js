@@ -50,7 +50,7 @@ export class MyScene extends CGFscene {
   }
   initCameras() {
     this.camera = new CGFcamera(
-      0.3,
+      0.4,
       0.1,
       1000,
       vec3.fromValues(200, 200, 200),
@@ -98,6 +98,8 @@ export class MyScene extends CGFscene {
     this.loadIdentity();
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
+
+    this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
 
     this.panorama.display();
 
