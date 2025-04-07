@@ -16,7 +16,7 @@ export class MySphere extends CGFobject {
     const beta = Math.PI / 2 * stack / this.stacks;
     const r = Math.cos(beta)
 
-    return [r * Math.cos(gamma), r * Math.sin(gamma), Math.sin(beta)]
+    return [r * Math.cos(gamma), Math.sin(beta), -r * Math.sin(gamma)]
   }
 
   getTexCoords(stack, slice) {
@@ -24,14 +24,14 @@ export class MySphere extends CGFobject {
   }
 
   pushEquatorVertex(slice) {
-    const [x, y, _] = this.getVertexCoords(0, slice);
+    const [x, _, z] = this.getVertexCoords(0, slice);
     const texCoords = this.getTexCoords(0, slice);
 
-    this.vertices.push(x, y, 0);
+    this.vertices.push(x, 0, z);
     if (!this.inverted) {
-      this.normals.push(x, y, 0);
+      this.normals.push(x, 0, z);
     } else {
-      this.normals.push(-x, -y, 0);
+      this.normals.push(-x, 0, -z);
     }
     this.texCoords.push(...texCoords)
   }
@@ -42,18 +42,18 @@ export class MySphere extends CGFobject {
 
     this.vertices.push(
       x, y, z,
-      x, y, -z
+      x, -y, z
     );
 
     if (!this.inverted) {
       this.normals.push(
         x, y, z,
-        x, y, -z,
+        x, -y, z,
       );
     } else {
       this.normals.push(
         -x, -y, -z,
-        -x, -y, z,
+        -x, y, -z,
       );
     }
 
@@ -65,26 +65,26 @@ export class MySphere extends CGFobject {
 
   pushPoles(slice) {
     this.vertices.push(
-      0, 0, 1,
-      0, 0, -1,
+      0, 1, 0,
+      0, -1, 0,
     );
 
     if (!this.inverted) {
       this.normals.push(
-        0, 0, 1,
-        0, 0, -1
+        0, 1, 0,
+        0, -1, 0
       );
     } else {
       this.normals.push(
-        0, 0, -1,
-        0, 0, 1
+        0, -1, 0,
+        0, 1, 0
       );
     }
 
     let middleU = (2 * slice + 1) / (2 * this.slices)
     this.texCoords.push(
-      middleU, 0.0,
-      middleU, 1.0
+      middleU, 0,
+      middleU, 1
     )
   }
 

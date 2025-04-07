@@ -1,6 +1,6 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFtexture } from "../lib/CGF.js";
+import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
-import { MySphere } from "./MySphere.js"
 
 /**
  * MyScene
@@ -31,17 +31,12 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
-    this.skySphere = new MySphere(this, 64, 64, true);
 
-    this.earthMaterial = new CGFappearance(this);
-    this.earthTexture = new CGFtexture(this, 'textures/earth.jpg');
-    this.earthMaterial.setTexture(this.earthTexture);
-
-    this.earthMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.earthMaterial.setDiffuse(0.0, 0.0, 0.0, 1.0);
-    this.earthMaterial.setSpecular(0.0, 0.0, 0.0, 1.0);
-    this.setShininess(1.0);
+    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
+    console.log(this.panorama);
   }
+
   initLights() {
     this.lights[0].setPosition(200, 200, 200, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -50,7 +45,7 @@ export class MyScene extends CGFscene {
   }
   initCameras() {
     this.camera = new CGFcamera(
-      0.4,
+      0.3,
       0.1,
       1000,
       vec3.fromValues(200, 200, 200),
@@ -80,11 +75,14 @@ export class MyScene extends CGFscene {
   }
 
   setDefaultAppearance() {
+    this.setEmission(0.0, 0.0, 0.0, 1.0);
+    this.activeTexture = null;
     this.setAmbient(0.5, 0.5, 0.5, 1.0);
     this.setDiffuse(0.5, 0.5, 0.5, 1.0);
     this.setSpecular(0.5, 0.5, 0.5, 1.0);
     this.setShininess(10.0);
   }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -96,7 +94,7 @@ export class MyScene extends CGFscene {
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
-    this.setGlobalAmbientLight(0.5, 0.5, 0.5, 1.0)
+    this.panorama.display();
 
     // Draw axis
     this.axis.display();
@@ -106,15 +104,5 @@ export class MyScene extends CGFscene {
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.plane.display();
     this.popMatrix();
-
-
-    this.pushMatrix();
-    this.earthMaterial.apply();
-    this.translate(0, 10, 0)
-    this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.scale(10, 10, 10);
-    this.skySphere.display();
-    this.popMatrix();
-    this.setDefaultAppearance();
   }
 }
