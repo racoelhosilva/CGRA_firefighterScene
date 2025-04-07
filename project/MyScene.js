@@ -108,8 +108,8 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
 
-    this.earthMaterial.apply();
     this.pushMatrix();
+    this.earthMaterial.apply();
     this.translate(0, 10, 0)
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.scale(10, 10, 10);
