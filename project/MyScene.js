@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFtexture } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 
@@ -28,13 +28,18 @@ export class MyScene extends CGFscene {
 
     this.setUpdatePeriod(50);
 
+    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
+
+    this.grassMaterial = new CGFappearance(this);
+    this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.grassMaterial.setShininess(1.0);
+    this.grassMaterial.setTexture(this.grassTexture);
+
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
-
-    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    console.log(this.panorama);
   }
 
   initLights() {
@@ -102,6 +107,7 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.scale(400, 1, 400);
     this.rotate(-Math.PI / 2, 1, 0, 0);
+    this.grassMaterial.apply();
     this.plane.display();
     this.popMatrix();
   }
