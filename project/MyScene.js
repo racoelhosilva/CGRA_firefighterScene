@@ -1,4 +1,5 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
+import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./MyBuilding.js";
 
@@ -33,11 +34,21 @@ export class MyScene extends CGFscene {
 
     this.setUpdatePeriod(50);
 
+    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
+
+    this.grassMaterial = new CGFappearance(this);
+    this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.grassMaterial.setShininess(1.0);
+    this.grassMaterial.setTexture(this.grassTexture);
+
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
+    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, 200, 100, 100, "window", [0.5, 0.5, 0.5]);
   }
+
   initLights() {
     this.lights[0].setPosition(200, 200, 200, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -76,11 +87,14 @@ export class MyScene extends CGFscene {
   }
 
   setDefaultAppearance() {
+    this.setEmission(0.0, 0.0, 0.0, 1.0);
+    this.activeTexture = null;
     this.setAmbient(0.5, 0.5, 0.5, 1.0);
     this.setDiffuse(0.5, 0.5, 0.5, 1.0);
     this.setSpecular(0.5, 0.5, 0.5, 1.0);
     this.setShininess(10.0);
   }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -92,6 +106,10 @@ export class MyScene extends CGFscene {
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
+    this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
+
+    this.panorama.display();
+
     // Draw axis
     this.axis.display();
 
@@ -101,7 +119,9 @@ export class MyScene extends CGFscene {
 
     this.pushMatrix();
     this.scale(400, 400, 400);
+
     this.rotate(-Math.PI / 2, 1, 0, 0);
+    this.grassMaterial.apply();
     this.plane.display();
     this.popMatrix();
     this.building.display();
