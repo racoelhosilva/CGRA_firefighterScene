@@ -52,7 +52,7 @@ export class MyScene extends CGFscene {
     this.camera = new CGFcamera(
       0.4,
       0.1,
-      1000,
+      2000,
       vec3.fromValues(200, 200, 200),
       vec3.fromValues(0, 0, 0)
     );
@@ -107,7 +107,7 @@ export class MyScene extends CGFscene {
     this.axis.display();
 
     this.pushMatrix();
-    this.scale(400, 1, 400);
+    this.scale(800, 1, 800);
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.grassMaterial.apply();
     this.plane.display();
