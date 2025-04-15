@@ -2,6 +2,7 @@ import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./MyBuilding.js";
+import { MyTree } from "./MyTree.js";
 
 /**
  * MyScene
@@ -44,7 +45,7 @@ export class MyScene extends CGFscene {
 
     // Building Properties
     this.buildingSize = 100;
-    this.floorNumber = 3; 
+    this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
     this.buildingMaterial = new CGFappearance(this);
@@ -71,6 +72,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
+    this.tree = new MyTree(this, 0, "x", 5, 50, [0.0, 0.5, 0.0]);
   }
 
   initLights() {
@@ -84,7 +86,7 @@ export class MyScene extends CGFscene {
       0.4,
       0.1,
       2000,
-      vec3.fromValues(200, 200, 200),
+      vec3.fromValues(100, 100, 100),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -183,15 +185,17 @@ export class MyScene extends CGFscene {
 
     this.appearance.apply();
 
+    this.tree.display();
+
     this.pushMatrix();
     this.scale(800, 1, 800);
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.grassMaterial.apply();
     this.plane.display();
     this.popMatrix();
-    
+
     this.pushMatrix();
-    this.translate(-50, 0, -60); 
+    this.translate(-50, 0, -60);
     this.building.display();
     this.popMatrix();
   }
