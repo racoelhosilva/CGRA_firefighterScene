@@ -35,18 +35,42 @@ export class MyScene extends CGFscene {
     this.setUpdatePeriod(50);
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
-    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
     this.grassMaterial = new CGFappearance(this);
     this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
     this.grassMaterial.setShininess(1.0);
-    this.grassMaterial.setTexture(this.grassTexture);
+    this.grassMaterial.loadTexture('textures/grass.jpg');
+    this.grassMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    // Building Properties
+    this.buildingSize = 125;
+    this.floorNumber = 3; 
+    this.windowNumber = 3;
+    this.buildingColor = this.hexToRgbA('#8F8B7E');
+    this.buildingMaterial = new CGFappearance(this);
+    this.buildingMaterial.setAmbient(0.565, 0.573, 0.522, 1.0);
+    this.buildingMaterial.setDiffuse(0.565, 0.573, 0.522, 1.0);
+    this.buildingMaterial.setSpecular(0, 0, 0, 0);
+    this.buildingMaterial.setShininess(1.0);
+
+    // Window Textures
+    this.windowTexture1 = new CGFtexture(this, 'textures/window.png');
+    this.windowTexture2 = new CGFtexture(this, 'textures/window2.jpg');
+    this.windowTextures = [this.windowTexture1, this.windowTexture2];
+    this.windowTexturesIds = {'Window1': 0, 'Window2': 1};
+    this.selectedWindowTexture = 0;
+
+    this.windowMaterial = new CGFappearance(this);
+    this.windowMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.windowMaterial.setShininess(1.0);
+    this.windowMaterial.setTexture(this.windowTexture1);
+    this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.building = new MyBuilding(this, 200, 100, 100, "window", [0.5, 0.5, 0.5]);
+    this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
   }
 
   initLights() {
@@ -95,6 +119,48 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
+  hexToRgbA(hex) {
+      var ret;
+      //either we receive a html/css color or a RGB vector
+      if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+          ret=[
+              parseInt(hex.substring(1,3),16).toPrecision()/255.0,
+              parseInt(hex.substring(3,5),16).toPrecision()/255.0,
+              parseInt(hex.substring(5,7),16).toPrecision()/255.0,
+              1.0
+          ];
+      }
+      else
+          ret=[
+              hex[0].toPrecision()/255.0,
+              hex[1].toPrecision()/255.0,
+              hex[2].toPrecision()/255.0,
+              1.0
+          ];
+      return ret;
+  }
+
+  updateBuildingSize() {
+    this.building.updateSize(this.buildingSize);
+  }
+
+  updateFloorNumber() {
+    this.building.updateFloorNumber(this.floorNumber);
+  }
+
+  updateWindowNumber() {
+    this.building.updateWindowNumber(this.windowNumber);
+  }
+
+  updateWindowTexture() {
+    this.windowMaterial.setTexture(this.windowTextures[this.selectedWindowTexture]);
+  }
+
+  updateBuildingMaterial() {
+    this.buildingMaterial.setAmbient(...this.hexToRgbA(this.buildingColor));
+    this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor));
+  }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -124,6 +190,10 @@ export class MyScene extends CGFscene {
     this.grassMaterial.apply();
     this.plane.display();
     this.popMatrix();
+    
+    this.pushMatrix();
+    this.translate(-100, 0, -120); 
     this.building.display();
+    this.popMatrix();
   }
 }

@@ -1,41 +1,103 @@
-import { CGFobject } from '../lib/CGF.js';
+import { CGFappearance, CGFobject, CGFtexture } from '../lib/CGF.js';
+import { MyCeiling } from './MyCeiling.js';
+import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, width, floors, windows, windowType, buildingColor) {
+    constructor(scene, total_width, floors, windows, windowMaterial, buildingMaterial) {
         super(scene);
-        this.width = width;
+        this.total_width = total_width;
+        this.width = 2 * total_width / 5;
+        this.height = total_width / 5;
+        this.depth = total_width / 3;
         this.floors = floors;
         this.windows = windows;
-        this.windowType = windowType;
-        this.buildingColor = buildingColor;
+        this.windowMaterial = windowMaterial;
+        this.buildingMaterial = buildingMaterial;
+
+
 
         this.initBuffers();
     }
 
     initBuffers() {
-        this.vertices = [
-            -200, 0, -200,
-            0, 0, -200,
-            -200, 100, -200 
-        ];
+        this.vertices = [];
+        this.indices = [];
+        this.normals = [];
 
-        this.indices = [
-            0, 1, 2
-        ];
-
-        this.normals = [
-            0, 0, 1,
-            0, 0, 1,
-            0, 0, 1 
-        ];
-
-        this.texCoords = [
-            0, 0,
-            1, 0,
-            0, 1 
-        ];
+        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowMaterial);
+        this.ceiling = new MyCeiling(this.scene, this.width, this.depth);
 
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
+    }
+
+    display() {
+        this.floor.enableNormalViz();
+        this.ceiling.enableNormalViz();
+        
+        this.scene.pushMatrix();
+        this.buildingMaterial.apply();
+        this.floor.display(false);
+        this.scene.translate(0, this.height, 0);
+        for (let i = 0; i < this.floors; i++) {
+            this.buildingMaterial.apply();
+            this.floor.display(true);
+            this.scene.translate(0, this.height, 0);
+        }
+        this.buildingMaterial.apply();
+        this.ceiling.display(true);
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.scale(0.75, 0.75, 0.75);
+        this.scene.translate(-this.width, 0, 0);
+        for (let i = 0; i < this.floors; i++) {
+            this.buildingMaterial.apply();
+            this.floor.display(true);
+            this.scene.translate(0, this.height, 0);
+        }
+        this.buildingMaterial.apply();
+        this.ceiling.display(false);
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(this.width, 0, 0);
+        this.scene.scale(0.75, 0.75, 0.75);
+        for (let i = 0; i < this.floors; i++) {
+            this.buildingMaterial.apply();
+            this.floor.display(true);
+            this.scene.translate(0, this.height, 0);
+        }
+        this.buildingMaterial.apply();
+        this.ceiling.display(false);
+        this.scene.popMatrix();
+
+        this.scene.setDefaultAppearance();
+    }
+
+    updateFloorNumber(floors) {
+        this.floors = floors;
+    }
+
+    updateSize(total_width) {
+        this.total_width = total_width;
+        this.width = 2 * total_width / 5;
+        this.height = total_width / 5;
+        this.depth = total_width / 3;
+
+        this.floor.updateSize(this.width, this.depth, this.height);
+        this.ceiling.updateSize(this.width, this.depth);
+    }
+
+    updateWindowNumber(windows) {
+        this.windows = windows;
+        this.floor.updateWindowNumber(this.windows);
+    }
+
+    updateBuildingColor(color) {
+        this.buildingColor = color;
+        this.appearance.setAmbient(...color);
+        this.appearance.setDiffuse(...color);
+        this.initBuffers();
     }
 }

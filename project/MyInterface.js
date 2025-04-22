@@ -17,6 +17,13 @@ export class MyInterface extends CGFinterface {
         // https://github.com/dataarts/dat.gui/blob/master/API.md
         this.gui = new dat.GUI();
 
+        // Building Properties
+        this.gui.add(this.scene, 'buildingSize', 50, 250, 1).name("Building Size").onChange(this.scene.updateBuildingSize.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'floorNumber', 1, 5, 1).name("Num of Floors").onChange(this.scene.updateFloorNumber.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'windowNumber', 1, 4, 1).name("Num of Windows").onChange(this.scene.updateWindowNumber.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'selectedWindowTexture', this.scene.windowTexturesIds).name('Selected Window Texture').onChange(this.scene.updateWindowTexture.bind(this.scene));
+        this.gui.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingMaterial.bind(this.scene));
+
         this.initKeys();
 
         return true;

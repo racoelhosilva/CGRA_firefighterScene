@@ -1,0 +1,172 @@
+import { CGFappearance, CGFobject, CGFtexture } from "../lib/CGF.js";
+import { MyWindow } from "./MyWindow.js";
+import { MyDoor } from "./MyDoor.js";
+import { MyBanner } from "./MyBanner.js";
+
+export class MyFloor extends CGFobject {
+    constructor(scene, width, depth, height, windows, windowMaterial) {
+        super(scene);
+        this.width = width;
+        this.depth = depth;
+        this.height = height;
+        this.windows = windows;
+        this.windowMaterial = windowMaterial;
+
+        // Windows
+        this.windowSize = width / 5;
+        this.windowHorizontalSpacing = (width - (windows * this.windowSize)) / (windows + 1);
+        this.windowVerticalSpacing = (height - this.windowSize) / 2;
+        this.window = new MyWindow(this.scene, this.windowSize, this.windowSize);
+
+        // Door
+        this.doorHeight = 3 * height / 5;
+        this.doorWidth = width / 5;
+        this.door = new MyDoor(this.scene, this.doorWidth, this.doorHeight);
+
+        this.doorTexture = new CGFtexture(this.scene, "textures/door.png");
+        this.doorAppearance = new CGFappearance(this.scene);
+        this.doorAppearance.setAmbient(0.3, 0.3, 0.3, 1);
+        this.doorAppearance.setShininess(1.0);
+        this.doorAppearance.setTexture(this.doorTexture);
+        this.doorAppearance.setTextureWrap("REPEAT", "REPEAT");
+
+        // Banner
+        this.bannerWidth = width / 2;
+        this.bannerHeight = height / 5;
+        this.banner = new MyBanner(this.scene, this.bannerWidth, this.bannerHeight);
+
+        this.bannerTexture = new CGFtexture(this.scene, "textures/banner.png");
+        this.bannerAppearance = new CGFappearance(this.scene);
+        this.bannerAppearance.setAmbient(0.3, 0.3, 0.3, 1);
+        this.bannerAppearance.setShininess(1.0);
+        this.bannerAppearance.setTexture(this.bannerTexture);
+        this.bannerAppearance.setTextureWrap("REPEAT", "REPEAT");
+
+        this.initBuffers();
+    }
+
+    initBuffers() {
+        this.vertices = [
+            // positive x
+            this.width, 0, this.depth,
+            this.width, 0, 0,
+            this.width, this.height, 0,
+            this.width, this.height, this.depth,
+            // negative z
+            this.width, 0, 0,
+            0, 0, 0,
+            0, this.height, 0,
+            this.width, this.height, 0,
+            // negative x
+            0, 0, 0,
+            0, 0, this.depth,
+            0, this.height, this.depth,
+            0, this.height, 0,
+            // positive z
+            0, 0, this.depth,
+            this.width, 0, this.depth,
+            this.width, this.height, this.depth,
+            0, this.height, this.depth,
+        ]
+
+        this.indices = [
+            // positive x
+            0, 1, 2,
+            0, 2, 3,
+            // negative z
+            4, 5, 6,
+            4, 6, 7,
+            // negative x
+            8, 9, 10,
+            8, 10, 11,
+            // positive z
+            12, 13, 14,
+            12, 14, 15,
+        ];
+    
+        this.normals = [
+            // positive x
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            // negative z
+            0, 0, -1,
+            0, 0, -1,
+            0, 0, -1,
+            0, 0, -1,
+            // negative x
+            -1, 0, 0,
+            -1, 0, 0,
+            -1, 0, 0,
+            -1, 0, 0,
+            // positive z
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+        ];
+        
+        this.primitiveType = this.scene.gl.TRIANGLES;
+        this.initGLBuffers();
+    }
+
+    display(displayWindows) {
+        super.display();
+
+        if (displayWindows) {
+            this.window.enableNormalViz();
+            this.windowMaterial.apply();
+            this.scene.pushMatrix();
+            this.scene.translate(this.windowHorizontalSpacing, this.windowVerticalSpacing, this.depth+0.05);
+            for (let i = 0; i < this.windows; i++) {
+                this.window.display();
+                this.scene.translate(this.windowSize + this.windowHorizontalSpacing, 0, 0);
+            }
+            this.scene.popMatrix();
+        } else {
+            this.door.enableNormalViz();
+            this.doorAppearance.apply();
+            this.scene.pushMatrix();
+            this.scene.translate(this.width / 2 - this.doorWidth / 2, 0, this.depth + 0.05);
+            this.door.display();
+            this.scene.popMatrix();
+
+            this.banner.enableNormalViz();
+            this.bannerAppearance.apply();
+            this.scene.pushMatrix();
+            this.scene.translate(this.width / 2 - this.bannerWidth / 2, (this.height - this.doorHeight - this.bannerHeight) / 2 + this.doorHeight, this.depth + 0.05);
+            this.banner.display();
+            this.scene.popMatrix();
+        }
+    }
+
+    updateSize(width, depth, height) {
+        this.width = width;
+        this.depth = depth;
+        this.height = height;
+        this.initBuffers();
+        this.initNormalVizBuffers();
+
+        this.windowSize = width / 5;
+        this.windowHorizontalSpacing = (width - (this.windows * this.windowSize)) / (this.windows + 1);
+        this.windowVerticalSpacing = (height - this.windowSize) / 2;
+        this.window.updateSize(this.windowSize, this.windowSize);
+
+        this.doorHeight = 3 * height / 5;
+        this.doorWidth = width / 5;
+        this.door.updateSize(this.doorWidth, this.doorHeight);
+        
+        this.bannerWidth = width / 2;
+        this.bannerHeight = height / 5;
+        this.banner.updateSize(this.bannerWidth, this.bannerHeight);
+    }
+
+    updateWindowNumber(windows) {
+        this.windows = windows;
+        this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
+        
+        this.initBuffers();
+        this.initNormalVizBuffers();
+    }
+}
