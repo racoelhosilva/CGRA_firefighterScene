@@ -1,4 +1,4 @@
-import { CGFobject } from "../lib/CGF.js";
+import { CGFobject } from "../../lib/CGF.js";
 
 export class MyCone extends CGFobject {
   constructor(scene, slices, radius, height) {

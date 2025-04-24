@@ -1,6 +1,6 @@
-import { CGFappearance, CGFobject } from "../lib/CGF.js";
-import { MyCone } from "./MyCone.js";
-import { MyPyramid } from "./MyPyramid.js";
+import { CGFappearance, CGFobject } from "../../lib/CGF.js";
+import { MyCone } from "../component/MyCone.js";
+import { MyPyramid } from "../component/MyPyramid.js";
 
 export class MyTree extends CGFobject {
   constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor) {

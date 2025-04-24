@@ -1,8 +1,8 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
-import { MyPanorama } from "./MyPanorama.js";
+import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./MyBuilding.js";
-import { MyTree } from "./MyTree.js";
+import { MyTree } from "./forest/MyTree.js";
 
 /**
  * MyScene
