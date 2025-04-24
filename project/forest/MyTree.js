@@ -5,6 +5,7 @@ import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
 export class MyTree extends CGFobject {
   crownSides = 6;
+  rootHeight = 5;
 
   constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor) {
     super(scene);
@@ -20,7 +21,8 @@ export class MyTree extends CGFobject {
   }
 
   buildTrunc(trunkRadius, height) {
-    return new MyCone(this.scene, 32, trunkRadius, height);
+    const realRadius = (height + this.rootHeight) * trunkRadius / height;
+    return new MyCone(this.scene, 32, realRadius, height + this.rootHeight);
   }
 
   buildTruncMaterial() {
@@ -66,8 +68,12 @@ export class MyTree extends CGFobject {
     this.scene.pushMatrix();
 
     this.scene.rotate(this.tilt, ...this.tiltAxis);
+
+    this.scene.pushMatrix();
+    this.scene.translate(0, -this.rootHeight, 0);
     this.truncMaterial.apply();
     this.trunc.display();
+    this.scene.popMatrix();
 
     this.scene.translate(0, this.crownStart, 0);
     this.crownMaterial.apply();

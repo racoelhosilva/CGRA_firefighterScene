@@ -2,7 +2,7 @@ import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/
 import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./MyBuilding.js";
-import { MyTree } from "./forest/MyTree.js";
+import { MyForest } from "./forest/MyForest.js";
 
 /**
  * MyScene
@@ -72,7 +72,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
-    this.tree = new MyTree(this, 0, "x", 5, 50, [0.0, 0.5, 0.0]);
+    this.forest = new MyForest(this, 10, 10);
   }
 
   initLights() {
@@ -179,16 +179,14 @@ export class MyScene extends CGFscene {
     this.panorama.display();
 
     // Draw axis
-    //this.axis.display();
+    this.axis.display();
 
     this.setDefaultAppearance();
-
     this.appearance.apply();
 
-    this.pushMatrix();
-    this.translate(10, 0, 10);
-    this.tree.display();
-    this.popMatrix();
+    this.building.display();
+
+    this.forest.display();
 
     this.pushMatrix();
     this.scale(800, 1, 800);
