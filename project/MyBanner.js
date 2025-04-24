@@ -45,6 +45,5 @@ export class MyBanner extends CGFobject {
         this.height = height;
 
         this.initBuffers();
-        this.initNormalVizBuffers();
     }
 }

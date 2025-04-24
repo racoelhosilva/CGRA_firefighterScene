@@ -52,7 +52,6 @@ export class MyCeiling extends CGFobject {
         super.display();
 
         if (helipad) {
-            this.helipad.enableNormalViz();
             this.helipadAppearance.apply();
             this.scene.pushMatrix();
             this.scene.translate(this.helipadXSpacing, 0.05, this.helipadZSpacing);
@@ -66,7 +65,6 @@ export class MyCeiling extends CGFobject {
         this.width = width;
         this.depth = depth;
         this.initBuffers();
-        this.initNormalVizBuffers();
 
         this.helipadSize = Math.min(width, depth) / 2;
         this.helipadXSpacing = (width - this.helipadSize) / 2;

@@ -115,7 +115,6 @@ export class MyFloor extends CGFobject {
         super.display();
 
         if (displayWindows) {
-            this.window.enableNormalViz();
             this.windowMaterial.apply();
             this.scene.pushMatrix();
             this.scene.translate(this.windowHorizontalSpacing, this.windowVerticalSpacing, this.depth+0.05);
@@ -125,20 +124,28 @@ export class MyFloor extends CGFobject {
             }
             this.scene.popMatrix();
         } else {
-            this.door.enableNormalViz();
             this.doorAppearance.apply();
             this.scene.pushMatrix();
             this.scene.translate(this.width / 2 - this.doorWidth / 2, 0, this.depth + 0.05);
             this.door.display();
             this.scene.popMatrix();
 
-            this.banner.enableNormalViz();
             this.bannerAppearance.apply();
             this.scene.pushMatrix();
             this.scene.translate(this.width / 2 - this.bannerWidth / 2, (this.height - this.doorHeight - this.bannerHeight) / 2 + this.doorHeight, this.depth + 0.05);
             this.banner.display();
             this.scene.popMatrix();
         }
+
+        this.windowMaterial.apply();
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, 0.05);
+        for (let i = 0; i < this.windows; i++) {
+            this.window.display();
+            this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
+        }
+        this.scene.popMatrix();
     }
 
     updateSize(width, depth, height) {
@@ -146,7 +153,6 @@ export class MyFloor extends CGFobject {
         this.depth = depth;
         this.height = height;
         this.initBuffers();
-        this.initNormalVizBuffers();
 
         this.windowSize = width / 5;
         this.windowHorizontalSpacing = (width - (this.windows * this.windowSize)) / (this.windows + 1);
@@ -167,6 +173,5 @@ export class MyFloor extends CGFobject {
         this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
         
         this.initBuffers();
-        this.initNormalVizBuffers();
     }
 }

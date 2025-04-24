@@ -45,6 +45,5 @@ export class MyDoor extends CGFobject {
         this.height = height;
 
         this.initBuffers();
-        this.initNormalVizBuffers();
     }
 }

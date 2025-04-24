@@ -32,9 +32,6 @@ export class MyBuilding extends CGFobject {
     }
 
     display() {
-        this.floor.enableNormalViz();
-        this.ceiling.enableNormalViz();
-        
         this.scene.pushMatrix();
         this.buildingMaterial.apply();
         this.floor.display(false);
