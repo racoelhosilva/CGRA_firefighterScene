@@ -43,7 +43,7 @@ export class MyScene extends CGFscene {
     this.grassMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
     // Building Properties
-    this.buildingSize = 125;
+    this.buildingSize = 100;
     this.floorNumber = 3; 
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
@@ -177,7 +177,7 @@ export class MyScene extends CGFscene {
     this.panorama.display();
 
     // Draw axis
-    this.axis.display();
+    //this.axis.display();
 
     this.setDefaultAppearance();
 
@@ -191,7 +191,7 @@ export class MyScene extends CGFscene {
     this.popMatrix();
     
     this.pushMatrix();
-    this.translate(-100, 0, -120); 
+    this.translate(-50, 0, -60); 
     this.building.display();
     this.popMatrix();
   }
