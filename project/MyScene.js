@@ -185,7 +185,10 @@ export class MyScene extends CGFscene {
 
     this.appearance.apply();
 
+    this.pushMatrix();
+    this.translate(10, 0, 10);
     this.tree.display();
+    this.popMatrix();
 
     this.pushMatrix();
     this.scale(800, 1, 800);

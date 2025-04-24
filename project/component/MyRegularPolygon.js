@@ -1,11 +1,10 @@
 import { CGFobject } from "../../lib/CGF.js";
 
 export class MyRegularPolygon extends CGFobject {
-  constructor(scene, sides, radius) {
+  constructor(scene, sides) {
     super(scene);
 
     this.sides = sides;
-    this.radius = radius;
 
     this.initBuffers();
   }
@@ -17,10 +16,6 @@ export class MyRegularPolygon extends CGFobject {
 
     this.pushVertices();
     this.pushFaces();
-
-    console.log(this.vertices);
-    console.log(this.normals);
-    console.log(this.indices);
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
@@ -35,7 +30,7 @@ export class MyRegularPolygon extends CGFobject {
     for (let side = 0; side < this.sides; side++) {
       const alpha = 2 * Math.PI * side / this.sides;
 
-      this.vertices.push(this.radius * Math.cos(alpha), 0, this.radius * Math.sin(alpha));
+      this.vertices.push(Math.cos(alpha), 0, Math.sin(alpha));
       this.normals.push(0, 1, 0);
     }
   }

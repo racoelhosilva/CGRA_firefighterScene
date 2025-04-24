@@ -34,8 +34,12 @@ export class MyPyramid extends CGFobject {
   }
 
   pushFaces() {
-    for (let face = 0; face < this.faces; face++)
-      this.indices.push(face * 3, face * 3 + 1, face * 3 + 2);
+    for (let face = 0; face < this.faces; face++) {
+      this.indices.push(
+        face * 3, face * 3 + 1, face * 3 + 2,
+        face * 3 + 2, face * 3 + 1, face * 3,
+      );
+    }
   }
 
   initBuffers() {

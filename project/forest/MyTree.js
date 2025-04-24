@@ -1,8 +1,11 @@
 import { CGFappearance, CGFobject } from "../../lib/CGF.js";
 import { MyCone } from "../component/MyCone.js";
 import { MyPyramid } from "../component/MyPyramid.js";
+import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
 export class MyTree extends CGFobject {
+  crownSides = 6;
+
   constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor) {
     super(scene);
 
@@ -12,6 +15,7 @@ export class MyTree extends CGFobject {
     this.trunc = this.buildTrunc(trunkRadius, height);
     this.truncMaterial = this.buildTruncMaterial();
     [this.crown, this.crownStart, this.crownStep] = this.buildCrown(trunkRadius, height);
+    this.crownBase = new MyRegularPolygon(this.scene, 6);
     this.crownMaterial = this.buildCrownMaterial(crownColor);
   }
 
@@ -37,10 +41,14 @@ export class MyTree extends CGFobject {
     for (let pyramid = 0; pyramid < numPyramids; pyramid++) {
       const pyramidRadius = trunkRadius * (3 - 2 * pyramid / (numPyramids + 1));
 
-      crown.push(new MyPyramid(this.scene, 6, pyramidRadius, pyramidHeight));
+      crown.push(new MyPyramid(this.scene, this.crownSides, pyramidRadius, pyramidHeight));
     }
 
     return [crown, height * 0.2, pyramidHeight / 2];
+  }
+
+  buildCrownBase() {
+    return new MyRegularPolygon(this.scene, this.crownSides);
   }
 
   buildCrownMaterial(crownColor) {
@@ -65,9 +73,18 @@ export class MyTree extends CGFobject {
     this.crownMaterial.apply();
     this.crown.forEach(crownPart => {
       crownPart.display();
+      this.displayCrownBase(crownPart.radius);
       this.scene.translate(0, this.crownStep, 0);
     });
 
+    this.scene.popMatrix();
+  }
+
+  displayCrownBase(radius) {
+    this.scene.pushMatrix();
+    this.scene.scale(radius, 1, radius);
+    this.scene.rotate(Math.PI, 1, 0, 0);
+    this.crownBase.display();
     this.scene.popMatrix();
   }
 }
