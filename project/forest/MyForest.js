@@ -14,37 +14,37 @@ export class MyForest extends CGFobject {
   GRID_SQUARE_SIZE = 20;
   POS_MAX_OFFSET = 6;
 
-  constructor(scene, rows, columns) {
+  constructor(scene, rows, columns, truncMaterial, crownMaterial) {
     super(scene);
 
     this.rows = rows;
     this.columns = columns;
 
-    this.trees = this.buildTrees(rows, columns);
+    this.trees = this.buildTrees(rows, columns, truncMaterial, crownMaterial);
     this.displacements = this.buildDisplacements(rows, columns);
   }
 
-  buildTrees(rows, columns) {
+  buildTrees(rows, columns, truncMaterial, crownMaterial) {
     let trees = [];
 
     for (let row = 0; row < rows; row++) {
       let treeRow = [];
       for (let col = 0; col < columns; col++)
-        treeRow.push(this.buildRandomTree());
+        treeRow.push(this.buildRandomTree(truncMaterial, crownMaterial));
       trees.push(treeRow);
     }
 
     return trees;
   }
 
-  buildRandomTree() {
+  buildRandomTree(truncMaterial, crownMaterial) {
     const tilt = this.randomBetween(-this.MAX_TILT, this.MAX_TILT);
     const tiltAxis = Math.random() < 0.5 ? "x" : "z";
     const radius = this.randomBetween(this.MIN_RADIUS, this.MAX_RADIUS);
     const height = this.randomBetween(this.MIN_HEIGHT, this.MAX_HEIGHT);
     const color = this.randomColor();
 
-    return new MyTree(this.scene, tilt, tiltAxis, radius, height, color);
+    return new MyTree(this.scene, tilt, tiltAxis, radius, height, color, truncMaterial, crownMaterial);
   }
 
   randomBetween(min, max) {

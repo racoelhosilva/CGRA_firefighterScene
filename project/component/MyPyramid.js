@@ -30,6 +30,12 @@ export class MyPyramid extends CGFobject {
         ...normal,
         ...normal,
       );
+
+      this.texCoords.push(
+        0, 1,
+        0.5, 0,
+        1, 1,
+      );
     }
   }
 
@@ -43,6 +49,7 @@ export class MyPyramid extends CGFobject {
     this.vertices = [];
     this.normals = [];
     this.indices = [];
+    this.texCoords = [];
 
     this.pushVertices();
     this.pushFaces();

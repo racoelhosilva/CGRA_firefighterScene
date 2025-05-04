@@ -7,7 +7,7 @@ export class MyTree extends CGFobject {
   crownSides = 6;
   rootHeight = 5;
 
-  constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor) {
+  constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor, trunkTexture, crownTexture) {
     super(scene);
 
     this.tilt = tilt;
@@ -15,9 +15,12 @@ export class MyTree extends CGFobject {
 
     this.trunc = this.buildTrunc(trunkRadius, height);
     this.truncMaterial = this.buildTruncMaterial();
+    this.truncMaterial.setTexture(trunkTexture);
+
     [this.crown, this.crownStart, this.crownStep] = this.buildCrown(trunkRadius, height);
     this.crownBase = new MyRegularPolygon(this.scene, 6);
     this.crownMaterial = this.buildCrownMaterial(crownColor);
+    this.crownMaterial.setTexture(crownTexture);
   }
 
   buildTrunc(trunkRadius, height) {

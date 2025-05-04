@@ -36,6 +36,8 @@ export class MyScene extends CGFscene {
     this.setUpdatePeriod(50);
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
+    this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
 
     this.grassMaterial = new CGFappearance(this);
     this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
@@ -72,7 +74,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
-    this.forest = new MyForest(this, 10, 10);
+    this.forest = new MyForest(this, 10, 10, this.truncTexture, this.crownTexture);
   }
 
   initLights() {

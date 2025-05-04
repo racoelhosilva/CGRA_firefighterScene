@@ -12,6 +12,7 @@ export class MyRegularPolygon extends CGFobject {
   initBuffers() {
     this.vertices = [];
     this.normals = [];
+    this.texCoords = [];
     this.indices = [];
 
     this.pushVertices();
@@ -25,13 +26,16 @@ export class MyRegularPolygon extends CGFobject {
     // Center
     this.vertices.push(0, 0, 0);
     this.normals.push(0, 1, 0);
+    this.texCoords.push(0.5, 0.5);
 
     // Border vertices
     for (let side = 0; side < this.sides; side++) {
       const alpha = 2 * Math.PI * side / this.sides;
+      const [x, z] = [Math.cos(alpha), Math.sin(alpha)]
 
-      this.vertices.push(Math.cos(alpha), 0, Math.sin(alpha));
+      this.vertices.push(x, 0, z);
       this.normals.push(0, 1, 0);
+      this.texCoords.push((1 + x) / 2, (1 + z) / 2);
     }
   }
 

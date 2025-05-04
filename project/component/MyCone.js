@@ -15,6 +15,7 @@ export class MyCone extends CGFobject {
     this.vertices = [];
     this.normals = [];
     this.indices = [];
+    this.texCoords = [];
 
     this.pushVertices();
     this.pushFaces();
@@ -27,13 +28,16 @@ export class MyCone extends CGFobject {
     // Top vertex
     this.vertices.push(0, this.height, 0);
     this.normals.push(0, 1, 0);
+    this.texCoords.push(0.5, 0.5);
 
     // Base vertices
     for (let slice = 0; slice < this.slices; slice++) {
       const alpha = 2 * Math.PI * slice / this.slices;
+      const [nx, nz] = [Math.cos(alpha), Math.sin(alpha)];
 
-      this.vertices.push(this.radius * Math.cos(alpha), 0, this.radius * Math.sin(alpha));
-      this.normals.push(Math.cos(alpha), 0, Math.sin(alpha));
+      this.vertices.push(this.radius * nx, 0, this.radius * nz);
+      this.normals.push(nx, 0, nz);
+      this.texCoords.push((1 + nx) / 2, (1 + nz) / 2);
     }
   }
 
