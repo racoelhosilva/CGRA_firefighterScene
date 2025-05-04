@@ -9,7 +9,10 @@ export class MyForest extends CGFobject {
   MIN_HEIGHT = 20;
   MAX_HEIGHT = 25;
   MIN_COLOR = [0.0, 0.3, 0.0];
-  MAX_COLOR = [0.1, 0.5, 0.1];
+  MAX_COLOR = [0.15, 0.5, 0.1];
+
+  GRID_SQUARE_SIZE = 20;
+  POS_MAX_OFFSET = 6;
 
   constructor(scene, rows, columns) {
     super(scene);
@@ -62,11 +65,21 @@ export class MyForest extends CGFobject {
     for (let row = 0; row < rows; row++) {
       let dispRow = [];
       for (let col = 0; col < columns; col++)
-        dispRow.push([(col + 0.5 - columns / 2) * 20, (row + 0.5 - rows / 2) * 20]);
+        dispRow.push(this.randomPosition(row, col));
       displacements.push(dispRow);
     }
 
     return displacements;
+  }
+
+  randomPosition(row, col) {
+    const dx = this.randomBetween(-this.POS_MAX_OFFSET, this.POS_MAX_OFFSET);
+    const dz = this.randomBetween(-this.POS_MAX_OFFSET, this.POS_MAX_OFFSET);
+
+    return [
+      (col + 0.5 - this.columns / 2) * this.GRID_SQUARE_SIZE + dx,
+      (row + 0.5 - this.rows / 2) * this.GRID_SQUARE_SIZE + dz
+    ];
   }
 
   display() {
