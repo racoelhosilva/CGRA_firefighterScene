@@ -2,6 +2,15 @@ import { CGFobject } from "../../lib/CGF.js";
 import { MyTree } from "./MyTree.js";
 
 export class MyForest extends CGFobject {
+  MIN_RADIUS
+  MAX_TILT = Math.PI / 18;
+  MIN_RADIUS = 1.5;
+  MAX_RADIUS = 2.5;
+  MIN_HEIGHT = 20;
+  MAX_HEIGHT = 25;
+  MIN_COLOR = [0.0, 0.3, 0.0];
+  MAX_COLOR = [0.1, 0.5, 0.1];
+
   constructor(scene, rows, columns) {
     super(scene);
 
@@ -18,11 +27,33 @@ export class MyForest extends CGFobject {
     for (let row = 0; row < rows; row++) {
       let treeRow = [];
       for (let col = 0; col < columns; col++)
-        treeRow.push(new MyTree(this.scene, 0, "x", 2, 20, [0.0, 0.5, 0.0]));
+        treeRow.push(this.buildRandomTree());
       trees.push(treeRow);
     }
 
     return trees;
+  }
+
+  buildRandomTree() {
+    const tilt = this.randomBetween(-this.MAX_TILT, this.MAX_TILT);
+    const tiltAxis = Math.random() < 0.5 ? "x" : "z";
+    const radius = this.randomBetween(this.MIN_RADIUS, this.MAX_RADIUS);
+    const height = this.randomBetween(this.MIN_HEIGHT, this.MAX_HEIGHT);
+    const color = this.randomColor();
+
+    return new MyTree(this.scene, tilt, tiltAxis, radius, height, color);
+  }
+
+  randomBetween(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  randomColor() {
+    return [
+      this.randomBetween(this.MIN_COLOR[0], this.MAX_COLOR[0]),
+      this.randomBetween(this.MIN_COLOR[1], this.MAX_COLOR[1]),
+      this.randomBetween(this.MIN_COLOR[2], this.MAX_COLOR[2])
+    ];
   }
 
   buildDisplacements(rows, columns) {
