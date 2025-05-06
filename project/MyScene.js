@@ -9,6 +9,8 @@ import { MyForest } from "./forest/MyForest.js";
  * @constructor
  */
 export class MyScene extends CGFscene {
+  Z_CLASHING_OFFSET = 0.2;
+
   constructor() {
     super();
   }

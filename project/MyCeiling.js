@@ -35,7 +35,7 @@ export class MyCeiling extends CGFobject {
         if (helipad) {
             this.helipadAppearance.apply();
             this.scene.pushMatrix();
-            this.scene.translate(this.helipadXSpacing, 0.05, this.helipadSize + this.helipadZSpacing);
+            this.scene.translate(this.helipadXSpacing, this.scene.Z_CLASHING_OFFSET, this.helipadSize + this.helipadZSpacing);
             this.scene.rotate(-Math.PI / 2, 1, 0, 0);
             this.helipad.display();
             this.scene.popMatrix();
