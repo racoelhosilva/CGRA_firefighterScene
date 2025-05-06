@@ -1,5 +1,5 @@
-import { CGFappearance, CGFobject, CGFtexture } from "../lib/CGF.js";
-import { MyRectangle } from "./MyRectangle.js";
+import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
+import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyFloor extends CGFobject {
     constructor(scene, width, depth, height, windows, windowMaterial) {

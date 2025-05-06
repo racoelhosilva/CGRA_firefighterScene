@@ -1,4 +1,4 @@
-import { CGFobject } from "../lib/CGF.js";
+import { CGFobject } from "../../lib/CGF.js";
 
 export class MyRectangle extends CGFobject {
     constructor(scene, width, height) {
@@ -21,7 +21,7 @@ export class MyRectangle extends CGFobject {
             0, 1, 2,
             0, 2, 3,
         ];
-    
+
         this.normals = [
             0, 0, 1,
             0, 0, 1,
