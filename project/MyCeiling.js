@@ -7,6 +7,9 @@ export class MyCeiling extends CGFobject {
         this.width = width;
         this.depth = depth;
 
+        // Ceiling
+        this.ceiling = new MyRectangle(this.scene, width, depth);
+
         // Helipad
         this.helipadSize = Math.min(width, depth) / 2;
         this.helipadXSpacing = (width - this.helipadSize) / 2;
@@ -20,36 +23,14 @@ export class MyCeiling extends CGFobject {
         this.helipadAppearance.setShininess(1.0);
         this.helipadAppearance.setTexture(this.helipadTexture);
         this.helipadAppearance.setTextureWrap("REPEAT", "REPEAT");
-
-        this.initBuffers();
-    }
-
-    initBuffers() {
-        this.vertices = [
-            this.width, 0, this.depth,
-            this.width, 0, 0,
-            0, 0, 0,
-            0, 0, this.depth,
-        ]
-
-        this.indices = [
-            0, 1, 2,
-            0, 2, 3,
-        ];
-    
-        this.normals = [
-            0, 1, 0,
-            0, 1, 0,
-            0, 1, 0,
-            0, 1, 0,
-        ];
-
-        this.primitiveType = this.scene.gl.TRIANGLES;
-        this.initGLBuffers();
     }
 
     display(helipad) {
-        super.display();
+        this.scene.pushMatrix();
+        this.scene.translate(0, 0, this.depth)
+        this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+        this.ceiling.display();
+        this.scene.popMatrix();
 
         if (helipad) {
             this.helipadAppearance.apply();
@@ -59,13 +40,12 @@ export class MyCeiling extends CGFobject {
             this.helipad.display();
             this.scene.popMatrix();
         }
-
     }
 
     updateSize(width, depth) {
         this.width = width;
         this.depth = depth;
-        this.initBuffers();
+        this.ceiling.updateSize(width, depth);
 
         this.helipadSize = Math.min(width, depth) / 2;
         this.helipadXSpacing = (width - this.helipadSize) / 2;
