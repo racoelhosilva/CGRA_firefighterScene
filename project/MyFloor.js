@@ -10,6 +10,10 @@ export class MyFloor extends CGFobject {
         this.windows = windows;
         this.windowMaterial = windowMaterial;
 
+        // Floor
+        this.xFloor = new MyRectangle(this.scene, depth, height);
+        this.zFloor = new MyRectangle(this.scene, width, height);
+
         // Windows
         this.windowSize = width / 5;
         this.windowHorizontalSpacing = (width - (windows * this.windowSize)) / (windows + 1);
@@ -40,77 +44,31 @@ export class MyFloor extends CGFobject {
         this.bannerAppearance.setTexture(this.bannerTexture);
         this.bannerAppearance.setTextureWrap("REPEAT", "REPEAT");
 
-        this.initBuffers();
-    }
-
-    initBuffers() {
-        this.vertices = [
-            // positive x
-            this.width, 0, this.depth,
-            this.width, 0, 0,
-            this.width, this.height, 0,
-            this.width, this.height, this.depth,
-            // negative z
-            this.width, 0, 0,
-            0, 0, 0,
-            0, this.height, 0,
-            this.width, this.height, 0,
-            // negative x
-            0, 0, 0,
-            0, 0, this.depth,
-            0, this.height, this.depth,
-            0, this.height, 0,
-            // positive z
-            0, 0, this.depth,
-            this.width, 0, this.depth,
-            this.width, this.height, this.depth,
-            0, this.height, this.depth,
-        ]
-
-        this.indices = [
-            // positive x
-            0, 1, 2,
-            0, 2, 3,
-            // negative z
-            4, 5, 6,
-            4, 6, 7,
-            // negative x
-            8, 9, 10,
-            8, 10, 11,
-            // positive z
-            12, 13, 14,
-            12, 14, 15,
-        ];
-    
-        this.normals = [
-            // positive x
-            1, 0, 0,
-            1, 0, 0,
-            1, 0, 0,
-            1, 0, 0,
-            // negative z
-            0, 0, -1,
-            0, 0, -1,
-            0, 0, -1,
-            0, 0, -1,
-            // negative x
-            -1, 0, 0,
-            -1, 0, 0,
-            -1, 0, 0,
-            -1, 0, 0,
-            // positive z
-            0, 0, 1,
-            0, 0, 1,
-            0, 0, 1,
-            0, 0, 1,
-        ];
-        
-        this.primitiveType = this.scene.gl.TRIANGLES;
-        this.initGLBuffers();
     }
 
     display(displayWindows) {
-        super.display();
+        this.scene.pushMatrix();
+        this.scene.translate(0, 0, this.depth);
+        this.zFloor.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(this.width, 0, this.depth);
+        this.scene.rotate(Math.PI / 2, 0, 1, 0);
+        this.xFloor.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(this.width, 0, 0);
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.zFloor.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.rotate(-Math.PI / 2, 0, 1, 0);
+        this.xFloor.display();
+        this.scene.popMatrix();
+
 
         if (displayWindows) {
             this.windowMaterial.apply();
@@ -150,7 +108,8 @@ export class MyFloor extends CGFobject {
         this.width = width;
         this.depth = depth;
         this.height = height;
-        this.initBuffers();
+        this.xFloor.updateSize(depth, height);
+        this.zFloor.updateSize(width, height);
 
         this.windowSize = width / 5;
         this.windowHorizontalSpacing = (width - (this.windows * this.windowSize)) / (this.windows + 1);
@@ -169,7 +128,5 @@ export class MyFloor extends CGFobject {
     updateWindowNumber(windows) {
         this.windows = windows;
         this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
-        
-        this.initBuffers();
     }
 }
