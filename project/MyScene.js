@@ -184,11 +184,6 @@ export class MyScene extends CGFscene {
     this.axis.display();
 
     this.setDefaultAppearance();
-    this.appearance.apply();
-
-    this.building.display();
-
-    this.forest.display();
 
     this.pushMatrix();
     this.scale(800, 1, 800);
@@ -198,8 +193,10 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.pushMatrix();
-    this.translate(-50, 0, -60);
+    this.translate(-100, 0, -150);
     this.building.display();
     this.popMatrix();
+
+    this.forest.display();
   }
 }
