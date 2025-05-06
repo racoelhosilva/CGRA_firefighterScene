@@ -1,4 +1,4 @@
-import { CGFappearance, CGFobject, CGFtexture } from '../lib/CGF.js';
+import { CGFobject } from '../lib/CGF.js';
 import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 

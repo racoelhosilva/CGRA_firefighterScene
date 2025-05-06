@@ -1,13 +1,16 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
-import { MyPanorama } from "./MyPanorama.js";
+import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./MyBuilding.js";
+import { MyForest } from "./forest/MyForest.js";
 
 /**
  * MyScene
  * @constructor
  */
 export class MyScene extends CGFscene {
+  Z_CLASHING_OFFSET = 0.2;
+
   constructor() {
     super();
   }
@@ -35,6 +38,8 @@ export class MyScene extends CGFscene {
     this.setUpdatePeriod(50);
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
+    this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
 
     this.grassMaterial = new CGFappearance(this);
     this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
@@ -44,7 +49,7 @@ export class MyScene extends CGFscene {
 
     // Building Properties
     this.buildingSize = 100;
-    this.floorNumber = 3; 
+    this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
     this.buildingMaterial = new CGFappearance(this);
@@ -71,6 +76,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
+    this.forest = new MyForest(this, 10, 10, this.truncTexture, this.crownTexture);
   }
 
   initLights() {
@@ -84,7 +90,7 @@ export class MyScene extends CGFscene {
       0.4,
       0.1,
       2000,
-      vec3.fromValues(200, 200, 200),
+      vec3.fromValues(100, 100, 100),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -177,11 +183,9 @@ export class MyScene extends CGFscene {
     this.panorama.display();
 
     // Draw axis
-    //this.axis.display();
+    this.axis.display();
 
     this.setDefaultAppearance();
-
-    this.appearance.apply();
 
     this.pushMatrix();
     this.scale(800, 1, 800);
@@ -189,10 +193,12 @@ export class MyScene extends CGFscene {
     this.grassMaterial.apply();
     this.plane.display();
     this.popMatrix();
-    
+
     this.pushMatrix();
-    this.translate(-50, 0, -60); 
+    this.translate(-100, 0, -150);
     this.building.display();
     this.popMatrix();
+
+    this.forest.display();
   }
 }

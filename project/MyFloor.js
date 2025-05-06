@@ -73,7 +73,7 @@ export class MyFloor extends CGFobject {
         if (displayWindows) {
             this.windowMaterial.apply();
             this.scene.pushMatrix();
-            this.scene.translate(this.windowHorizontalSpacing, this.windowVerticalSpacing, this.depth+0.05);
+            this.scene.translate(this.windowHorizontalSpacing, this.windowVerticalSpacing, this.depth + this.scene.Z_CLASHING_OFFSET);
             for (let i = 0; i < this.windows; i++) {
                 this.window.display();
                 this.scene.translate(this.windowSize + this.windowHorizontalSpacing, 0, 0);
@@ -82,7 +82,7 @@ export class MyFloor extends CGFobject {
         } else {
             this.doorAppearance.apply();
             this.scene.pushMatrix();
-            this.scene.translate(this.width / 2 - this.doorWidth / 2, 0, this.depth + 0.05);
+            this.scene.translate(this.width / 2 - this.doorWidth / 2, 0, this.depth + this.scene.Z_CLASHING_OFFSET);
             this.door.display();
             this.scene.popMatrix();
 
@@ -96,7 +96,7 @@ export class MyFloor extends CGFobject {
         this.windowMaterial.apply();
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 0, 1, 0);
-        this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, 0.05);
+        this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
         for (let i = 0; i < this.windows; i++) {
             this.window.display();
             this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
@@ -119,7 +119,7 @@ export class MyFloor extends CGFobject {
         this.doorHeight = 3 * height / 5;
         this.doorWidth = width / 5;
         this.door.updateSize(this.doorWidth, this.doorHeight);
-        
+
         this.bannerWidth = width / 2;
         this.bannerHeight = height / 5;
         this.banner.updateSize(this.bannerWidth, this.bannerHeight);
