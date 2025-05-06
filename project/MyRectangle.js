@@ -1,6 +1,6 @@
-import { CGFappearance, CGFobject, CGFtexture } from "../lib/CGF.js";
+import { CGFobject } from "../lib/CGF.js";
 
-export class MyDoor extends CGFobject {
+export class MyRectangle extends CGFobject {
     constructor(scene, width, height) {
         super(scene);
         this.width = width;

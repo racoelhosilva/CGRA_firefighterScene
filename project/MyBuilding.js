@@ -14,21 +14,8 @@ export class MyBuilding extends CGFobject {
         this.windowMaterial = windowMaterial;
         this.buildingMaterial = buildingMaterial;
 
-
-
-        this.initBuffers();
-    }
-
-    initBuffers() {
-        this.vertices = [];
-        this.indices = [];
-        this.normals = [];
-
         this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowMaterial);
         this.ceiling = new MyCeiling(this.scene, this.width, this.depth);
-
-        this.primitiveType = this.scene.gl.TRIANGLES;
-        this.initGLBuffers();
     }
 
     display() {

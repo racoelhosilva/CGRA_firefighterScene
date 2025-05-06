@@ -1,5 +1,5 @@
 import { CGFappearance, CGFobject, CGFtexture } from "../lib/CGF.js";
-import { MyHelipad } from "./MyHelipad.js";
+import { MyRectangle } from "./MyRectangle.js";
 
 export class MyCeiling extends CGFobject {
     constructor(scene, width, depth) {
@@ -11,7 +11,7 @@ export class MyCeiling extends CGFobject {
         this.helipadSize = Math.min(width, depth) / 2;
         this.helipadXSpacing = (width - this.helipadSize) / 2;
         this.helipadZSpacing = (depth - this.helipadSize) / 2;
-        this.helipad = new MyHelipad(this.scene, this.helipadSize, this.helipadSize);
+        this.helipad = new MyRectangle(this.scene, this.helipadSize, this.helipadSize);
 
         // Helipad texture
         this.helipadTexture = new CGFtexture(this.scene, "textures/helipad.jpeg");
@@ -54,7 +54,8 @@ export class MyCeiling extends CGFobject {
         if (helipad) {
             this.helipadAppearance.apply();
             this.scene.pushMatrix();
-            this.scene.translate(this.helipadXSpacing, 0.05, this.helipadZSpacing);
+            this.scene.translate(this.helipadXSpacing, 0.05, this.helipadSize + this.helipadZSpacing);
+            this.scene.rotate(-Math.PI / 2, 1, 0, 0);
             this.helipad.display();
             this.scene.popMatrix();
         }

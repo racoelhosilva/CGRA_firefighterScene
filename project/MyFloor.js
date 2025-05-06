@@ -1,7 +1,5 @@
 import { CGFappearance, CGFobject, CGFtexture } from "../lib/CGF.js";
-import { MyWindow } from "./MyWindow.js";
-import { MyDoor } from "./MyDoor.js";
-import { MyBanner } from "./MyBanner.js";
+import { MyRectangle } from "./MyRectangle.js";
 
 export class MyFloor extends CGFobject {
     constructor(scene, width, depth, height, windows, windowMaterial) {
@@ -16,12 +14,12 @@ export class MyFloor extends CGFobject {
         this.windowSize = width / 5;
         this.windowHorizontalSpacing = (width - (windows * this.windowSize)) / (windows + 1);
         this.windowVerticalSpacing = (height - this.windowSize) / 2;
-        this.window = new MyWindow(this.scene, this.windowSize, this.windowSize);
+        this.window = new MyRectangle(this.scene, this.windowSize, this.windowSize);
 
         // Door
         this.doorHeight = 3 * height / 5;
         this.doorWidth = width / 5;
-        this.door = new MyDoor(this.scene, this.doorWidth, this.doorHeight);
+        this.door = new MyRectangle(this.scene, this.doorWidth, this.doorHeight);
 
         this.doorTexture = new CGFtexture(this.scene, "textures/door.png");
         this.doorAppearance = new CGFappearance(this.scene);
@@ -33,7 +31,7 @@ export class MyFloor extends CGFobject {
         // Banner
         this.bannerWidth = width / 2;
         this.bannerHeight = height / 5;
-        this.banner = new MyBanner(this.scene, this.bannerWidth, this.bannerHeight);
+        this.banner = new MyRectangle(this.scene, this.bannerWidth, this.bannerHeight);
 
         this.bannerTexture = new CGFtexture(this.scene, "textures/banner.png");
         this.bannerAppearance = new CGFappearance(this.scene);
