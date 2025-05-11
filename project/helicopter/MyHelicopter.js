@@ -4,6 +4,7 @@ import { MySkewedPyramid } from "../component/MySkewedPyramid.js";
 import { MySkid } from "./MySkid.js";
 import { MyRotor } from "./MyRotor.js";
 import { MyRudder } from "./MyRudder.js";
+import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
     constructor(scene, cockpitTexture) {
@@ -37,13 +38,19 @@ export class MyHelicopter extends CGFobject {
         this.mainRotor = new MyRotor(this.scene, 16, 5, 2, 0.8);
         this.tailRotor = new MyRotor(this.scene, 3, 3, 0.5, 0.2);
         this.rudder = new MyRudder(this.scene);
+        this.waterBucket = new MyWaterBucket(this.scene, 4, 6);
     }
 
     display() {
         this.scene.setDefaultAppearance();
         
         this.scene.pushMatrix();
+        
         this.scene.translate(0, 7.4, 0);
+
+        this.scene.pushMatrix();
+
+        //this.scene.rotate(Math.PI / 12, 0, 0, 1);
 
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 0, 1, 0);
@@ -60,7 +67,6 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.pushMatrix();
         this.scene.translate(-10, -7, -4);
-        this.scene.setDefaultAppearance();
         this.skidLeft.display();
         this.scene.popMatrix();
 
@@ -89,5 +95,11 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.popMatrix();
 
+        this.scene.pushMatrix();
+        this.scene.translate(0, -24, 0);
+        this.waterBucket.display();
+        this.scene.popMatrix();
+
+        this.scene.popMatrix();
     }
 }

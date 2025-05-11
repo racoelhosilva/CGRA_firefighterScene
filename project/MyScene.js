@@ -205,7 +205,8 @@ export class MyScene extends CGFscene {
     this.forest.display();
 
     this.pushMatrix();
-    this.translate(-50 + this.buildingSize / 5, (this.floorNumber + 1) * this.buildingSize / 5, -100 + this.buildingSize / 6);
+    //this.translate(-50 + this.buildingSize / 5, (this.floorNumber + 1) * this.buildingSize / 5, -100 + this.buildingSize / 6);
+    this.translate(0, (this.floorNumber + 1) * this.buildingSize / 5, 0);
     this.helicopter.display();
     this.popMatrix();
   }
