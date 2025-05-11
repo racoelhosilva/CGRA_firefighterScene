@@ -3,6 +3,7 @@ import { CGFobject } from '../../lib/CGF.js';
 export class MySkewedPyramid extends CGFobject {
   constructor(scene, faces, rx, rz, height, skewness) {
     super(scene);
+
     this.faces = faces;
     this.rx = rx;
     this.rz = rz;

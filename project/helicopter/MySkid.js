@@ -8,7 +8,6 @@ export class MySkid extends CGFobject {
     constructor(scene, right) {
         super(scene);
      
-        this.scene = scene;
         this.right = right;
 
         this.smallCylinder = new MyCylinder(this.scene, 0.2, 3, 8, 2);
