@@ -36,7 +36,9 @@ export class MyScene extends CGFscene {
 		this.appearance.setTexture(this.groundTex);
 		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
-    this.setUpdatePeriod(50);
+    this.updatePeriod = 100;
+    this.setUpdatePeriod(this.updatePeriod);
+    this.speedFactor = 1;
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
@@ -51,6 +53,8 @@ export class MyScene extends CGFscene {
 
     // Building Properties
     this.buildingSize = 100;
+    this.buildingX = -50;
+    this.buildingZ = -100;
     this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
@@ -78,8 +82,10 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
+
     this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
-    this.helicopter = new MyHelicopter(this, this.helicopterTexture);
+    this.helicopter = new MyHelicopter(this, this.helicopterTexture, [0, 0, 0]);
+    this.setHelicopterInitPos();
   }
 
   initLights() {
@@ -93,8 +99,8 @@ export class MyScene extends CGFscene {
       0.4,
       0.1,
       2000,
-      vec3.fromValues(100, 100, 100),
-      vec3.fromValues(0, 0, 0)
+      vec3.fromValues(300, 300, 300),
+      vec3.fromValues(-50, 0, -100)
     );
   }
   checkKeys() {
@@ -105,18 +111,34 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyW")) {
       text += " W ";
       keysPressed = true;
+      this.helicopter.accelerate(this.speedFactor / 120);
     }
 
     if (this.gui.isKeyPressed("KeyS")) {
       text += " S ";
       keysPressed = true;
+      this.helicopter.accelerate(-this.speedFactor / 120);
     }
+
+    if (this.gui.isKeyPressed("KeyA")) {
+      text += " A ";
+      keysPressed = true;
+      this.helicopter.turn(this.speedFactor * Math.PI / 30);
+    }
+
+    if (this.gui.isKeyPressed("KeyD")) {
+      text += " D ";
+      keysPressed = true;
+      this.helicopter.turn(-this.speedFactor * Math.PI / 30);
+    }
+
     if (keysPressed)
       console.log(text);
   }
 
   update(t) {
     this.checkKeys();
+    this.helicopter.update(this.updatePeriod);
   }
 
   setDefaultAppearance() {
@@ -149,12 +171,22 @@ export class MyScene extends CGFscene {
       return ret;
   }
 
+  setHelicopterInitPos() {
+    this.helicopter.setInitPos([
+      this.buildingX + this.building.getCentralFloorWidth() / 2,
+      this.building.getTotalHeight() + this.Z_CLASHING_OFFSET,
+      this.buildingZ + this.building.getCentralFloorDepth() / 2
+    ]);
+  }
+
   updateBuildingSize() {
     this.building.updateSize(this.buildingSize);
+    this.setHelicopterInitPos();
   }
 
   updateFloorNumber() {
     this.building.updateFloorNumber(this.floorNumber);
+    this.setHelicopterInitPos();
   }
 
   updateWindowNumber() {
@@ -198,15 +230,13 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.pushMatrix();
-    this.translate(-50, 0, -100);
+    this.translate(this.buildingX, 0, this.buildingZ);
     this.building.display();
     this.popMatrix();
 
     this.forest.display();
 
     this.pushMatrix();
-    //this.translate(-50 + this.buildingSize / 5, (this.floorNumber + 1) * this.buildingSize / 5, -100 + this.buildingSize / 6);
-    this.translate(0, (this.floorNumber + 1) * this.buildingSize / 5, 0);
     this.helicopter.display();
     this.popMatrix();
   }

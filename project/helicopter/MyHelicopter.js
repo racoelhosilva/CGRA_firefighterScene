@@ -7,8 +7,18 @@ import { MyRudder } from "./MyRudder.js";
 import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
+    MAX_VELOCITY = 0.5;
+
     constructor(scene, cockpitTexture) {
         super(scene);
+
+        this.initPosition = [0, 0, 0];
+        this.rotorAngle = 0;
+        
+        this.position = [0, 0, 0];
+        this.orientation = -Math.PI / 2;
+        this.velocityNorm = 0;
+        this.velocity = [0, 0, 0];
 
         this.cockpit = new MyEllipsoid(this.scene, 10, 6, 6, 12, 12);
         this.tail = new MySkewedPyramid(this.scene, 6, 4, 1.5, 32, 3);
@@ -41,12 +51,13 @@ export class MyHelicopter extends CGFobject {
         this.waterBucket = new MyWaterBucket(this.scene, 4, 6);
     }
 
-    display() {
-        this.scene.setDefaultAppearance();
-        
+    display() {        
         this.scene.pushMatrix();
         
         this.scene.translate(0, 7.4, 0);
+        this.scene.translate(...this.position);
+
+        this.scene.rotate(this.orientation, 0, 1, 0);
 
         this.scene.pushMatrix();
 
@@ -77,6 +88,7 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.pushMatrix();
         this.scene.translate(0, 5, 0);
+        this.scene.rotate(this.rotorAngle, 0, 1, 0);
         this.mainRotor.display();
         this.scene.popMatrix();
 
@@ -85,6 +97,7 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.pushMatrix();
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+        this.scene.rotate(this.rotorAngle, 0, 1, 0);
         this.tailRotor.display();
         this.scene.popMatrix();
         
@@ -101,5 +114,30 @@ export class MyHelicopter extends CGFobject {
         this.scene.popMatrix();
 
         this.scene.popMatrix();
+    }
+
+    setInitPos(initPosition) {
+        for (let i = 0; i < 3; i++)
+            this.position[i] += initPosition[i] - this.initPosition[i];
+        this.initPosition = initPosition;
+    }
+
+    turn(orientationDelta) {
+        this.orientation += orientationDelta;
+        this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
+        this.velocity[2] = -this.velocityNorm * Math.sin(this.orientation);
+    }
+
+    accelerate(velocityDelta) {
+        this.velocityNorm = Math.min(this.MAX_VELOCITY, Math.max(0, this.velocityNorm + velocityDelta));
+        this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
+        this.velocity[2] = -this.velocityNorm * Math.sin(this.orientation);
+    }
+
+    update(t) {
+        this.rotorAngle += t;
+        this.position[0] += this.velocity[0] * t;
+        this.position[1] += this.velocity[1] * t;
+        this.position[2] += this.velocity[2] * t;
     }
 }

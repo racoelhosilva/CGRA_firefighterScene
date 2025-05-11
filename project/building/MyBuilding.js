@@ -59,6 +59,18 @@ export class MyBuilding extends CGFobject {
         this.scene.setDefaultAppearance();
     }
 
+    getTotalHeight() {
+        return this.height * (this.floors + 1);
+    }
+
+    getCentralFloorWidth() {
+        return this.width;
+    }
+
+    getCentralFloorDepth() {
+        return this.depth;
+    }
+
     updateFloorNumber(floors) {
         this.floors = floors;
     }

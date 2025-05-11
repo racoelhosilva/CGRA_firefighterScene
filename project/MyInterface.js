@@ -24,6 +24,8 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'selectedWindowTexture', this.scene.windowTexturesIds).name('Selected Window Texture').onChange(this.scene.updateWindowTexture.bind(this.scene));
         this.gui.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingMaterial.bind(this.scene));
 
+        this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").step(0.1);
+
         this.initKeys();
 
         return true;
