@@ -8,17 +8,28 @@ import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
     MAX_VELOCITY = 0.5;
+    MAX_TILT = Math.PI / 4;
+    LIFTING_DURATION = 2000;
+    LANDING4_DURATION = 2000;
 
-    constructor(scene, cockpitTexture) {
+    constructor(scene, cockpitTexture, flyingHeight) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
-        this.rotorAngle = 0;
         
         this.position = [0, 0, 0];
         this.orientation = -Math.PI / 2;
         this.velocityNorm = 0;
-        this.velocity = [0, 0, 0];
+        this.velocity = [0, 0];
+
+        this.flyingHeight = flyingHeight;
+
+        this.tilt = 0;
+        this.rotorAngle = 0;
+        this.rotorSpeed = 0;
+
+        this.state = "STATIONARY";
+        this.animDuration = 0;
 
         this.cockpit = new MyEllipsoid(this.scene, 10, 6, 6, 12, 12);
         this.tail = new MySkewedPyramid(this.scene, 6, 4, 1.5, 32, 3);
@@ -61,7 +72,7 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.pushMatrix();
 
-        //this.scene.rotate(Math.PI / 12, 0, 0, 1);
+        this.scene.rotate(this.tilt, 0, 0, 1);
 
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 0, 1, 0);
@@ -123,21 +134,104 @@ export class MyHelicopter extends CGFobject {
     }
 
     turn(orientationDelta) {
-        this.orientation += orientationDelta;
-        this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
-        this.velocity[2] = -this.velocityNorm * Math.sin(this.orientation);
+        if (this.state === "FLYING") {
+            this.orientation += orientationDelta;
+            this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
+            this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
+        }
     }
 
     accelerate(velocityDelta) {
-        this.velocityNorm = Math.min(this.MAX_VELOCITY, Math.max(0, this.velocityNorm + velocityDelta));
-        this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
-        this.velocity[2] = -this.velocityNorm * Math.sin(this.orientation);
+        if (this.state === "FLYING") {
+            this.velocityNorm = Math.min(this.MAX_VELOCITY, Math.max(0, this.velocityNorm + velocityDelta));
+            this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
+            this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
+            
+            this.tilt = Math.min(this.MAX_TILT, Math.max(-this.MAX_TILT, this.tilt - velocityDelta * 8));
+        }
+    }
+
+    liftOff() {
+        if (this.state === "STATIONARY") {
+            this.state = "LIFTING";
+            this.animDuration = 0;
+        }
+    }
+    
+    land() {
+        if (this.state === "FLYING") {
+            this.state = "LANDING3";
+            this.animDuration = 0;
+            this.position[0] = this.initPosition[0];
+            this.position[2] = this.initPosition[2];
+            this.velocity = [0, 0];
+            this.velocityNorm = 0;
+
+            this.orientation = ((this.orientation + Math.PI) % (2 * Math.PI)) - Math.PI;
+            this.initialOrientation = this.orientation;
+        }
     }
 
     update(t) {
-        this.rotorAngle += t;
+        switch (this.state) {
+            case "LIFTING":
+                this.animDuration += t;
+                if (this.animDuration < this.LIFTING_DURATION) {
+                    const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
+                    this.position[1] = this.initPosition[1] + progressFactor * this.flyingHeight;
+                    this.rotorSpeed = progressFactor;
+                } else {
+                    this.state = "FLYING";
+                    this.position[1] = this.initPosition[1] + this.flyingHeight;
+                    this.rotorSpeed = 1;
+                }
+                break;
+
+            case "FLYING":
+                this.rotorAngle += t;
+                this.position[1] = this.initPosition[1] + this.flyingHeight;
+                break;
+
+            case "LANDING3":
+                this.animDuration += t;
+
+                if (this.animDuration < 1000) {
+                    this.orientation += (-Math.PI / 2 - this.initialOrientation) * (t / 1000);
+                } else {
+                    this.state = "LANDING4";
+                    this.orientation = -Math.PI / 2;
+                    this.animDuration = 0;
+                }
+                break;
+
+            case "LANDING4":
+                this.animDuration += t;
+                if (this.animDuration < this.LIFTING_DURATION) {
+                    const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
+                    this.position[1] = this.initPosition[1] + this.flyingHeight - progressFactor * this.flyingHeight;
+                    this.rotorSpeed = 1 - progressFactor;
+                } else {
+                    this.state = "STATIONARY";
+                    this.position[1] = this.initPosition[1];
+                    this.rotorSpeed = 0;
+                }
+        }
+
         this.position[0] += this.velocity[0] * t;
-        this.position[1] += this.velocity[1] * t;
-        this.position[2] += this.velocity[2] * t;
+        this.position[2] += this.velocity[1] * t;
+        this.rotorAngle += this.rotorSpeed * t;
+
+        this.tilt *= 0.75;
+    }
+
+    reset() {
+        this.position = [...this.initPosition];
+        this.orientation = -Math.PI / 2;
+        this.velocityNorm = 0;
+        this.velocity = [0, 0];
+        this.tilt = 0;
+        this.rotorAngle = 0;
+        this.rotorSpeed = 0;
+        this.state = "STATIONARY";
     }
 }

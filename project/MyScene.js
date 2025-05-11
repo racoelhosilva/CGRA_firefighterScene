@@ -84,7 +84,7 @@ export class MyScene extends CGFscene {
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
 
     this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
-    this.helicopter = new MyHelicopter(this, this.helicopterTexture, [0, 0, 0]);
+    this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
   }
 
@@ -130,6 +130,24 @@ export class MyScene extends CGFscene {
       text += " D ";
       keysPressed = true;
       this.helicopter.turn(-this.speedFactor * Math.PI / 30);
+    }
+
+    if (this.gui.isKeyPressed("KeyP")) {
+      text += " P ";
+      keysPressed = true;
+      this.helicopter.liftOff();
+    }
+
+    if (this.gui.isKeyPressed("KeyL")) {
+      text += " L ";
+      keysPressed = true;
+      this.helicopter.land();
+    }
+
+    if (this.gui.isKeyPressed("KeyR")) {
+      text += " R ";
+      keysPressed = true;
+      this.helicopter.reset();
     }
 
     if (keysPressed)
