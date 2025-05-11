@@ -14,4 +14,14 @@
     <figcaption>Fig. 2: Screenshot of Building step 2.2</figcaption>
 </figure>
 
+<figure>
+    <img src="./screenshots/project-t13g01-3.png" alt="Project step 3.4">
+    <figcaption>Fig. 3: Screenshot of Forest step 3.4</figcaption>
+</figure>
+
+<figure>
+    <img src="./screenshots/project-t13g01-4.png" alt="Project step 4.1">
+    <figcaption>Fig. 4: Screenshot of Helicopter step 4.1</figcaption>
+</figure>
+
 
