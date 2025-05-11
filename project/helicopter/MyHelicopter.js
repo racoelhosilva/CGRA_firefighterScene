@@ -2,6 +2,7 @@ import { CGFobject } from "../../lib/CGF.js";
 import { MyEllipsoid } from "../component/MyEllipsoid.js";
 import { MySkewedPyramid } from "../component/MySkewedPyramid.js";
 import { MySkid } from "./MySkid.js";
+import { MyRotor } from "./MyRotor.js";
 
 export class MyHelicopter extends CGFobject {
     constructor(scene) {
@@ -14,13 +15,16 @@ export class MyHelicopter extends CGFobject {
     
         this.skidRight = new MySkid(this.scene, true);
         this.skidLeft = new MySkid(this.scene, false);
+
+        this.mainRotor = new MyRotor(this.scene, 6, 5);
     }
 
     display() {
         this.scene.setDefaultAppearance();
-        this.scene.translate(0, 40, 0);
+
         
         this.scene.pushMatrix();
+        this.scene.translate(0, 40, 0);
         
         this.body.display();
 
@@ -40,6 +44,9 @@ export class MyHelicopter extends CGFobject {
         this.skidRight.display();
         this.scene.popMatrix();
 
+        this.scene.translate(0, 6, 0);
+        this.mainRotor.display();
         this.scene.popMatrix();
+
     }
 }
