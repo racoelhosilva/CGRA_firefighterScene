@@ -11,7 +11,7 @@ export class MyCeiling extends CGFobject {
         this.ceiling = new MyRectangle(this.scene, width, depth);
 
         // Helipad
-        this.helipadSize = Math.min(width, depth) / 2;
+        this.helipadSize = 2 * Math.min(width, depth) / 3;
         this.helipadXSpacing = (width - this.helipadSize) / 2;
         this.helipadZSpacing = (depth - this.helipadSize) / 2;
         this.helipad = new MyRectangle(this.scene, this.helipadSize, this.helipadSize);

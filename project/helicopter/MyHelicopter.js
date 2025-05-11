@@ -43,8 +43,8 @@ export class MyHelicopter extends CGFobject {
         this.scene.setDefaultAppearance();
         
         this.scene.pushMatrix();
-        this.scene.translate(0, 40, 0);
-        
+        this.scene.translate(0, 7.4, 0);
+
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 0, 1, 0);
         this.cockpitMaterial.apply();
