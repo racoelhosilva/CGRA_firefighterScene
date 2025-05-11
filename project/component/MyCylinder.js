@@ -1,54 +1,56 @@
 import { CGFobject } from "../lib/CGF.js";
 
 export class MyCylinder extends CGFobject {
-  constructor(scene, slices, stacks) {
+  constructor(scene, radius, height, slices, stacks) {
     super(scene);
 
+    this.radius = radius;
+    this.height = height;
     this.slices = slices;
     this.stacks = stacks;
 
     this.initBuffers();
   }
 
-  initBuffers() {
-    this.vertices = []
-    this.indices = []
-    this.normals = []
+  pushVertices() {
+    for (let stack = 0; stack <= this.stacks; stack++) {
+      const y = height * stack / this.stacks;
+      const v = 1 - stack / this.stacks;
 
-    let baseZ = 0;
-    let baseStep = 1 / this.stacks;
-    let alphaStep = 2 * Math.PI / this.slices;
-    let indexStart = 0;
+      for (let slice = 0; slice <= this.slices; slice++) {
+        const alpha = 2 * Math.PI * slice / this.slices;
+        const [x, z] = [Math.cos(alpha), Math.sin(alpha)];
+        const u = slice / this.slices;
 
+        this.vertices.push(this.radius * x, y, this.radius * z);
+        this.normals.push(x, 0, z);
+        this.texCoords.push(u, v);
+      }
+    }
+  }
+
+  pushFaces() {
     for (let stack = 0; stack < this.stacks; stack++) {
       for (let slice = 0; slice < this.slices; slice++) {
-        this.vertices.push(
-          Math.cos(alphaStep * slice), Math.sin(alphaStep * slice), baseZ,
-          Math.cos(alphaStep * slice), Math.sin(alphaStep * slice), baseZ + baseStep
-        )
+        const bottomRight = stack * (this.slices + 1) + slice;
+        const bottomLeft = bottomRight + 1;
+        const topRight = bottomRight + this.slices + 1;
+        const topLeft = bottomRight + this.slices + 2;
 
-        if (slice < this.slices - 1) {
-          this.indices.push(
-            indexStart, indexStart + 2, indexStart + 3,
-            indexStart + 3, indexStart + 1, indexStart,
-          );
-        } else {
-          this.indices.push(
-            indexStart, indexStart + 2 - 2 * this.slices, indexStart + 3 - 2 * this.slices,
-            indexStart + 3 - 2 * this.slices, indexStart + 1, indexStart,
-          );
-        }
-        indexStart += 2;
-
-        let sideNormal = [Math.cos(alphaStep * slice), Math.sin(alphaStep * slice), 0];
-        this.normals.push(
-          ...sideNormal,
-          ...sideNormal
-        );
+        this.indices.push(bottomRight, topRight, topLeft);
+        this.indices.push(topLeft, bottomLeft, bottomRight);
       }
-
-      baseZ += baseStep;
     }
+  }
+
+  initBuffers() {
+    this.vertices = [];
+    this.normals = [];
+    this.texCoords = [];
+    this.indices = [];
+
+    this.pushVertices();
+    this.pushFaces();
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
