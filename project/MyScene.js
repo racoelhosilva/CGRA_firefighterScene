@@ -3,6 +3,7 @@ import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
+import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 
 /**
  * MyScene
@@ -77,6 +78,7 @@ export class MyScene extends CGFscene {
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
     this.forest = new MyForest(this, 10, 10, this.truncTexture, this.crownTexture);
+    this.helicopter = new MyHelicopter(this);
   }
 
   initLights() {
@@ -200,5 +202,7 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.forest.display();
+
+    this.helicopter.display();
   }
 }

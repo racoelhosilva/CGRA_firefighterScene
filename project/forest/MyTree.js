@@ -18,7 +18,7 @@ export class MyTree extends CGFobject {
     this.truncMaterial.setTexture(trunkTexture);
 
     [this.crown, this.crownStart, this.crownStep] = this.buildCrown(trunkRadius, height);
-    this.crownBase = new MyRegularPolygon(this.scene, 6);
+    this.crownBase = new MyRegularPolygon(this.scene, 6, 1);
     this.crownMaterial = this.buildCrownMaterial(crownColor);
     this.crownMaterial.setTexture(crownTexture);
   }

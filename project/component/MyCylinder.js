@@ -1,4 +1,4 @@
-import { CGFobject } from "../lib/CGF.js";
+import { CGFobject } from "../../lib/CGF.js";
 
 export class MyCylinder extends CGFobject {
   constructor(scene, radius, height, slices, stacks) {
@@ -14,7 +14,7 @@ export class MyCylinder extends CGFobject {
 
   pushVertices() {
     for (let stack = 0; stack <= this.stacks; stack++) {
-      const y = height * stack / this.stacks;
+      const y = this.height * stack / this.stacks;
       const v = 1 - stack / this.stacks;
 
       for (let slice = 0; slice <= this.slices; slice++) {
