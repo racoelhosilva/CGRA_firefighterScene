@@ -47,7 +47,7 @@ export class MyCeiling extends CGFobject {
         this.depth = depth;
         this.ceiling.updateSize(width, depth);
 
-        this.helipadSize = Math.min(width, depth) / 2;
+        this.helipadSize = 2 * Math.min(width, depth) / 3;
         this.helipadXSpacing = (width - this.helipadSize) / 2;
         this.helipadZSpacing = (depth - this.helipadSize) / 2;
         this.helipad.updateSize(this.helipadSize, this.helipadSize);
