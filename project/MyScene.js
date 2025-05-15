@@ -36,7 +36,7 @@ export class MyScene extends CGFscene {
 		this.appearance.setTexture(this.groundTex);
 		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
-    this.updatePeriod = 100;
+    this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
 
@@ -86,6 +86,8 @@ export class MyScene extends CGFscene {
     this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
+
+    this.t = new Date().getTime();
   }
 
   initLights() {
@@ -103,7 +105,7 @@ export class MyScene extends CGFscene {
       vec3.fromValues(-50, 0, -100)
     );
   }
-  checkKeys() {
+  checkKeys(deltaT) {
     var text = "Keys pressed: ";
     var keysPressed = false;
 
@@ -111,25 +113,33 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyW")) {
       text += " W ";
       keysPressed = true;
-      this.helicopter.accelerate(this.speedFactor / 120);
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.accelerate(this.speedFactor / 6000 * deltaT);
     }
 
     if (this.gui.isKeyPressed("KeyS")) {
       text += " S ";
       keysPressed = true;
-      this.helicopter.accelerate(-this.speedFactor / 120);
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.accelerate(-this.speedFactor / 6000 * deltaT);
     }
 
     if (this.gui.isKeyPressed("KeyA")) {
       text += " A ";
       keysPressed = true;
-      this.helicopter.turn(this.speedFactor * Math.PI / 30);
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.turn(this.speedFactor / 750 * deltaT);
     }
 
     if (this.gui.isKeyPressed("KeyD")) {
       text += " D ";
       keysPressed = true;
-      this.helicopter.turn(-this.speedFactor * Math.PI / 30);
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.turn(-this.speedFactor / 750 * deltaT);
     }
 
     if (this.gui.isKeyPressed("KeyP")) {
@@ -155,8 +165,11 @@ export class MyScene extends CGFscene {
   }
 
   update(t) {
-    this.checkKeys();
-    this.helicopter.update(this.updatePeriod);
+    const deltaT = t - this.t;
+    this.t = t;
+
+    this.checkKeys(deltaT);
+    this.helicopter.update(deltaT);
   }
 
   setDefaultAppearance() {

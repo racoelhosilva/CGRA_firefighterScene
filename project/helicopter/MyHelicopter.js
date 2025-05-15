@@ -7,7 +7,7 @@ import { MyRudder } from "./MyRudder.js";
 import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
-    MAX_VELOCITY = 0.5;
+    MAX_VELOCITY = 0.25;
     MAX_TILT = Math.PI / 4;
     LIFTING_DURATION = 2000;
     LANDING4_DURATION = 2000;
@@ -22,8 +22,8 @@ export class MyHelicopter extends CGFobject {
         this.orientation = -Math.PI / 2;
         this.velocityNorm = 0;
         this.velocity = [0, 0];
-        this.automaticAcceleration = scene.speedFactor / 120;
-        this.automaticOrientationVel = scene.speedFactor * Math.PI / 30;
+        this.acceleration = scene.speedFactor / 6000;
+        this.orientationVelocity = scene.speedFactor * Math.PI / 30;
 
         this.flyingHeight = flyingHeight;
 
@@ -140,12 +140,14 @@ export class MyHelicopter extends CGFobject {
         this.initPosition = initPosition;
     }
 
+    getState() {
+        return this.state;
+    }
+
     turn(orientationDelta) {
-        if (this.state === "FLYING" || this.state === "LANDING3") {
-            this.orientation += orientationDelta;
-            this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
-            this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
-        }
+        this.orientation += orientationDelta;
+        this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
+        this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
     }
 
     normalize(value, min, max) {
@@ -153,13 +155,11 @@ export class MyHelicopter extends CGFobject {
     }
 
     accelerate(velocityDelta) {
-        if (this.state === "FLYING") {
-            this.velocityNorm = this.normalize(this.velocityNorm + velocityDelta, 0, this.MAX_VELOCITY);
-            this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
-            this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
+        this.velocityNorm = this.normalize(this.velocityNorm + velocityDelta, 0, this.MAX_VELOCITY);
+        this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
+        this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
 
-            this.tilt = this.normalize(this.tilt - velocityDelta * 8, -this.MAX_TILT, this.MAX_TILT);
-        }
+        this.tilt = this.normalize(this.tilt - velocityDelta * 8, -this.MAX_TILT, this.MAX_TILT);
     }
 
     liftOff() {
@@ -171,15 +171,23 @@ export class MyHelicopter extends CGFobject {
 
     land() {
         if (this.state === "FLYING") {
-            this.state = "LANDING3";
-            this.position[0] = this.initPosition[0];
-            this.position[2] = this.initPosition[2];
-            this.velocity = [0, 0];
+            this.state = "LANDING2";
+            this.orientation = Math.atan2(this.position[2] - this.initPosition[2], this.initPosition[0] - this.position[0]);
             this.velocityNorm = 0;
+            this.velocity = [0, 0];
 
             // Normalize the orientation to be between -3 * PI / 2 and PI / 2
             this.orientation = ((this.orientation + 3 * Math.PI / 2) % (2 * Math.PI)) - 3 * Math.PI / 2;
         }
+    }
+
+    getDistanceToInit(position) {
+        let delta = [0, 1, 2].map(i => this.initPosition[i] - position[i]);
+        return Math.sqrt(delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2]);
+    }
+
+    getNextPosition(t) {
+        return [this.position[0] + this.velocity[0] * t, this.position[1], this.position[2] + this.velocity[1] * t];
     }
 
     update(t) {
@@ -201,27 +209,53 @@ export class MyHelicopter extends CGFobject {
                 break;
 
             case "FLYING":
-                this.rotorAngle += t;
                 this.position[1] = this.initPosition[1] + this.flyingHeight;
                 break;
 
+            case "LANDING2":
+                const toleranceDistance = (this.velocityNorm) * (this.velocityNorm) / 2 / this.acceleration;
+
+                if (this.getDistanceToInit(this.position) < toleranceDistance) {
+                    this.state = "LANDING3";
+                    break;
+                }
+
+                this.accelerate(this.acceleration * t);
+                break;
+
             case "LANDING3":
+                const distance = this.getDistanceToInit(this.position);
+                const nextPos = this.getNextPosition(t);
+
+                if (this.getDistanceToInit(nextPos) > distance) {
+                    this.state = "LANDING4";
+                    this.position[0] = this.initPosition[0];
+                    this.position[2] = this.initPosition[2];
+                    this.velocity = [0, 0];
+                    this.velocityNorm = 0;
+                    break;
+                }
+
+                this.accelerate(-this.acceleration * t);
+                break;
+
+            case "LANDING4":
                 const targetOrientation = -Math.PI / 2;
                 const orientationDelta = this.orientation <= targetOrientation
-                    ? Math.min(this.automaticOrientationVel, targetOrientation - this.orientation)
-                    : Math.max(-this.automaticOrientationVel, targetOrientation - this.orientation);
+                    ? Math.min(this.orientationVelocity, targetOrientation - this.orientation)
+                    : Math.max(-this.orientationVelocity, targetOrientation - this.orientation);
                 console.log(orientationDelta);
 
                 if (orientationDelta !== 0) {
                     this.turn(orientationDelta);
                 } else {
-                    this.state = "LANDING4";
+                    this.state = "LANDING5";
                     this.orientation = targetOrientation;
                     this.animDuration = 0;
                 }
                 break;
 
-            case "LANDING4":
+            case "LANDING5":
                 this.animDuration += t;
                 if (this.animDuration < this.LIFTING_DURATION) {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
@@ -238,8 +272,7 @@ export class MyHelicopter extends CGFobject {
                 break;
         }
 
-        this.position[0] += this.velocity[0] * t;
-        this.position[2] += this.velocity[1] * t;
+        this.position = this.getNextPosition(t);
         this.rotorAngle += this.rotorSpeed * t;
 
         this.tilt *= 0.75;
