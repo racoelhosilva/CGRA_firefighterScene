@@ -11,6 +11,7 @@ export class MyHelicopter extends CGFobject {
     MAX_TILT = Math.PI / 4;
     LIFTING_DURATION = 2000;
     LANDING4_DURATION = 2000;
+    BUCKET_HEIGHT = 24;
 
     constructor(scene, cockpitTexture, flyingHeight) {
         super(scene);
@@ -23,6 +24,8 @@ export class MyHelicopter extends CGFobject {
         this.velocity = [0, 0];
 
         this.flyingHeight = flyingHeight;
+
+        this.bucketHeight = 0;
 
         this.tilt = 0;
         this.rotorAngle = 0;
@@ -59,7 +62,7 @@ export class MyHelicopter extends CGFobject {
         this.mainRotor = new MyRotor(this.scene, 16, 5, 2, 0.8);
         this.tailRotor = new MyRotor(this.scene, 3, 3, 0.5, 0.2);
         this.rudder = new MyRudder(this.scene);
-        this.waterBucket = new MyWaterBucket(this.scene, 4, 6);
+        this.waterBucket = new MyWaterBucket(this.scene, 4, 6, 0);
     }
 
     display() {        
@@ -119,10 +122,12 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.popMatrix();
 
-        this.scene.pushMatrix();
-        this.scene.translate(0, -24, 0);
-        this.waterBucket.display();
-        this.scene.popMatrix();
+        if (this.state !== "STATIONARY") {
+            this.scene.pushMatrix();
+            this.scene.translate(0, -4 - this.bucketHeight, 0);
+            this.waterBucket.display();
+            this.scene.popMatrix();
+        }
 
         this.scene.popMatrix();
     }
@@ -180,11 +185,14 @@ export class MyHelicopter extends CGFobject {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
                     this.position[1] = this.initPosition[1] + progressFactor * this.flyingHeight;
                     this.rotorSpeed = progressFactor;
+                    this.bucketHeight = this.BUCKET_HEIGHT * progressFactor;
                 } else {
                     this.state = "FLYING";
                     this.position[1] = this.initPosition[1] + this.flyingHeight;
                     this.rotorSpeed = 1;
+                    this.bucketHeight = this.BUCKET_HEIGHT;
                 }
+                this.waterBucket.updateCableHeight(this.bucketHeight);
                 break;
 
             case "FLYING":
@@ -210,11 +218,15 @@ export class MyHelicopter extends CGFobject {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
                     this.position[1] = this.initPosition[1] + this.flyingHeight - progressFactor * this.flyingHeight;
                     this.rotorSpeed = 1 - progressFactor;
+                    this.bucketHeight = this.BUCKET_HEIGHT * (1 - progressFactor);
                 } else {
                     this.state = "STATIONARY";
                     this.position[1] = this.initPosition[1];
                     this.rotorSpeed = 0;
+                    this.bucketHeight = 0;
                 }
+                this.waterBucket.updateCableHeight(this.bucketHeight);
+                break;
         }
 
         this.position[0] += this.velocity[0] * t;

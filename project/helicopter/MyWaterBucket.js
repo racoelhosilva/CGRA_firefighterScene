@@ -3,14 +3,15 @@ import { MyCylinder } from "../component/MyCylinder.js";
 import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
 export class MyWaterBucket extends CGFobject {
-    constructor(scene, radius, height) {
+    constructor(scene, radius, height, cableHeight) {
         super(scene);
         this.radius = radius;
         this.height = height;
+        this.cableHeight = cableHeight;
 
         this.bucket = new MyCylinder(this.scene, this.radius, this.height, 8, 2, true);
         this.base = new MyRegularPolygon(this.scene, 8, this.radius, true);
-        this.cable = new MyCylinder(this.scene, 0.2, 24 + this.radius, 4, 8);
+        this.cable = new MyCylinder(this.scene, 0.2, 1, 4, 8);
         
         this.bucketMaterial = new CGFappearance(this.scene);
         this.bucketMaterial.setAmbient(0.3, 0.3, 0.3, 1.0);
@@ -34,9 +35,16 @@ export class MyWaterBucket extends CGFobject {
         this.base.display();
         this.scene.popMatrix();
         
+        this.scene.pushMatrix();
+        this.scene.scale(1, this.cableHeight, 1);
         this.cableMaterial.apply();
         this.cable.display();
+        this.scene.popMatrix();
     
         this.scene.popMatrix();
+    }
+
+    updateCableHeight(newHeight) {
+        this.cableHeight = newHeight;
     }
 }
