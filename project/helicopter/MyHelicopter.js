@@ -171,13 +171,10 @@ export class MyHelicopter extends CGFobject {
 
     land() {
         if (this.state === "FLYING") {
-            this.state = "LANDING2";
-            this.orientation = Math.atan2(this.position[2] - this.initPosition[2], this.initPosition[0] - this.position[0]);
-            this.velocityNorm = 0;
-            this.velocity = [0, 0];
+            this.state = this.position != this.initPosition ? "LANDING1" : "LANDING4";
 
-            // Normalize the orientation to be between -3 * PI / 2 and PI / 2
-            this.orientation = ((this.orientation + 3 * Math.PI / 2) % (2 * Math.PI)) - 3 * Math.PI / 2;
+            // Normalize the orientation to be between -PI and PI
+            this.orientation = ((this.orientation + Math.PI) % (2 * Math.PI)) - Math.PI;
         }
     }
 
@@ -212,46 +209,71 @@ export class MyHelicopter extends CGFobject {
                 this.position[1] = this.initPosition[1] + this.flyingHeight;
                 break;
 
-            case "LANDING2":
-                const toleranceDistance = (this.velocityNorm) * (this.velocityNorm) / 2 / this.acceleration;
+            case "LANDING1":
+                {
+                    const targetOrientation = Math.atan2(this.position[2] - this.initPosition[2], this.initPosition[0] - this.position[0]);
+                    const orientationDelta = this.orientation <= targetOrientation
+                        ? Math.min(this.orientationVelocity, targetOrientation - this.orientation)
+                        : Math.max(-this.orientationVelocity, targetOrientation - this.orientation);
 
-                if (this.getDistanceToInit(this.position) < toleranceDistance) {
-                    this.state = "LANDING3";
-                    break;
+                    if (this.velocityNorm > 0)
+                        this.accelerate(-this.acceleration * t);
+
+                    if (orientationDelta !== 0) {
+                        this.turn(orientationDelta);
+                    } else {
+                        this.state = "LANDING2";
+                        this.orientation = targetOrientation;
+                        this.animDuration = 0;
+                    }
                 }
+                break;
 
-                this.accelerate(this.acceleration * t);
+            case "LANDING2":
+                {
+                    const toleranceDistance = this.velocityNorm * this.velocityNorm / 2 / this.acceleration;
+
+                    if (this.getDistanceToInit(this.position) < toleranceDistance) {
+                        this.state = "LANDING3";
+                        break;
+                    }
+
+                    this.accelerate(this.acceleration * t);
+                }
                 break;
 
             case "LANDING3":
-                const distance = this.getDistanceToInit(this.position);
-                const nextPos = this.getNextPosition(t);
+                {
+                    const distance = this.getDistanceToInit(this.position);
+                    const nextPos = this.getNextPosition(t);
 
-                if (this.getDistanceToInit(nextPos) > distance) {
-                    this.state = "LANDING4";
-                    this.position[0] = this.initPosition[0];
-                    this.position[2] = this.initPosition[2];
-                    this.velocity = [0, 0];
-                    this.velocityNorm = 0;
-                    break;
+                    if (this.getDistanceToInit(nextPos) > distance) {
+                        this.state = "LANDING4";
+                        this.position[0] = this.initPosition[0];
+                        this.position[2] = this.initPosition[2];
+                        this.velocity = [0, 0];
+                        this.velocityNorm = 0;
+                        break;
+                    }
+
+                    this.accelerate(-this.acceleration * t);
                 }
-
-                this.accelerate(-this.acceleration * t);
                 break;
 
             case "LANDING4":
-                const targetOrientation = -Math.PI / 2;
-                const orientationDelta = this.orientation <= targetOrientation
-                    ? Math.min(this.orientationVelocity, targetOrientation - this.orientation)
-                    : Math.max(-this.orientationVelocity, targetOrientation - this.orientation);
-                console.log(orientationDelta);
+                {
+                    const targetOrientation = -Math.PI / 2;
+                    const orientationDelta = this.orientation <= targetOrientation
+                        ? Math.min(this.orientationVelocity, targetOrientation - this.orientation)
+                        : Math.max(-this.orientationVelocity, targetOrientation - this.orientation);
 
-                if (orientationDelta !== 0) {
-                    this.turn(orientationDelta);
-                } else {
-                    this.state = "LANDING5";
-                    this.orientation = targetOrientation;
-                    this.animDuration = 0;
+                    if (orientationDelta !== 0) {
+                        this.turn(orientationDelta);
+                    } else {
+                        this.state = "LANDING5";
+                        this.orientation = targetOrientation;
+                        this.animDuration = 0;
+                    }
                 }
                 break;
 
