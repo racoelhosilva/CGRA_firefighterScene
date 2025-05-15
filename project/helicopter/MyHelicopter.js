@@ -17,11 +17,13 @@ export class MyHelicopter extends CGFobject {
         super(scene);
 
         this.initPosition = [0, 0, 0];
-        
+
         this.position = [0, 0, 0];
         this.orientation = -Math.PI / 2;
         this.velocityNorm = 0;
         this.velocity = [0, 0];
+        this.automaticAcceleration = scene.speedFactor / 120;
+        this.automaticOrientationVel = scene.speedFactor * Math.PI / 30;
 
         this.flyingHeight = flyingHeight;
 
@@ -55,7 +57,7 @@ export class MyHelicopter extends CGFobject {
         this.rudderMaterial.setDiffuse(0.5, 0.0, 0.0, 1.0);
         this.rudderMaterial.setSpecular(1.0, 0.0, 0.0, 1.0);
         this.rudderMaterial.setShininess(200);
-    
+
         this.skidRight = new MySkid(this.scene, true);
         this.skidLeft = new MySkid(this.scene, false);
 
@@ -65,9 +67,9 @@ export class MyHelicopter extends CGFobject {
         this.waterBucket = new MyWaterBucket(this.scene, 4, 6, 0);
     }
 
-    display() {        
+    display() {
         this.scene.pushMatrix();
-        
+
         this.scene.translate(0, 7.4, 0);
         this.scene.translate(...this.position);
 
@@ -114,7 +116,7 @@ export class MyHelicopter extends CGFobject {
         this.scene.rotate(this.rotorAngle, 0, 1, 0);
         this.tailRotor.display();
         this.scene.popMatrix();
-        
+
         this.scene.translate(1, 0, 0);
         this.rudderMaterial.apply();
         this.rudder.display();
@@ -139,20 +141,24 @@ export class MyHelicopter extends CGFobject {
     }
 
     turn(orientationDelta) {
-        if (this.state === "FLYING") {
+        if (this.state === "FLYING" || this.state === "LANDING3") {
             this.orientation += orientationDelta;
             this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
             this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
         }
     }
 
+    normalize(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
     accelerate(velocityDelta) {
         if (this.state === "FLYING") {
-            this.velocityNorm = Math.min(this.MAX_VELOCITY, Math.max(0, this.velocityNorm + velocityDelta));
+            this.velocityNorm = this.normalize(this.velocityNorm + velocityDelta, 0, this.MAX_VELOCITY);
             this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
             this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
-            
-            this.tilt = Math.min(this.MAX_TILT, Math.max(-this.MAX_TILT, this.tilt - velocityDelta * 8));
+
+            this.tilt = this.normalize(this.tilt - velocityDelta * 8, -this.MAX_TILT, this.MAX_TILT);
         }
     }
 
@@ -162,18 +168,17 @@ export class MyHelicopter extends CGFobject {
             this.animDuration = 0;
         }
     }
-    
+
     land() {
         if (this.state === "FLYING") {
             this.state = "LANDING3";
-            this.animDuration = 0;
             this.position[0] = this.initPosition[0];
             this.position[2] = this.initPosition[2];
             this.velocity = [0, 0];
             this.velocityNorm = 0;
 
-            this.orientation = ((this.orientation + Math.PI) % (2 * Math.PI)) - Math.PI;
-            this.initialOrientation = this.orientation;
+            // Normalize the orientation to be between -3 * PI / 2 and PI / 2
+            this.orientation = ((this.orientation + 3 * Math.PI / 2) % (2 * Math.PI)) - 3 * Math.PI / 2;
         }
     }
 
@@ -201,13 +206,17 @@ export class MyHelicopter extends CGFobject {
                 break;
 
             case "LANDING3":
-                this.animDuration += t;
+                const targetOrientation = -Math.PI / 2;
+                const orientationDelta = this.orientation <= targetOrientation
+                    ? Math.min(this.automaticOrientationVel, targetOrientation - this.orientation)
+                    : Math.max(-this.automaticOrientationVel, targetOrientation - this.orientation);
+                console.log(orientationDelta);
 
-                if (this.animDuration < 1000) {
-                    this.orientation += (-Math.PI / 2 - this.initialOrientation) * (t / 1000);
+                if (orientationDelta !== 0) {
+                    this.turn(orientationDelta);
                 } else {
                     this.state = "LANDING4";
-                    this.orientation = -Math.PI / 2;
+                    this.orientation = targetOrientation;
                     this.animDuration = 0;
                 }
                 break;

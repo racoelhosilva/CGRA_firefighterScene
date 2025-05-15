@@ -76,7 +76,7 @@ export class MyScene extends CGFscene {
     this.windowMaterial.setShininess(1.0);
     this.windowMaterial.setTexture(this.windowTexture1);
     this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
-    
+
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
