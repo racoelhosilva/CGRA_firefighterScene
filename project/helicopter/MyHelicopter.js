@@ -8,10 +8,11 @@ import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
     MAX_VELOCITY = 0.25;
-    MAX_TILT = Math.PI / 4;
+    MAX_TILT = Math.PI / 10;
     LIFTING_DURATION = 2000;
     LANDING4_DURATION = 2000;
     BUCKET_HEIGHT = 24;
+    MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
     constructor(scene, cockpitTexture, flyingHeight) {
         super(scene);
@@ -32,6 +33,8 @@ export class MyHelicopter extends CGFobject {
         this.tilt = 0;
         this.rotorAngle = 0;
         this.rotorSpeed = 0;
+        this.animationAngle1 = 0;
+        this.animationAngle2 = 0;
 
         this.state = "STATIONARY";
         this.animDuration = 0;
@@ -77,6 +80,7 @@ export class MyHelicopter extends CGFobject {
 
         this.scene.pushMatrix();
 
+        this.scene.rotate(this.animationAngle2, Math.cos(this.animationAngle1), 0, Math.sin(this.animationAngle1));
         this.scene.rotate(this.tilt, 0, 0, 1);
 
         this.scene.pushMatrix();
@@ -159,7 +163,7 @@ export class MyHelicopter extends CGFobject {
         this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
         this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
 
-        this.tilt = this.normalize(this.tilt - velocityDelta * 8, -this.MAX_TILT, this.MAX_TILT);
+        this.tilt = this.normalize(this.tilt - 8 * velocityDelta, -this.MAX_TILT, this.MAX_TILT);
     }
 
     liftOff() {
@@ -171,7 +175,8 @@ export class MyHelicopter extends CGFobject {
 
     land() {
         if (this.state === "FLYING") {
-            this.state = this.position != this.initPosition ? "LANDING1" : "LANDING4";
+            const atStart = this.position[0] !== this.initPosition[0] || this.position[2] !== this.initPosition[2];
+            this.state = atStart ? "LANDING1" : "LANDING4";
 
             // Normalize the orientation to be between -PI and PI
             this.orientation = ((this.orientation + Math.PI) % (2 * Math.PI)) - Math.PI;
@@ -195,11 +200,13 @@ export class MyHelicopter extends CGFobject {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
                     this.position[1] = this.initPosition[1] + progressFactor * this.flyingHeight;
                     this.rotorSpeed = progressFactor;
+                    this.animationAngle2 = this.MAX_ANIMATION2_ANGLE * progressFactor;
                     this.bucketHeight = this.BUCKET_HEIGHT * progressFactor;
                 } else {
                     this.state = "FLYING";
                     this.position[1] = this.initPosition[1] + this.flyingHeight;
                     this.rotorSpeed = 1;
+                    this.animationAngle2 = this.MAX_ANIMATION2_ANGLE;
                     this.bucketHeight = this.BUCKET_HEIGHT;
                 }
                 this.waterBucket.updateCableHeight(this.bucketHeight);
@@ -283,11 +290,13 @@ export class MyHelicopter extends CGFobject {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
                     this.position[1] = this.initPosition[1] + this.flyingHeight - progressFactor * this.flyingHeight;
                     this.rotorSpeed = 1 - progressFactor;
+                    this.animationAngle2 = this.MAX_ANIMATION2_ANGLE * (1 - progressFactor);
                     this.bucketHeight = this.BUCKET_HEIGHT * (1 - progressFactor);
                 } else {
                     this.state = "STATIONARY";
                     this.position[1] = this.initPosition[1];
                     this.rotorSpeed = 0;
+                    this.animationAngle2 = 0;
                     this.bucketHeight = 0;
                 }
                 this.waterBucket.updateCableHeight(this.bucketHeight);
@@ -297,7 +306,9 @@ export class MyHelicopter extends CGFobject {
         this.position = this.getNextPosition(t);
         this.rotorAngle += this.rotorSpeed * t;
 
-        this.tilt *= 0.75;
+        this.tilt *= 0.8;
+        this.tiltDiff = 0;
+        this.animationAngle1 += 0.002 * t;
     }
 
     reset() {
