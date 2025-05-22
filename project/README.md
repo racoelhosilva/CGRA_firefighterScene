@@ -24,4 +24,8 @@
     <figcaption>Fig. 4: Screenshot of Helicopter step 4.1</figcaption>
 </figure>
 
+<figure>
+    <img src="./screenshots/project-t13g01-5.png" alt="Project step 4.3">
+    <figcaption>Fig. 5: Screenshot of Helicopter step 4.3</figcaption>
+</figure>
 
