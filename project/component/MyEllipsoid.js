@@ -19,8 +19,6 @@ export class MyEllipsoid extends CGFobject {
   }
 
   pushVertex(x, y, z, u, v) {
-    const radius = Math.sqrt(x * x + y * y + z * z) * (this.inverted ? -1 : 1);
-
     this.vertices.push(x, y, z);
     this.normals.push(x * this.invSqrRx, y * this.invSqrRy, z * this.invSqrRz);
     this.texCoords.push(u, v);
