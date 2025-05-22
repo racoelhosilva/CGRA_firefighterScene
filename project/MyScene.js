@@ -4,6 +4,7 @@ import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
+import { MyLake } from "./lake/MyLake.js";
 
 /**
  * MyScene
@@ -77,6 +78,14 @@ export class MyScene extends CGFscene {
     this.windowMaterial.setTexture(this.windowTexture1);
     this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Lake Texture
+    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
+    this.lakeMaterial = new CGFappearance(this);
+    this.lakeMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.lakeMaterial.setShininess(1.0);
+    this.lakeMaterial.setTexture(this.lakeTexture);
+    this.lakeMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
@@ -86,6 +95,8 @@ export class MyScene extends CGFscene {
     this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
+
+    this.lake = new MyLake(this, 75, [-150, this.Z_CLASHING_OFFSET, 0], this.lakeMaterial);
 
     this.t = new Date().getTime();
   }
@@ -269,6 +280,10 @@ export class MyScene extends CGFscene {
 
     this.pushMatrix();
     this.helicopter.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.lake.display();
     this.popMatrix();
   }
 }
