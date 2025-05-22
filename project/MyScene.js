@@ -1,8 +1,9 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
 import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
-import { MyBuilding } from "./MyBuilding.js";
+import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
+import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 
 /**
  * MyScene
@@ -35,11 +36,14 @@ export class MyScene extends CGFscene {
 		this.appearance.setTexture(this.groundTex);
 		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
-    this.setUpdatePeriod(50);
+    this.updatePeriod = 50;
+    this.setUpdatePeriod(this.updatePeriod);
+    this.speedFactor = 1;
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
+    this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
 
     this.grassMaterial = new CGFappearance(this);
     this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
@@ -49,6 +53,8 @@ export class MyScene extends CGFscene {
 
     // Building Properties
     this.buildingSize = 100;
+    this.buildingX = -50;
+    this.buildingZ = -100;
     this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
@@ -76,7 +82,12 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
-    this.forest = new MyForest(this, 10, 10, this.truncTexture, this.crownTexture);
+
+    this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
+    this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
+    this.setHelicopterInitPos();
+
+    this.t = new Date().getTime();
   }
 
   initLights() {
@@ -90,11 +101,11 @@ export class MyScene extends CGFscene {
       0.4,
       0.1,
       2000,
-      vec3.fromValues(100, 100, 100),
-      vec3.fromValues(0, 0, 0)
+      vec3.fromValues(300, 300, 300),
+      vec3.fromValues(-50, 0, -100)
     );
   }
-  checkKeys() {
+  checkKeys(deltaT) {
     var text = "Keys pressed: ";
     var keysPressed = false;
 
@@ -102,18 +113,63 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyW")) {
       text += " W ";
       keysPressed = true;
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.accelerate(this.speedFactor / 6000 * deltaT);
     }
 
     if (this.gui.isKeyPressed("KeyS")) {
       text += " S ";
       keysPressed = true;
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.accelerate(-this.speedFactor / 6000 * deltaT);
     }
+
+    if (this.gui.isKeyPressed("KeyA")) {
+      text += " A ";
+      keysPressed = true;
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.turn(this.speedFactor / 750 * deltaT);
+    }
+
+    if (this.gui.isKeyPressed("KeyD")) {
+      text += " D ";
+      keysPressed = true;
+
+      if (this.helicopter.getState() == "FLYING")
+        this.helicopter.turn(-this.speedFactor / 750 * deltaT);
+    }
+
+    if (this.gui.isKeyPressed("KeyP")) {
+      text += " P ";
+      keysPressed = true;
+      this.helicopter.liftOff();
+    }
+
+    if (this.gui.isKeyPressed("KeyL")) {
+      text += " L ";
+      keysPressed = true;
+      this.helicopter.land();
+    }
+
+    if (this.gui.isKeyPressed("KeyR")) {
+      text += " R ";
+      keysPressed = true;
+      this.helicopter.reset();
+    }
+
     if (keysPressed)
       console.log(text);
   }
 
   update(t) {
-    this.checkKeys();
+    const deltaT = t - this.t;
+    this.t = t;
+
+    this.checkKeys(deltaT);
+    this.helicopter.update(deltaT);
   }
 
   setDefaultAppearance() {
@@ -146,12 +202,22 @@ export class MyScene extends CGFscene {
       return ret;
   }
 
+  setHelicopterInitPos() {
+    this.helicopter.setInitPos([
+      this.buildingX + this.building.getCentralFloorWidth() / 2,
+      this.building.getTotalHeight() + this.Z_CLASHING_OFFSET,
+      this.buildingZ + this.building.getCentralFloorDepth() / 2
+    ]);
+  }
+
   updateBuildingSize() {
     this.building.updateSize(this.buildingSize);
+    this.setHelicopterInitPos();
   }
 
   updateFloorNumber() {
     this.building.updateFloorNumber(this.floorNumber);
+    this.setHelicopterInitPos();
   }
 
   updateWindowNumber() {
@@ -195,10 +261,14 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.pushMatrix();
-    this.translate(-100, 0, -150);
+    this.translate(this.buildingX, 0, this.buildingZ);
     this.building.display();
     this.popMatrix();
 
     this.forest.display();
+
+    this.pushMatrix();
+    this.helicopter.display();
+    this.popMatrix();
   }
 }
