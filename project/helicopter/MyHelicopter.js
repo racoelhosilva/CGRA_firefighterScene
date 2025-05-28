@@ -14,7 +14,7 @@ export class MyHelicopter extends CGFobject {
     BUCKET_HEIGHT = 24;
     MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
-    constructor(scene, cockpitTexture, flyingHeight) {
+    constructor(scene, cockpitTexture, flyingHeight, waterMaterial) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
@@ -177,6 +177,9 @@ export class MyHelicopter extends CGFobject {
         if (this.state === "STATIONARY") {
             this.state = "LIFTING";
             this.animDuration = 0;
+        } else if (this.state === "LOWERING1") {
+            this.state = "LIFTING";
+            this.animDuration = 0;
         }
     }
 
@@ -316,6 +319,8 @@ export class MyHelicopter extends CGFobject {
                 }
                 this.waterBucket.updateCableHeight(this.bucketHeight);
                 break;
+            case "LOWERING1":
+                this.waterBucket.updateWaterLevel(0.002 * t);
         }
 
         this.position = this.getNextPosition(t);
@@ -336,5 +341,6 @@ export class MyHelicopter extends CGFobject {
         this.rotorSpeed = 0;
         this.state = "STATIONARY";
         this.animationAngle2 = 0;
+        this.waterBucket.setWaterLevel(0);
     }
 }
