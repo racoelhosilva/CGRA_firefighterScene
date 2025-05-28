@@ -3,7 +3,7 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, floors, windows, windowMaterial, buildingMaterial) {
+    constructor(scene, total_width, floors, windows, windowMaterial, buildingMaterial, doorMaterial, bannerMaterial, helipadMaterial) {
         super(scene);
         this.total_width = total_width;
         this.width = 2 * total_width / 5;
@@ -14,8 +14,8 @@ export class MyBuilding extends CGFobject {
         this.windowMaterial = windowMaterial;
         this.buildingMaterial = buildingMaterial;
 
-        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowMaterial);
-        this.ceiling = new MyCeiling(this.scene, this.width, this.depth);
+        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowMaterial, doorMaterial, bannerMaterial);
+        this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadMaterial);
     }
 
     display() {

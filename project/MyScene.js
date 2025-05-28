@@ -5,6 +5,7 @@ import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
+import { MyLake } from "./lake/MyLake.js";
 
 /**
  * MyScene
@@ -66,6 +67,22 @@ export class MyScene extends CGFscene {
     this.buildingMaterial.setSpecular(0, 0, 0, 0);
     this.buildingMaterial.setShininess(1.0);
 
+    // Door Texture
+    this.doorTexture = new CGFtexture(this, "textures/door.png");
+    this.doorMaterial = new CGFappearance(this);
+    this.doorMaterial.setAmbient(0.3, 0.3, 0.3, 1);
+    this.doorMaterial.setShininess(1.0);
+    this.doorMaterial.setTexture(this.doorTexture);
+    this.doorMaterial.setTextureWrap("REPEAT", "REPEAT");
+
+    // Banner Texture
+    this.bannerTexture = new CGFtexture(this, "textures/banner.png");
+    this.bannerMaterial = new CGFappearance(this);
+    this.bannerMaterial.setAmbient(0.3, 0.3, 0.3, 1);
+    this.bannerMaterial.setShininess(1.0);
+    this.bannerMaterial.setTexture(this.bannerTexture);
+    this.bannerMaterial.setTextureWrap("REPEAT", "REPEAT");
+
     // Window Textures
     this.windowTexture1 = new CGFtexture(this, 'textures/window.png');
     this.windowTexture2 = new CGFtexture(this, 'textures/window2.jpg');
@@ -79,17 +96,39 @@ export class MyScene extends CGFscene {
     this.windowMaterial.setTexture(this.windowTexture1);
     this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Helipad Texture
+    this.helipadTexture = new CGFtexture(this, "textures/helipad.jpeg");
+    this.helipadMaterial = new CGFappearance(this);
+    this.helipadMaterial.setAmbient(0.3, 0.3, 0.3, 1);
+    this.helipadMaterial.setShininess(1.0);
+    this.helipadMaterial.setTexture(this.helipadTexture);
+    this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
+
+    // Lake Properties
+    this.lakeRadius = 75;
+    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 0];
+
+    // Lake Texture
+    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
+    this.lakeMaterial = new CGFappearance(this);
+    this.lakeMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.lakeMaterial.setShininess(1.0);
+    this.lakeMaterial.setTexture(this.lakeTexture);
+    this.lakeMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial);
+    this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial, this.doorMaterial, this.bannerMaterial, this.helipadMaterial);
 
     this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
     this.fire = new MyFire(this, 20, 30, 30, this.fireTexture);
+
+    this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
     this.t = new Date().getTime();
   }
@@ -155,7 +194,17 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyL")) {
       text += " L ";
       keysPressed = true;
-      this.helicopter.land();
+      if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
+        this.helicopter.lower()
+      } else {
+        this.helicopter.land();
+      }
+    }
+
+    if (this.gui.isKeyPressed("KeyO")) {
+      text += " O ";
+      keysPressed = true;
+      this.helicopter.openBucket();
     }
 
     if (this.gui.isKeyPressed("KeyR")) {
@@ -275,6 +324,10 @@ export class MyScene extends CGFscene {
 
     this.pushMatrix();
     this.helicopter.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.lake.display();
     this.popMatrix();
   }
 }
