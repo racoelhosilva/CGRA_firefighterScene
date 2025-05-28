@@ -2,6 +2,7 @@ import { CGFobject, CGFappearance } from "../../lib/CGF.js";
 import { MyCircle } from "../component/MyCircle.js";
 import { MyCylinder } from "../component/MyCylinder.js";
 import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
+import { MyWaterParticle } from "./MyWaterParticle.js";
 
 export class MyWaterBucket extends CGFobject {
     constructor(scene, radius, height, cableHeight) {
@@ -10,6 +11,7 @@ export class MyWaterBucket extends CGFobject {
         this.height = height;
         this.cableHeight = cableHeight;
         this.isOpen = false;
+        this.positionHeight = 0;
 
         this.bucket = new MyCylinder(this.scene, this.radius, this.height, 8, 2, true);
         this.base = new MyRegularPolygon(this.scene, 8, this.radius, true);
@@ -18,6 +20,7 @@ export class MyWaterBucket extends CGFobject {
         this.waterLevel = 0;
         this.maxWaterLevel = height - 1;
         this.water = new MyCircle(this.scene, 8, this.radius - this.scene.Z_CLASHING_OFFSET);
+        this.particles = [];
 
         // Water material
         this.waterMaterial = new CGFappearance(this.scene);
@@ -37,8 +40,8 @@ export class MyWaterBucket extends CGFobject {
         this.cableMaterial.setDiffuse(0.1, 0.1, 0.1, 1.0);
         this.cableMaterial.setSpecular(0.2, 0.2, 0.2, 1.0);
         this.cableMaterial.setShininess(10);
-
     }
+
     display() {
         this.scene.pushMatrix();
         this.bucketMaterial.apply();
@@ -70,7 +73,18 @@ export class MyWaterBucket extends CGFobject {
         this.cable.display();
         this.scene.popMatrix();
     
+        for (let particle of this.particles) {
+            this.scene.pushMatrix();
+            this.scene.translate(particle.position[0], particle.position[1] - this.positionHeight, particle.position[2]);
+            particle.display();
+            this.scene.popMatrix();
+        }
+
         this.scene.popMatrix();
+    }
+
+    setPositionHeight(positionHeight) {
+        this.positionHeight = positionHeight;
     }
 
     updateCableHeight(newHeight) {
@@ -104,6 +118,27 @@ export class MyWaterBucket extends CGFobject {
             this.waterLevel = 0;
         } else if (this.waterLevel > this.maxWaterLevel) {
             this.waterLevel = this.maxWaterLevel;
+        }
+    }
+
+    addParticles(n) {
+        for (let i = 0; i < n; i++) {
+            const randomDisplacement = Math.random() * this.radius;
+            const angle = Math.random() * 2 * Math.PI;
+            const randomX = Math.cos(angle) * randomDisplacement;
+            const randomZ = Math.sin(angle) * randomDisplacement;
+            const randomFactor = Math.random() + 0.5;
+            const particle = new MyWaterParticle(this.scene, [randomX, this.positionHeight, randomZ], randomFactor);
+            this.particles.push(particle);
+        }
+    }
+
+    updateParticles(t) {
+        for (let particle of this.particles) {
+            particle.update(t);
+            if (particle.position[1] <= 0) {
+                this.particles.splice(this.particles.indexOf(particle), 1);
+            }
         }
     }
 }

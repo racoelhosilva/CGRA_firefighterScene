@@ -145,6 +145,7 @@ export class MyHelicopter extends CGFobject {
         for (let i = 0; i < 3; i++)
             this.position[i] += initPosition[i] - this.initPosition[i];
         this.initPosition = initPosition;
+        this.waterBucket.setPositionHeight(this.initPosition[1] + this.flyingHeight - this.BUCKET_HEIGHT - 4);
     }
 
     getState() {
@@ -351,10 +352,17 @@ export class MyHelicopter extends CGFobject {
                 this.waterBucket.updateWaterLevel(0.002 * t);
                 break;
             case "OPEN":
-                this.waterBucket.updateWaterLevel(-0.008 * t);
+                this.waterBucket.updateParticles(t);
+
                 if (this.waterBucket.getWaterLevel() == 0) {
-                    this.state = "FLYING";
                     this.waterBucket.closeBucket();
+                } else {
+                    this.waterBucket.addParticles(3);
+                    this.waterBucket.updateWaterLevel(-0.008 * t);
+                }
+
+                if (this.waterBucket.particles.length == 0) {
+                    this.state = "FLYING";
                 }
                 break;
         }
