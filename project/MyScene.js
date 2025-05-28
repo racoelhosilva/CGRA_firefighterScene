@@ -4,6 +4,7 @@ import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
+import { MyFire } from "./fire/MyFire.js";
 import { MyLake } from "./lake/MyLake.js";
 
 /**
@@ -45,6 +46,7 @@ export class MyScene extends CGFscene {
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
+    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
 
     this.grassMaterial = new CGFappearance(this);
     this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
@@ -123,6 +125,8 @@ export class MyScene extends CGFscene {
     this.forest = new MyForest(this, 4, 4, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
+
+    this.fire = new MyFire(this, 20, 30, 30, this.fireTexture);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
@@ -315,6 +319,8 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.forest.display();
+
+    this.fire.display();
 
     this.pushMatrix();
     this.helicopter.display();
