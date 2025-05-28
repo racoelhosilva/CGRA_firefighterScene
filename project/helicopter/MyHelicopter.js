@@ -29,7 +29,6 @@ export class MyHelicopter extends CGFobject {
         this.flyingHeight = flyingHeight;
 
         this.bucketHeight = 0;
-        this.hasWater = false;
 
         this.tilt = 0;
         this.rotorAngle = 0;
@@ -153,6 +152,12 @@ export class MyHelicopter extends CGFobject {
         const dx = this.position[0] - center[0];
         const dz = this.position[2] - center[2];
         return (this.velocity[0] == 0 && this.velocity[1] == 0) && (dx * dx + dz * dz) <= (radius * radius);
+    }
+
+    openBucket() {
+        if (this.state === "FLYING" && this.waterBucket.getWaterLevel() > 0) {
+            this.state = "OPEN";
+        }
     }
 
     turn(orientationDelta) {
@@ -321,6 +326,13 @@ export class MyHelicopter extends CGFobject {
                 break;
             case "LOWERING1":
                 this.waterBucket.updateWaterLevel(0.002 * t);
+                break;
+            case "OPEN":
+                this.waterBucket.updateWaterLevel(-0.02 * t);
+                if (this.waterBucket.getWaterLevel() == 0) {
+                    this.state = "FLYING";
+                }
+                break;
         }
 
         this.position = this.getNextPosition(t);

@@ -68,6 +68,10 @@ export class MyWaterBucket extends CGFobject {
         this.cableHeight = newHeight;
     }
 
+    getWaterLevel() {
+        return this.waterLevel;
+    }
+
     setWaterLevel(level) {
         this.waterLevel = level;
         if (this.waterLevel < 0) {

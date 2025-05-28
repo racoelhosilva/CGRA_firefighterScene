@@ -197,6 +197,12 @@ export class MyScene extends CGFscene {
       }
     }
 
+    if (this.gui.isKeyPressed("KeyO")) {
+      text += " O ";
+      keysPressed = true;
+      this.helicopter.openBucket();
+    }
+
     if (this.gui.isKeyPressed("KeyR")) {
       text += " R ";
       keysPressed = true;
