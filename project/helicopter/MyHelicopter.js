@@ -29,6 +29,7 @@ export class MyHelicopter extends CGFobject {
         this.flyingHeight = flyingHeight;
 
         this.bucketHeight = 0;
+        this.hasWater = false;
 
         this.tilt = 0;
         this.rotorAngle = 0;
@@ -148,6 +149,12 @@ export class MyHelicopter extends CGFobject {
         return this.state;
     }
 
+    isOverLake(center, radius) {
+        const dx = this.position[0] - center[0];
+        const dz = this.position[2] - center[2];
+        return (this.velocity[0] == 0 && this.velocity[1] == 0) && (dx * dx + dz * dz) <= (radius * radius);
+    }
+
     turn(orientationDelta) {
         this.orientation += orientationDelta;
         this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
@@ -170,6 +177,14 @@ export class MyHelicopter extends CGFobject {
         if (this.state === "STATIONARY") {
             this.state = "LIFTING";
             this.animDuration = 0;
+        }
+    }
+
+    lower() {
+        if (this.state === "FLYING") {
+            this.state = "LOWERING1";
+            this.animDuration = 0;
+            this.position[1] = this.BUCKET_HEIGHT - 8;
         }
     }
 
@@ -320,5 +335,6 @@ export class MyHelicopter extends CGFobject {
         this.rotorAngle = 0;
         this.rotorSpeed = 0;
         this.state = "STATIONARY";
+        this.animationAngle2 = 0;
     }
 }

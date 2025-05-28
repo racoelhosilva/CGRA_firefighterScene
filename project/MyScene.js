@@ -102,6 +102,10 @@ export class MyScene extends CGFscene {
     this.helipadMaterial.setTexture(this.helipadTexture);
     this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
 
+    // Lake Properties
+    this.lakeRadius = 75;
+    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 0];
+
     // Lake Texture
     this.lakeTexture = new CGFtexture(this, 'textures/water.png');
     this.lakeMaterial = new CGFappearance(this);
@@ -120,7 +124,7 @@ export class MyScene extends CGFscene {
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
-    this.lake = new MyLake(this, 75, [-150, this.Z_CLASHING_OFFSET, 0], this.lakeMaterial);
+    this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
     this.t = new Date().getTime();
   }
@@ -186,7 +190,11 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyL")) {
       text += " L ";
       keysPressed = true;
-      this.helicopter.land();
+      if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
+        this.helicopter.lower()
+      } else {
+        this.helicopter.land();
+      }
     }
 
     if (this.gui.isKeyPressed("KeyR")) {
