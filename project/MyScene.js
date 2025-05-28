@@ -97,7 +97,7 @@ export class MyScene extends CGFscene {
     this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
     // Helipad Texture
-    this.helipadTexture = new CGFtexture(this, "textures/helipad.jpeg");
+    this.helipadTexture = new CGFtexture(this, "textures/helipad.png");
     this.helipadMaterial = new CGFappearance(this);
     this.helipadMaterial.setAmbient(0.3, 0.3, 0.3, 1);
     this.helipadMaterial.setShininess(1.0);

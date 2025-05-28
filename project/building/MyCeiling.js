@@ -42,7 +42,10 @@ export class MyCeiling extends CGFobject {
             this.scene.pushMatrix();
             this.scene.translate(this.helipadXSpacing, this.scene.Z_CLASHING_OFFSET, this.helipadSize + this.helipadZSpacing);
             this.scene.rotate(-Math.PI / 2, 1, 0, 0);
+            this.scene.gl.enable(this.scene.gl.BLEND);
+            this.scene.gl.blendFunc(this.scene.gl.SRC_ALPHA, this.scene.gl.ONE_MINUS_SRC_ALPHA);
             this.helipad.display();
+            this.scene.gl.disable(this.scene.gl.BLEND);
             this.scene.popMatrix();
 
             this.lightMaterial.apply();
