@@ -64,4 +64,20 @@ export class MyFire extends CGFobject {
   collidesWith(position) {
     return this.squaredLength(this.difference(position, center)) < this.radius * this.radius * 0.8;
   }
+
+  static generateFires(scene, topLeft, bottomRight, numFires, texture) {
+    const fires = [];
+
+    for (let i = 0; i < numFires; i++) {
+      const radius = 10 + Math.random() * (30 - 10);
+      const height = radius * 1.5;
+      const centerX = Math.random() * (bottomRight[0] - topLeft[0]) + topLeft[0];
+      const centerZ = Math.random() * (bottomRight[2] - topLeft[2]) + topLeft[2];
+      const centerY = 0;  // Ground level
+
+      fires.push(new MyFire(scene, radius, height, 20, [centerX, centerY, centerZ], texture));
+    }
+
+    return fires;
+  }
 }
