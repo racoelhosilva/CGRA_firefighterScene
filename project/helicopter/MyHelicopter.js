@@ -183,8 +183,8 @@ export class MyHelicopter extends CGFobject {
             this.state = "LIFTING";
             this.animDuration = 0;
         } else if (this.state === "LOWERING1") {
-            this.state = "LIFTING";
-            this.animDuration = 0;
+            this.state = "FLYING";
+            this.position[1] = this.initPosition[1] + this.flyingHeight;
         }
     }
 
