@@ -25,7 +25,7 @@ export class MyTree extends CGFobject {
 
   buildTrunc(trunkRadius, height) {
     const realRadius = (height + this.rootHeight) * trunkRadius / height;
-    return new MyCone(this.scene, 32, realRadius, height + this.rootHeight);
+    return new MyCone(this.scene, 8, realRadius, height + this.rootHeight);
   }
 
   buildTruncMaterial() {
