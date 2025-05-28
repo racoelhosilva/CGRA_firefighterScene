@@ -21,13 +21,6 @@ export class MyCeiling extends CGFobject {
         // Helipad Light
         this.lightSize = 1;
         this.light = new MyCube(this.scene, this.lightSize);
-
-        // Light Material
-        this.lightMaterial = new CGFappearance(this.scene);
-        this.lightMaterial.setAmbient(0.0, 0.0, 0.0, 1);
-        this.lightMaterial.setDiffuse(0.0, 0.0, 0.0, 1);
-        this.lightMaterial.setSpecular(0.0, 0.0, 0.0, 1);
-        this.lightMaterial.setShininess(10.0);
     }
 
     display(helipad) {
@@ -48,10 +41,7 @@ export class MyCeiling extends CGFobject {
             this.scene.gl.disable(this.scene.gl.BLEND);
             this.scene.popMatrix();
 
-            this.lightMaterial.apply();
-            if (["up", "down"].includes(this.scene.helicopterMovement)) {
-                this.scene.setActiveShader(this.scene.pulsatingShader);
-            }
+            this.scene.setActiveShader(this.scene.pulsatingShader);
             this.scene.pushMatrix();
             this.scene.translate(- 0.5 * this.lightSize, 0, 0.5 * this.lightSize);
             for (let i = 0; i < 4; i++) {

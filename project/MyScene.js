@@ -228,14 +228,14 @@ export class MyScene extends CGFscene {
     this.helicopter.update(deltaT);
 
     if (["STATIONARY", "FLYING", "OPEN", "LAKE"].includes(this.helicopter.getState())) {
-      this.helicopterMovement = "free";
+      this.movePhase = 0;
     } else if (["LIFTING", "RISING"].includes(this.helicopter.getState())) {
-      this.helicopterMovement = "up";
+      this.movePhase = 1;
     } else { // LOWERING, LANDING
-      this.helicopterMovement = "down";
+      this.movePhase = 2;
     }
 
-    this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100 });
+    this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
   }
 
   setDefaultAppearance() {
