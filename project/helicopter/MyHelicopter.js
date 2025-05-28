@@ -161,6 +161,7 @@ export class MyHelicopter extends CGFobject {
     openBucket() {
         if (this.state === "FLYING" && this.waterBucket.getWaterLevel() > 0) {
             this.state = "OPEN";
+
             this.waterBucket.openBucket();
         }
     }
@@ -347,10 +348,12 @@ export class MyHelicopter extends CGFobject {
                     this.bucketHeight = 0;
                 }
                 this.waterBucket.updateCableHeight(this.bucketHeight);
-                break;                
-            case "LAKE":
-                this.waterBucket.updateWaterLevel(0.002 * t);
                 break;
+
+            case "LAKE":
+                this.waterBucket.updateWaterLevel(0.001 * t);
+                break;
+
             case "OPEN":
                 this.waterBucket.updateParticles(t);
 
@@ -358,7 +361,9 @@ export class MyHelicopter extends CGFobject {
                     this.waterBucket.closeBucket();
                 } else {
                     this.waterBucket.addParticles(3);
-                    this.waterBucket.updateWaterLevel(-0.008 * t);
+                    this.waterBucket.updateWaterLevel(-0.003 * t);
+                    this.scene.fires.filter(fire => fire.collidesWith([this.position[0], 0, this.position[2]]))
+                        .forEach(fire => fire.setHeightFactor(Math.max(0, fire.getHeightFactor() - 0.001 * t)));
                 }
 
                 if (this.waterBucket.particles.length == 0) {

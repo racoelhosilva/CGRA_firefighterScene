@@ -40,9 +40,8 @@ export class MyBlaze extends CGFobject {
   }
 
   buildRandomTopVertex(baseVertex1, baseVertex2) {
-    const y = (Math.random() ** 2) * this.height;
+    const y = Math.random() ** 1.4 * this.height;
     const [x, z] = [(baseVertex1[0] + baseVertex2[0]) / 2, (baseVertex1[2] + baseVertex2[2]) / 2];
-
     return [x, y, z];
   }
 
