@@ -29,3 +29,8 @@
     <figcaption>Fig. 5: Screenshot of Helicopter step 4.3</figcaption>
 </figure>
 
+<figure>
+    <img src="./screenshots/project-t13g01-6.png" alt="Project step 5">
+    <figcaption>Fig. 6: Screenshot of Lake and Fire step 5</figcaption>
+</figure>
+
