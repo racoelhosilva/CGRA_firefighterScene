@@ -122,7 +122,7 @@ export class MyScene extends CGFscene {
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial, this.doorMaterial, this.bannerMaterial, this.helipadMaterial);
 
-    this.forest = new MyForest(this, 7, 7, this.truncTexture, this.crownTexture);
+    this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
