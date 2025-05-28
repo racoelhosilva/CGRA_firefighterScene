@@ -9,6 +9,7 @@ export class MyWaterBucket extends CGFobject {
         this.radius = radius;
         this.height = height;
         this.cableHeight = cableHeight;
+        this.isOpen = false;
 
         this.bucket = new MyCylinder(this.scene, this.radius, this.height, 8, 2, true);
         this.base = new MyRegularPolygon(this.scene, 8, this.radius, true);
@@ -43,9 +44,17 @@ export class MyWaterBucket extends CGFobject {
         this.bucketMaterial.apply();
         this.bucket.display();
 
-        this.scene.pushMatrix();
-        this.base.display();
-        this.scene.popMatrix();
+        if (this.isOpen) {
+            this.scene.pushMatrix();
+            this.scene.rotate(Math.PI, 1, 0, 0);
+            this.waterMaterial.apply();
+            this.water.display();
+            this.scene.popMatrix();
+        } else {
+            this.scene.pushMatrix();
+            this.base.display();
+            this.scene.popMatrix();
+        }
 
         if (this.waterLevel > 0) {
             this.scene.pushMatrix();
@@ -66,6 +75,14 @@ export class MyWaterBucket extends CGFobject {
 
     updateCableHeight(newHeight) {
         this.cableHeight = newHeight;
+    }
+
+    openBucket() {
+        this.isOpen = true;
+    }
+
+    closeBucket() {
+        this.isOpen = false;
     }
 
     getWaterLevel() {

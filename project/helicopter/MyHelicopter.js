@@ -160,6 +160,7 @@ export class MyHelicopter extends CGFobject {
     openBucket() {
         if (this.state === "FLYING" && this.waterBucket.getWaterLevel() > 0) {
             this.state = "OPEN";
+            this.waterBucket.openBucket();
         }
     }
 
@@ -353,6 +354,7 @@ export class MyHelicopter extends CGFobject {
                 this.waterBucket.updateWaterLevel(-0.008 * t);
                 if (this.waterBucket.getWaterLevel() == 0) {
                     this.state = "FLYING";
+                    this.waterBucket.closeBucket();
                 }
                 break;
         }
