@@ -2,13 +2,15 @@ import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyFloor extends CGFobject {
-    constructor(scene, width, depth, height, windows, windowMaterial) {
+    constructor(scene, width, depth, height, windows, windowMaterial, doorMaterial, bannerMaterial) {
         super(scene);
         this.width = width;
         this.depth = depth;
         this.height = height;
         this.windows = windows;
         this.windowMaterial = windowMaterial;
+        this.doorMaterial = doorMaterial;
+        this.bannerMaterial = bannerMaterial;
 
         // Floor
         this.xFloor = new MyRectangle(this.scene, depth, height);
@@ -25,25 +27,10 @@ export class MyFloor extends CGFobject {
         this.doorWidth = width / 5;
         this.door = new MyRectangle(this.scene, this.doorWidth, this.doorHeight);
 
-        this.doorTexture = new CGFtexture(this.scene, "textures/door.png");
-        this.doorAppearance = new CGFappearance(this.scene);
-        this.doorAppearance.setAmbient(0.3, 0.3, 0.3, 1);
-        this.doorAppearance.setShininess(1.0);
-        this.doorAppearance.setTexture(this.doorTexture);
-        this.doorAppearance.setTextureWrap("REPEAT", "REPEAT");
-
         // Banner
         this.bannerWidth = width / 2;
         this.bannerHeight = height / 5;
         this.banner = new MyRectangle(this.scene, this.bannerWidth, this.bannerHeight);
-
-        this.bannerTexture = new CGFtexture(this.scene, "textures/banner.png");
-        this.bannerAppearance = new CGFappearance(this.scene);
-        this.bannerAppearance.setAmbient(0.3, 0.3, 0.3, 1);
-        this.bannerAppearance.setShininess(1.0);
-        this.bannerAppearance.setTexture(this.bannerTexture);
-        this.bannerAppearance.setTextureWrap("REPEAT", "REPEAT");
-
     }
 
     display(displayWindows) {
@@ -80,13 +67,13 @@ export class MyFloor extends CGFobject {
             }
             this.scene.popMatrix();
         } else {
-            this.doorAppearance.apply();
+            this.doorMaterial.apply();
             this.scene.pushMatrix();
             this.scene.translate(this.width / 2 - this.doorWidth / 2, 0, this.depth + this.scene.Z_CLASHING_OFFSET);
             this.door.display();
             this.scene.popMatrix();
 
-            this.bannerAppearance.apply();
+            this.bannerMaterial.apply();
             this.scene.pushMatrix();
             this.scene.translate(this.width / 2 - this.bannerWidth / 2, (this.height - this.doorHeight - this.bannerHeight) / 2 + this.doorHeight, this.depth + 0.05);
             this.banner.display();
