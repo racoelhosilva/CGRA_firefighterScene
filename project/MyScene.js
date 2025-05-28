@@ -104,6 +104,12 @@ export class MyScene extends CGFscene {
     this.helipadMaterial.setTexture(this.helipadTexture);
     this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
 
+    this.upTexture = new CGFtexture(this, "textures/helipad_up.png");
+    this.downTexture = new CGFtexture(this, "textures/helipad_down.png");
+
+    // Helipad Shader
+    this.movementShader = new CGFshader(this.gl, 'shaders/movement.vert', 'shaders/movement.frag');
+
     // Helipad Lights
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
 
@@ -123,7 +129,12 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this, 20, 1);
     this.plane = new MyPlane(this, 64);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial, this.doorMaterial, this.bannerMaterial, this.helipadMaterial);
+    this.building = new MyBuilding(this, 
+      this.buildingSize, 
+      this.floorNumber, this.windowNumber, 
+      this.windowMaterial, this.buildingMaterial, 
+      this.doorMaterial, this.bannerMaterial, 
+      this.helipadMaterial, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 2, 2, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
@@ -236,6 +247,7 @@ export class MyScene extends CGFscene {
     }
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
+    this.movementShader.setUniformsValues({ phase: this.movePhase, default:0, textureUp : 1, textureDown : 2 });
   }
 
   setDefaultAppearance() {

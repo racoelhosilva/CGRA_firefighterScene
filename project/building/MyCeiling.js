@@ -1,13 +1,15 @@
-import { CGFappearance, CGFobject } from "../../lib/CGF.js";
+import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
 import { MyCube } from "../component/MyCube.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyCeiling extends CGFobject {
-    constructor(scene, width, depth, helipadMaterial) {
+    constructor(scene, width, depth, helipadMaterial, upTexture, downTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
         this.helipadMaterial = helipadMaterial;
+        this.upTexture = upTexture;
+        this.downTexture = downTexture;
 
         // Ceiling
         this.ceiling = new MyRectangle(this.scene, width, depth);
@@ -32,6 +34,9 @@ export class MyCeiling extends CGFobject {
 
         if (helipad) {
             this.helipadMaterial.apply();
+            this.upTexture.bind(1);
+            this.downTexture.bind(2);
+            this.scene.setActiveShader(this.scene.movementShader);
             this.scene.pushMatrix();
             this.scene.translate(this.helipadXSpacing, this.scene.Z_CLASHING_OFFSET, this.helipadSize + this.helipadZSpacing);
             this.scene.rotate(-Math.PI / 2, 1, 0, 0);
@@ -40,6 +45,7 @@ export class MyCeiling extends CGFobject {
             this.helipad.display();
             this.scene.gl.disable(this.scene.gl.BLEND);
             this.scene.popMatrix();
+            this.scene.setActiveShader(this.scene.defaultShader);
 
             this.scene.setActiveShader(this.scene.pulsatingShader);
             this.scene.pushMatrix();
