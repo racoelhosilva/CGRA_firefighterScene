@@ -126,7 +126,7 @@ export class MyScene extends CGFscene {
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
-    this.fire = new MyFire(this, 20, 30, 30, [10, 0, 100], this.fireTexture);
+    this.fire = new MyFire(this, 20, 30, 30, [10, 0, 10], this.fireTexture);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 

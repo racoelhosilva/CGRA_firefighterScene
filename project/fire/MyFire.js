@@ -17,6 +17,7 @@ export class MyFire extends CGFobject {
     this.material.setTexture(texture);
 
     this.blazes = this.buildBlazes();
+    this.heightFactor = 1.0;
   }
 
   buildBlazes() {
@@ -27,13 +28,21 @@ export class MyFire extends CGFobject {
     return blazes;
   }
 
+  getHeightFactor() {
+    return this.heightFactor;
+  }
+
+  setHeightFactor(heightFactor) {
+    this.heightFactor = heightFactor;
+  }
+
   display() {
     this.scene.pushMatrix();
     this.scene.translate(this.center[0], this.center[1], this.center[2]);
+    this.scene.scale(1, this.heightFactor, 1);
 
     this.scene.gl.enable(this.scene.gl.BLEND);
     this.scene.gl.blendFunc(this.scene.gl.SRC_ALPHA, this.scene.gl.ONE_MINUS_SRC_ALPHA);
-
 
     for (let i = 0; i < this.numBlazes; i++) {
       this.blazes[i].display();
