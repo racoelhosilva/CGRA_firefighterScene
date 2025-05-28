@@ -30,7 +30,7 @@ export class MyBlaze extends CGFobject {
 
   buildColor(topVertex) {
     let green = this.FIRE_MIN_GREEN + ((this.height - topVertex[1]) / this.height) * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN);
-    return [this.FIRE_RED, green, this.FIRE_BLUE, 0.5];
+    return [this.FIRE_RED, green, this.FIRE_BLUE, 0.7];
   }
 
   buildRandomVertex(low) {
