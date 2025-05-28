@@ -4,7 +4,7 @@ import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
-import { MyBlaze } from "./fire/MyBlaze.js";
+import { MyFire } from "./fire/MyFire.js";
 
 /**
  * MyScene
@@ -88,7 +88,7 @@ export class MyScene extends CGFscene {
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
-    this.fire = new MyBlaze(this, 50, 50, 20, null);
+    this.fire = new MyFire(this, 20, 30, 30, null);
 
     this.t = new Date().getTime();
   }
@@ -269,6 +269,7 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.forest.display();
+
     this.fire.display();
 
     this.pushMatrix();

@@ -1,4 +1,4 @@
-import { CGFappearance, CGFobject } from '../../lib/CGF.js';
+import { CGFobject } from '../../lib/CGF.js';
 import { MyTriangle } from '../component/MyTriangle.js';
 
 export class MyBlaze extends CGFobject {
@@ -7,61 +7,43 @@ export class MyBlaze extends CGFobject {
   FIRE_MIN_GREEN = 0.0;
   FIRE_MAX_GREEN = 0.8;
 
-  constructor(scene, radius, height, numTriangles, texture) {
+  constructor(scene, radius, height, material) {
     super(scene);
 
     this.radius = radius;
     this.height = height;
-    this.numTriangles = numTriangles;
+    this.material = material;
 
-    this.material = new CGFappearance(scene);
-    this.material.setSpecular(0.0, 0.0, 0.0, 1.0);
-    this.material.setDiffuse(0.0, 0.0, 0.0, 1.0);
-    this.material.setAmbient(0.0, 0.0, 0.0, 1.0);
-    this.material.setTexture(texture);
-
-    this.triangles = this.buildTriangles();
-    this.triangleGreens = this.buildTriangleGreens();
+    this.triangle = this.buildTriangle();
+    this.color = this.buildColor(this.triangle.p3);
   }
 
-  buildTriangles() {
-    const triangles = [];
+  buildTriangle() {
+    const p1 = this.buildRandomVertex(true);
+    const p2 = this.buildRandomVertex(true);
+    const p3 = this.buildRandomVertex(false);
+    p3[0] = (p1[0] + p2[0]) / 2;
+    p3[2] = (p1[2] + p2[2]) / 2;
 
-    for (let i = 0; i < this.numTriangles; i++) {
-      const p1 = this.buildRandomVertex();
-      const p2 = this.buildRandomVertex();
-      const p3 = this.buildRandomVertex();
-
-      triangles.push(new MyTriangle(this.scene, p1, p2, p3, true));
-    }
-
-    return triangles;
+    return new MyTriangle(this.scene, p1, p2, p3, true);
   }
 
-  buildRandomVertex() {
-    const y = Math.random() ** 2 * this.height;
+  buildColor(topVertex) {
+    let green = this.FIRE_MIN_GREEN + ((this.height - topVertex[1]) / this.height) * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN);
+    return [this.FIRE_RED, green, this.FIRE_BLUE, 0.5];
+  }
+
+  buildRandomVertex(low) {
+    const y = Math.random() ** 2 * (low ? 0.05 : 1) * this.height;
     const [r, theta] = [Math.random() * this.radius, Math.random() * 2 * Math.PI];
     const [x, z] = [r * Math.cos(theta), r * Math.sin(theta)];
 
     return [x, y, z];
   }
 
-  buildTriangleGreens() {
-    const greens = [];
-
-    for (let i = 0; i < this.numTriangles; i++) {
-      greens.push(this.FIRE_MIN_GREEN + Math.random() * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN));
-    }
-
-    return greens;
-  }
-
   display() {
-    for (let i = 0; i < this.numTriangles; i++) {
-      this.material.setEmission(this.FIRE_RED, this.triangleGreens[i], this.FIRE_BLUE, 1.0);
-      this.material.apply();
-
-      this.triangles[i].display();
-    }
+    this.material.setEmission(...this.color);
+    this.material.apply();
+    this.triangle.display();
   }
 }
