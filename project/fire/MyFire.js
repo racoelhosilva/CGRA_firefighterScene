@@ -58,11 +58,11 @@ export class MyFire extends CGFobject {
   }
 
   squaredLength(v) {
-    return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
+    return v[0] * v[0] + v[2] * v[2];
   }
 
   collidesWith(position) {
-    return this.squaredLength(this.difference(position, center)) < this.radius * this.radius * 0.8;
+    return this.squaredLength(this.difference(position, this.center)) < this.radius * this.radius;
   }
 
   static generateFires(scene, topLeft, bottomRight, numFires, texture) {
