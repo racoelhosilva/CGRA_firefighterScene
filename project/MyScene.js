@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance, CGFshader } from "../lib/CGF.js";
 import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
@@ -104,6 +104,9 @@ export class MyScene extends CGFscene {
     this.helipadMaterial.setTexture(this.helipadTexture);
     this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
 
+    // Helipad Lights
+    this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
+
     // Lake Properties
     this.lakeRadius = 75;
     this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 0];
@@ -122,7 +125,7 @@ export class MyScene extends CGFscene {
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
     this.building = new MyBuilding(this, this.buildingSize, this.floorNumber, this.windowNumber, this.windowMaterial, this.buildingMaterial, this.doorMaterial, this.bannerMaterial, this.helipadMaterial);
 
-    this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest = new MyForest(this, 2, 2, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
@@ -223,6 +226,16 @@ export class MyScene extends CGFscene {
 
     this.checkKeys(deltaT);
     this.helicopter.update(deltaT);
+
+    if (["STATIONARY", "FLYING", "OPEN", "LAKE"].includes(this.helicopter.getState())) {
+      this.helicopterMovement = "free";
+    } else if (["LIFTING", "RISING"].includes(this.helicopter.getState())) {
+      this.helicopterMovement = "up";
+    } else { // LOWERING, LANDING
+      this.helicopterMovement = "down";
+    }
+
+    this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100 });
   }
 
   setDefaultAppearance() {
