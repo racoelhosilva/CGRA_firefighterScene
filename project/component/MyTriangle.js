@@ -102,8 +102,6 @@ export class MyTriangle extends CGFobject {
     this.pushVertices();
     this.pushFaces();
 
-    console.log(this.vertices, this.texCoords, this.normals, this.indices)
-
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
   }

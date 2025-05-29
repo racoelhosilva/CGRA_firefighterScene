@@ -23,7 +23,7 @@ export class MyBlaze extends CGFobject {
     const p2 = this.buildRandomBaseVertex();
     const p3 = this.buildRandomTopVertex(p1, p2);
 
-    return new MyTriangle(this.scene, p1, p2, p3, 4, true);
+    return new MyTriangle(this.scene, p1, p2, p3, 7, true);
   }
 
   buildColor(topVertex) {
@@ -32,11 +32,10 @@ export class MyBlaze extends CGFobject {
   }
 
   buildRandomBaseVertex() {
-    const y = Math.random() * 0.05 * this.height;
     const [r, theta] = [Math.random() * this.radius, Math.random() * 2 * Math.PI];
     const [x, z] = [r * Math.cos(theta), r * Math.sin(theta)];
 
-    return [x, y, z];
+    return [x, 0, z];
   }
 
   buildRandomTopVertex(baseVertex1, baseVertex2) {

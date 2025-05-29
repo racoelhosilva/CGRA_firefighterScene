@@ -2,7 +2,7 @@ import { CGFappearance, CGFobject } from '../../lib/CGF.js';
 import { MyBlaze } from './MyBlaze.js';
 
 export class MyFire extends CGFobject {
-  constructor(scene, radius, height, numBlazes, center, texture) {
+  constructor(scene, radius, height, numBlazes, center, texture, shader) {
     super(scene);
 
     this.radius = radius;
@@ -15,6 +15,8 @@ export class MyFire extends CGFobject {
     this.material.setDiffuse(0.0, 0.0, 0.0, 0.0);
     this.material.setSpecular(0.0, 0.0, 0.0, 0.0);
     this.material.setTexture(texture);
+
+    this.shader = shader;
 
     this.blazes = this.buildBlazes();
     this.heightFactor = 1.0;
@@ -41,6 +43,7 @@ export class MyFire extends CGFobject {
     this.scene.translate(this.center[0], this.center[1], this.center[2]);
     this.scene.scale(1, this.heightFactor, 1);
 
+    this.scene.setActiveShader(this.shader);
     this.scene.gl.enable(this.scene.gl.BLEND);
     this.scene.gl.blendFunc(this.scene.gl.SRC_ALPHA, this.scene.gl.ONE_MINUS_SRC_ALPHA);
 
@@ -49,6 +52,7 @@ export class MyFire extends CGFobject {
     }
 
     this.scene.gl.disable(this.scene.gl.BLEND);
+    this.scene.setActiveShader(this.scene.defaultShader);
 
     this.scene.popMatrix();
   }
@@ -65,7 +69,7 @@ export class MyFire extends CGFobject {
     return this.squaredLength(this.difference(position, this.center)) < this.radius * this.radius;
   }
 
-  static generateFires(scene, topLeft, bottomRight, numFires, texture) {
+  static generateFires(scene, topLeft, bottomRight, numFires, texture, shader) {
     const fires = [];
 
     for (let i = 0; i < numFires; i++) {
@@ -75,7 +79,7 @@ export class MyFire extends CGFobject {
       const centerZ = Math.random() * (bottomRight[2] - topLeft[2]) + topLeft[2];
       const centerY = 0;  // Ground level
 
-      fires.push(new MyFire(scene, radius, height, 20, [centerX, centerY, centerZ], texture));
+      fires.push(new MyFire(scene, radius, height, 20, [centerX, centerY, centerZ], texture, shader));
     }
 
     return fires;
