@@ -31,7 +31,7 @@ export class MyHelicopter extends CGFobject {
         this.flyingHeight = flyingHeight;
 
         this.bucketHeight = 0;
-        this.lakeHeight = this.BUCKET_HEIGHT - 8;
+        this.lakeHeight = this.BUCKET_HEIGHT - 14;
 
         this.tilt = 0;
         this.rotorAngle = 0;

@@ -6,6 +6,7 @@ import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
 import { MyLake } from "./lake/MyLake.js";
+import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
 
 /**
  * MyScene
@@ -138,6 +139,7 @@ export class MyScene extends CGFscene {
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
+    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
 
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
@@ -327,17 +329,20 @@ export class MyScene extends CGFscene {
 
     this.setDefaultAppearance();
 
-    this.pushMatrix();
-    this.scale(800, 1, 800);
-    this.rotate(-Math.PI / 2, 1, 0, 0);
     this.planeMask.apply();
     this.waterMap.bind(1);
     this.grassTexture.bind(2);
     this.lakeTexture.bind(3);
+
+    this.pushMatrix();
+    this.scale(800, 1, 800);
+    this.rotate(-Math.PI / 2, 1, 0, 0);
+
     this.setActiveShader(this.planeShader);
     this.plane.display();
-    this.setActiveShader(this.defaultShader);
+
     this.popMatrix();
+    this.setActiveShader(this.defaultShader);
 
     this.pushMatrix();
     this.translate(this.buildingX, 0, this.buildingZ);
@@ -352,6 +357,7 @@ export class MyScene extends CGFscene {
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 
     this.fires.forEach(fire => fire.display());
+    this.helicopterMarker.display();
 
     this.gl.disable(this.gl.BLEND);
   }
