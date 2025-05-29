@@ -140,7 +140,8 @@ export class MyScene extends CGFscene {
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
-    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture);
+    this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
+    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
@@ -241,6 +242,7 @@ export class MyScene extends CGFscene {
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
     this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
+    this.fireShader.setUniformsValues({ timeFactor: t / 200 % 100 })
   }
 
   setDefaultAppearance() {
@@ -337,15 +339,15 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.forest.display();
+    this.helicopter.display();
+    this.lake.display();
+
+    // Transparent object should be displayed at the end to prevent hiding objects behind transparency
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 
     this.fires.forEach(fire => fire.display());
 
-    this.pushMatrix();
-    this.helicopter.display();
-    this.popMatrix();
-
-    this.pushMatrix();
-    this.lake.display();
-    this.popMatrix();
+    this.gl.disable(this.gl.BLEND);
   }
 }
