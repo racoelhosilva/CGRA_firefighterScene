@@ -34,3 +34,8 @@
     <figcaption>Fig. 6: Screenshot of Lake and Fire step 5</figcaption>
 </figure>
 
+<figure>
+    <img src="./screenshots/project-t13g01-7.png" alt="Project step 6.1">
+    <figcaption>Fig. 6: Screenshot of Fire Ondulation step 6.1</figcaption>
+</figure>
+

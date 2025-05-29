@@ -152,6 +152,16 @@ export class MyHelicopter extends CGFobject {
         return this.state;
     }
 
+    getMovePhase() {
+        if (this.state == "LIFTING") { // up
+            return 1;
+        } else if (this.state == "LANDING5") { // down
+            return 2;
+        } else {
+            return 0;
+        }
+    }
+
     isOverLake(center, radius) {
         const dx = this.position[0] - center[0];
         const dz = this.position[2] - center[2];
@@ -164,6 +174,10 @@ export class MyHelicopter extends CGFobject {
 
             this.waterBucket.openBucket();
         }
+    }
+
+    isEmpty() {
+        return this.waterBucket.getWaterLevel() == 0;
     }
 
     turn(orientationDelta) {
