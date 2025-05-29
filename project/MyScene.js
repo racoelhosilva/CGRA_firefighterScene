@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance, CGFshader } from "../lib/CGF.js";
 import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
@@ -48,11 +48,16 @@ export class MyScene extends CGFscene {
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
     this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
 
-    this.grassMaterial = new CGFappearance(this);
-    this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.grassMaterial.setShininess(1.0);
-    this.grassMaterial.loadTexture('textures/grass.jpg');
-    this.grassMaterial.setTextureWrap('REPEAT', 'REPEAT');
+    this.planeMask = new CGFappearance(this);
+    this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.planeMask.setShininess(1.0);
+    this.planeMask.loadTexture('textures/plane_mask.png');
+    this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
+    this.planeShader.setUniformsValues({ grassTexture: 1, lakeTexture: 2 });
+
+    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
     // Building Properties
     this.buildingSize = 100;
@@ -105,16 +110,11 @@ export class MyScene extends CGFscene {
     this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
 
     // Lake Properties
-    this.lakeRadius = 75;
-    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 0];
+    this.lakeRadius = 150;
+    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 150];
 
     // Lake Texture
     this.lakeTexture = new CGFtexture(this, 'textures/water.png');
-    this.lakeMaterial = new CGFappearance(this);
-    this.lakeMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.lakeMaterial.setShininess(1.0);
-    this.lakeMaterial.setTexture(this.lakeTexture);
-    this.lakeMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
@@ -309,8 +309,12 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.scale(800, 1, 800);
     this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.grassMaterial.apply();
+    this.planeMask.apply();
+    this.grassTexture.bind(1);
+    this.lakeTexture.bind(2);
+    this.setActiveShader(this.planeShader);
     this.plane.display();
+    this.setActiveShader(this.defaultShader);
     this.popMatrix();
 
     this.pushMatrix();
@@ -326,8 +330,8 @@ export class MyScene extends CGFscene {
     this.helicopter.display();
     this.popMatrix();
 
-    this.pushMatrix();
-    this.lake.display();
-    this.popMatrix();
+    //this.pushMatrix();
+    //this.lake.display();
+    //this.popMatrix();
   }
 }
