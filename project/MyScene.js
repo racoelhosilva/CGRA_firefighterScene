@@ -136,7 +136,7 @@ export class MyScene extends CGFscene {
       this.doorMaterial, this.bannerMaterial, 
       this.helipadMaterial, this.upTexture, this.downTexture);
 
-    this.forest = new MyForest(this, 2, 2, this.truncTexture, this.crownTexture);
+    this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.setHelicopterInitPos();
 
@@ -210,7 +210,7 @@ export class MyScene extends CGFscene {
       keysPressed = true;
       if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
         this.helicopter.lower()
-      } else {
+      } else if (this.helicopter.isEmpty()){
         this.helicopter.land();
       }
     }

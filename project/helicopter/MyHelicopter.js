@@ -153,12 +153,12 @@ export class MyHelicopter extends CGFobject {
     }
 
     getMovePhase() {
-        if (["STATIONARY", "FLYING", "OPEN", "LAKE"].includes(this.state)) {
-            return 0;
-        } else if (["LIFTING", "RISING"].includes(this.state)) {
+        if (this.state == "LIFTING") { // up
             return 1;
-        } else { // LOWERING, LANDING
+        } else if (this.state == "LANDING5") { // down
             return 2;
+        } else {
+            return 0;
         }
     }
 
@@ -174,6 +174,10 @@ export class MyHelicopter extends CGFobject {
 
             this.waterBucket.openBucket();
         }
+    }
+
+    isEmpty() {
+        return this.waterBucket.getWaterLevel() == 0;
     }
 
     turn(orientationDelta) {
