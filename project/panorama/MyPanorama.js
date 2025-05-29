@@ -2,7 +2,7 @@ import { CGFappearance, CGFobject } from "../../lib/CGF.js";
 import { MySphere } from "../component/MySphere.js";
 
 export class MyPanorama extends CGFobject {
-  RADIUS = 1000;
+  RADIUS = 2000;
 
   constructor(scene, stacks, slices, texture) {
     super(scene);

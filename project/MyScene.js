@@ -6,6 +6,7 @@ import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
 import { MyLake } from "./lake/MyLake.js";
+import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
 
 /**
  * MyScene
@@ -48,11 +49,15 @@ export class MyScene extends CGFscene {
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
     this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
 
-    this.grassMaterial = new CGFappearance(this);
-    this.grassMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.grassMaterial.setShininess(1.0);
-    this.grassMaterial.loadTexture('textures/grass.jpg');
-    this.grassMaterial.setTextureWrap('REPEAT', 'REPEAT');
+    this.planeMask = new CGFappearance(this);
+    this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.planeMask.setShininess(1.0);
+    this.planeMask.loadTexture('textures/plane_mask.png');
+    this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
+
+    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
     // Building Properties
     this.buildingSize = 100;
@@ -114,30 +119,27 @@ export class MyScene extends CGFscene {
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
 
     // Lake Properties
-    this.lakeRadius = 75;
-    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 0];
+    this.lakeRadius = 150;
+    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 150];
 
     // Lake Texture
+    this.waterMap = new CGFtexture(this, 'textures/water_map.png');
     this.lakeTexture = new CGFtexture(this, 'textures/water.png');
-    this.lakeMaterial = new CGFappearance(this);
-    this.lakeMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.lakeMaterial.setShininess(1.0);
-    this.lakeMaterial.setTexture(this.lakeTexture);
-    this.lakeMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.plane = new MyPlane(this, 64);
+    this.plane = new MyPlane(this, 128);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.building = new MyBuilding(this, 
-      this.buildingSize, 
-      this.floorNumber, this.windowNumber, 
-      this.windowMaterial, this.buildingMaterial, 
-      this.doorMaterial, this.bannerMaterial, 
+    this.building = new MyBuilding(this,
+      this.buildingSize,
+      this.floorNumber, this.windowNumber,
+      this.windowMaterial, this.buildingMaterial,
+      this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
+    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
 
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
@@ -211,7 +213,7 @@ export class MyScene extends CGFscene {
       keysPressed = true;
       if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
         this.helicopter.lower()
-      } else if (this.helicopter.isEmpty()){
+      } else {
         this.helicopter.land();
       }
     }
@@ -242,7 +244,8 @@ export class MyScene extends CGFscene {
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
     this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
-    this.fireShader.setUniformsValues({ timeFactor: t / 200 % 100 })
+    this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
+    this.planeShader.setUniformsValues({ waterMap: 1, grassTexture: 2, lakeTexture: 3, timeFactor: t  / 400000.0 % 1.0 });
   }
 
   setDefaultAppearance() {
@@ -326,12 +329,20 @@ export class MyScene extends CGFscene {
 
     this.setDefaultAppearance();
 
+    this.planeMask.apply();
+    this.waterMap.bind(1);
+    this.grassTexture.bind(2);
+    this.lakeTexture.bind(3);
+
     this.pushMatrix();
     this.scale(800, 1, 800);
     this.rotate(-Math.PI / 2, 1, 0, 0);
-    this.grassMaterial.apply();
+
+    this.setActiveShader(this.planeShader);
     this.plane.display();
+
     this.popMatrix();
+    this.setActiveShader(this.defaultShader);
 
     this.pushMatrix();
     this.translate(this.buildingX, 0, this.buildingZ);
@@ -340,13 +351,13 @@ export class MyScene extends CGFscene {
 
     this.forest.display();
     this.helicopter.display();
-    this.lake.display();
 
     // Transparent object should be displayed at the end to prevent hiding objects behind transparency
     this.gl.enable(this.gl.BLEND);
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 
     this.fires.forEach(fire => fire.display());
+    this.helicopterMarker.display();
 
     this.gl.disable(this.gl.BLEND);
   }
