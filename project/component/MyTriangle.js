@@ -1,34 +1,44 @@
 import { CGFobject } from "../../lib/CGF.js";
 
 export class MyTriangle extends CGFobject {
-  constructor(scene, p1, p2, p3, doubleSided = false) {
+  constructor(scene, p1, p2, p3, complexity = 0, doubleSided = false) {
     super(scene);
     this.p1 = p1;
     this.p2 = p2;
     this.p3 = p3;
+    this.complexity = complexity;
     this.doubleSided = doubleSided;
 
     this.initBuffers();
   }
 
   pushVertices() {
-    this.vertices.push(
-      ...this.p1,
-      ...this.p2,
-      ...this.p3
-    )
+    const normal = this.normalize(this.crossProduct(this.difference(this.p2, this.p1), this.difference(this.p3, this.p1)));
 
-    this.texCoords.push(
-      0, 1,
-      1, 1,
-      0.5, 0
-    );
+    for (let i = 0; i <= this.complexity + 1; i++) {
+      for (let j = 0; j <= this.complexity - i + 1; j++) {
+        const u = i / (this.complexity + 1);
+        const v = j / (this.complexity + 1);
+        const w = (this.complexity + 1 - i - j) / (this.complexity + 1);
 
-    this.normals.push(
-      ...this.normalize(this.crossProduct(this.difference(this.p2, this.p1), this.difference(this.p3, this.p1))),
-      ...this.normalize(this.crossProduct(this.difference(this.p3, this.p2), this.difference(this.p1, this.p2))),
-      ...this.normalize(this.crossProduct(this.difference(this.p1, this.p3), this.difference(this.p2, this.p3)))
-    );
+        this.vertices.push(
+          u * this.p1[0] + v * this.p2[0] + w * this.p3[0],
+          u * this.p1[1] + v * this.p2[1] + w * this.p3[1],
+          u * this.p1[2] + v * this.p2[2] + w * this.p3[2]
+        );
+
+        this.texCoords.push(
+          u * 0 + v * 1 + w * 0.5,
+          u * 1 + v * 1 + w * 0
+        );
+
+        this.normals.push(
+          ...normal,
+          ...normal,
+          ...normal
+        );
+      }
+    }
 
     if (this.doubleSided) {
       this.vertices.push(...this.vertices);
@@ -62,31 +72,35 @@ export class MyTriangle extends CGFobject {
     ];
   }
 
-  initBuffers() {
-    this.vertices = [
-      ...this.p1,
-      ...this.p2,
-      ...this.p3
-    ];
+  pushFaces() {
+    for (let i = 0; i < this.complexity + 1; i++) {
+      for (let j = 0; j < this.complexity - i + 1; j++) {
+        const a = i * (2 * this.complexity - i + 3) / 2 + j;
+        const b = a + 1;
+        const c = a + (this.complexity - i + 2);
 
-    this.indices = [
-      0, 1, 2
-    ];
-    if (this.doubleSided) {
-      this.indices.push(0, 2, 1);
+        this.indices.push(a, b, c);
+        if (j < this.complexity - i) {
+          const d = c + 1;
+          this.indices.push(b, d, c);
+        }
+      }
     }
 
-    this.normals = [
-      0, 0, 1,
-      0, 0, 1,
-      0, 0, 1
-    ];
+    if (this.doubleSided) {
+      const halfVertices = this.vertices.length / 6;
+      this.indices.push(...this.indices.map(index => index + halfVertices).reverse());
+    }
+  }
 
-    this.texCoords = [
-      0, 1,
-      1, 1,
-      0.5, 0
-    ];
+  initBuffers() {
+    this.vertices = [];
+    this.texCoords = [];
+    this.normals = [];
+    this.indices = [];
+
+    this.pushVertices();
+    this.pushFaces();
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
