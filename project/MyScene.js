@@ -55,7 +55,6 @@ export class MyScene extends CGFscene {
     this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
 
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
-    this.planeShader.setUniformsValues({ grassTexture: 1, lakeTexture: 2 });
 
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
@@ -123,17 +122,18 @@ export class MyScene extends CGFscene {
     this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 150];
 
     // Lake Texture
+    this.waterMap = new CGFtexture(this, 'textures/water_map.png');
     this.lakeTexture = new CGFtexture(this, 'textures/water.png');
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.plane = new MyPlane(this, 64);
+    this.plane = new MyPlane(this, 128);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.building = new MyBuilding(this, 
-      this.buildingSize, 
-      this.floorNumber, this.windowNumber, 
-      this.windowMaterial, this.buildingMaterial, 
-      this.doorMaterial, this.bannerMaterial, 
+    this.building = new MyBuilding(this,
+      this.buildingSize,
+      this.floorNumber, this.windowNumber,
+      this.windowMaterial, this.buildingMaterial,
+      this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
@@ -242,7 +242,8 @@ export class MyScene extends CGFscene {
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
     this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
-    this.fireShader.setUniformsValues({ timeFactor: t / 200 % 100 })
+    this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
+    this.planeShader.setUniformsValues({ waterMap: 1, grassTexture: 2, lakeTexture: 3, timeFactor: t  / 400000.0 % 1.0 });
   }
 
   setDefaultAppearance() {
@@ -330,8 +331,9 @@ export class MyScene extends CGFscene {
     this.scale(800, 1, 800);
     this.rotate(-Math.PI / 2, 1, 0, 0);
     this.planeMask.apply();
-    this.grassTexture.bind(1);
-    this.lakeTexture.bind(2);
+    this.waterMap.bind(1);
+    this.grassTexture.bind(2);
+    this.lakeTexture.bind(3);
     this.setActiveShader(this.planeShader);
     this.plane.display();
     this.setActiveShader(this.defaultShader);
