@@ -219,7 +219,7 @@ export class MyHelicopter extends CGFobject {
     }
 
     land() {
-        if (this.state === "FLYING" && this.helicopter.isEmpty()) {
+        if (this.state === "FLYING" && this.isEmpty()) {
             const atStart = this.position[0] !== this.initPosition[0] || this.position[2] !== this.initPosition[2];
             this.state = atStart ? "LANDING1" : "LANDING4";
 
