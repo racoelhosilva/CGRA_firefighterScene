@@ -39,6 +39,9 @@ export class MyFire extends CGFobject {
   }
 
   display() {
+    if (this.heightFactor == 0)
+      return;  // If height factor is 0, no need to display
+
     this.scene.pushMatrix();
     this.scene.translate(this.center[0], this.center[1], this.center[2]);
     this.scene.scale(1, this.heightFactor, 1);
