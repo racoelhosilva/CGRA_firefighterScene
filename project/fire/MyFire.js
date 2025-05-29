@@ -47,16 +47,12 @@ export class MyFire extends CGFobject {
     this.scene.scale(1, this.heightFactor, 1);
 
     this.scene.setActiveShader(this.shader);
-    this.scene.gl.enable(this.scene.gl.BLEND);
-    this.scene.gl.blendFunc(this.scene.gl.SRC_ALPHA, this.scene.gl.ONE_MINUS_SRC_ALPHA);
 
     for (let i = 0; i < this.numBlazes; i++) {
       this.blazes[i].display();
     }
 
-    this.scene.gl.disable(this.scene.gl.BLEND);
     this.scene.setActiveShader(this.scene.defaultShader);
-
     this.scene.popMatrix();
   }
 

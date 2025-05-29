@@ -321,15 +321,15 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.forest.display();
+    this.helicopter.display();
+    this.lake.display();
+
+    // Transparent object should be displayed at the end to prevent hiding objects behind transparency
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 
     this.fires.forEach(fire => fire.display());
 
-    this.pushMatrix();
-    this.helicopter.display();
-    this.popMatrix();
-
-    this.pushMatrix();
-    this.lake.display();
-    this.popMatrix();
+    this.gl.disable(this.gl.BLEND);
   }
 }
