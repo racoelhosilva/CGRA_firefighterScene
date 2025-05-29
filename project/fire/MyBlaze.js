@@ -15,6 +15,7 @@ export class MyBlaze extends CGFobject {
 
     this.triangle = this.buildTriangle();
     this.green = this.buildGreen(this.triangle.p3);
+    this.randomFactor = 0.5 + Math.random() * 1.5;
   }
 
   buildTriangle() {
@@ -43,7 +44,7 @@ export class MyBlaze extends CGFobject {
   }
 
   display() {
-    this.fire.shader.setUniformsValues({ green: this.green });
+    this.fire.shader.setUniformsValues({ green: this.green, randomFactor: this.randomFactor });
     this.material.apply();
     this.triangle.display();
   }
