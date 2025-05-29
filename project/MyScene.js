@@ -237,17 +237,10 @@ export class MyScene extends CGFscene {
 
     this.checkKeys(deltaT);
     this.helicopter.update(deltaT);
-
-    if (["STATIONARY", "FLYING", "OPEN", "LAKE"].includes(this.helicopter.getState())) {
-      this.movePhase = 0;
-    } else if (["LIFTING", "RISING"].includes(this.helicopter.getState())) {
-      this.movePhase = 1;
-    } else { // LOWERING, LANDING
-      this.movePhase = 2;
-    }
+    this.movePhase = this.helicopter.getMovePhase();
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, default:0, textureUp : 1, textureDown : 2 });
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
   }
 
   setDefaultAppearance() {

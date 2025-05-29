@@ -152,6 +152,16 @@ export class MyHelicopter extends CGFobject {
         return this.state;
     }
 
+    getMovePhase() {
+        if (["STATIONARY", "FLYING", "OPEN", "LAKE"].includes(this.state)) {
+            return 0;
+        } else if (["LIFTING", "RISING"].includes(this.state)) {
+            return 1;
+        } else { // LOWERING, LANDING
+            return 2;
+        }
+    }
+
     isOverLake(center, radius) {
         const dx = this.position[0] - center[0];
         const dz = this.position[2] - center[2];
