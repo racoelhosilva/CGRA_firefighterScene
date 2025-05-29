@@ -224,7 +224,7 @@ export class MyScene extends CGFscene {
 
     this.checkKeys(deltaT);
     this.helicopter.update(deltaT);
-    this.fireShader.setUniformsValues({ timeFactor: t / 100 % 100 })
+    this.fireShader.setUniformsValues({ timeFactor: t / 200 % 100 })
   }
 
   setDefaultAppearance() {
