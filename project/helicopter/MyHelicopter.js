@@ -169,11 +169,14 @@ export class MyHelicopter extends CGFobject {
     }
 
     openBucket() {
-        if (this.state === "FLYING" && this.waterBucket.getWaterLevel() > 0) {
-            this.state = "OPEN";
+        if (this.state !== "FLYING" || this.waterBucket.getWaterLevel() == 0)
+            return;
 
-            this.waterBucket.openBucket();
-        }
+        if (!this.scene.fires.some(fire => fire.collidesWith([this.position[0], 0, this.position[2]])))
+            return;
+
+        this.state = "OPEN";
+        this.waterBucket.openBucket();
     }
 
     isEmpty() {
@@ -216,7 +219,7 @@ export class MyHelicopter extends CGFobject {
     }
 
     land() {
-        if (this.state === "FLYING") {
+        if (this.state === "FLYING" && this.helicopter.isEmpty()) {
             const atStart = this.position[0] !== this.initPosition[0] || this.position[2] !== this.initPosition[2];
             this.state = atStart ? "LANDING1" : "LANDING4";
 

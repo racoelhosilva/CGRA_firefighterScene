@@ -213,7 +213,7 @@ export class MyScene extends CGFscene {
       keysPressed = true;
       if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
         this.helicopter.lower()
-      } else if (this.helicopter.isEmpty()){
+      } else {
         this.helicopter.land();
       }
     }

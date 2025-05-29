@@ -17,7 +17,7 @@ export class MyHelicopterMarker extends CGFobject {
   }
 
   display() {
-    if (this.helicopter.waterBucket.waterLevel == 0)
+    if (this.helicopter.isEmpty())
       return; // Do not display marker if helicopter has no water
 
     this.material.apply();
