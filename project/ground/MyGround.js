@@ -7,7 +7,7 @@ export class MyGround extends CGFobject {
     super(scene);
 
     this.side = side;
-    this.plane = new MyPlane(scene, 128);
+    this.plane = new MyPlane(scene, 255);
 
     this.material = new CGFappearance(this.scene);
     this.material.setAmbient(1.0, 1.0, 1.0, 1.0);

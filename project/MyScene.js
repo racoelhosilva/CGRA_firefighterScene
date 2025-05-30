@@ -121,7 +121,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.ground = new MyGround(this, 800, 'textures/plane_mask.png', this.waterMap, this.grassTexture, this.lakeTexture, this.planeShader);
+    this.ground = new MyGround(this, 800, 'textures/plane_mask-2.png', this.waterMap, this.grassTexture, this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.floorNumber, this.windowNumber,
