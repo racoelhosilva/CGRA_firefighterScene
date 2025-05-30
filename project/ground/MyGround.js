@@ -3,7 +3,7 @@ import { MyPlane } from "../MyPlane.js";
 
 
 export class MyGround extends CGFobject {
-  constructor(scene, side, planeMaskPath, waterMap, grassTex, lakeTex, shader) {
+  constructor(scene, side, planeMaskPath, waterMap, elevationMap, grassTex, lakeTex, shader) {
     super(scene);
 
     this.side = side;
@@ -16,9 +16,17 @@ export class MyGround extends CGFobject {
     this.material.setTextureWrap('REPEAT', 'REPEAT');
 
     this.waterMap = waterMap;
+    this.elevationMap = elevationMap;
     this.grassTex = grassTex;
     this.lakeTex = lakeTex;
     this.shader = shader;
+
+    this.shader.setUniformsValues({
+      waterMap: 1,
+      elevationMap: 2,
+      grassTexture: 3,
+      lakeTexture: 4
+    });
 
     this.buildLakeMap(planeMaskPath);
   }
@@ -47,8 +55,10 @@ export class MyGround extends CGFobject {
 
     this.material.apply();
     this.waterMap.bind(1);
-    this.grassTex.bind(2);
-    this.lakeTex.bind(3);
+    this.elevationMap.bind(2);
+    this.grassTex.bind(3);
+    this.lakeTex.bind(4);
+
     this.scene.setActiveShader(this.shader);
 
     this.plane.display();
