@@ -10,7 +10,7 @@ uniform float timeFactor;
 void main() {
     vec4 maskColor = texture2D(mask, vTextureCoord);
     vec4 grassColor = texture2D(grassTexture, vTextureCoord);
-    vec4 lakeColor = texture2D(lakeTexture, mod(vTextureCoord + timeFactor, 1.0));
+    vec4 lakeColor = texture2D(lakeTexture, mod(vTextureCoord + 0.003 * sin(400.0 * timeFactor), 1.0));
 
     float maskValue = maskColor.r;
     gl_FragColor = mix(lakeColor, grassColor, maskValue);
