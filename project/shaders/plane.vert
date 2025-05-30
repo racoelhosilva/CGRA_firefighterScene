@@ -19,9 +19,9 @@ void main(void) {
     float maskValue = maskColor.r;
 
     if (maskValue < 0.5) {
-        vec2 mapPos = mod(aTextureCoord * 0.2 + timeFactor, 1.0);
+        vec2 mapPos = mod(aTextureCoord * 0.1 + timeFactor, 1.0);
         vec4 mapColor = texture2D(waterMap, mapPos);
-        newPosition.z -= mapColor.r * 15.0;
+        newPosition.z -= mapColor.r * 4.0;
     }
 
     gl_Position = uPMatrix * uMVMatrix * vec4(newPosition, 1.0);
