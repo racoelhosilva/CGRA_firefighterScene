@@ -203,7 +203,7 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyL")) {
       text += " L ";
       keysPressed = true;
-      if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
+      if (this.ground.isAboveWater(this.helicopter.position)) {
         this.helicopter.lower()
       } else {
         this.helicopter.land();
