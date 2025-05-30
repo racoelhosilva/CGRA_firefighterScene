@@ -7,6 +7,7 @@ import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
 import { MyLake } from "./lake/MyLake.js";
 import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
+import { MyGround } from "./ground/MyGround.js";
 
 /**
  * MyScene
@@ -35,29 +36,25 @@ export class MyScene extends CGFscene {
     this.enableTextures(true);
     this.appearance = new CGFappearance(this);
 
-    this.groundTex = new CGFtexture(this, "textures/ground.png");
-		this.appearance.setTexture(this.groundTex);
-		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+    // TODO(Process-ing): Why is this here?
+    // this.groundTex = new CGFtexture(this, "textures/ground.png");
+		// this.appearance.setTexture(this.groundTex);
+		// this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
-    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
-
-    this.planeMask = new CGFappearance(this);
-    this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.planeMask.setShininess(1.0);
-    this.planeMask.loadTexture('textures/plane_mask.png');
-    this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
+    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg');
+    this.waterMap = new CGFtexture(this, 'textures/water_map.png');
+    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
 
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
-
-    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
     // Building Properties
     this.buildingSize = 100;
@@ -122,14 +119,10 @@ export class MyScene extends CGFscene {
     this.lakeRadius = 150;
     this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 150];
 
-    // Lake Texture
-    this.waterMap = new CGFtexture(this, 'textures/water_map.png');
-    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
-
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.plane = new MyPlane(this, 128);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
+    this.ground = new MyGround(this, 800, 'textures/plane_mask.png', this.waterMap, this.grassTexture, this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.floorNumber, this.windowNumber,
@@ -160,7 +153,7 @@ export class MyScene extends CGFscene {
     this.camera = new CGFcamera(
       0.4,
       0.1,
-      2000,
+      2200,
       vec3.fromValues(300, 300, 300),
       vec3.fromValues(-50, 0, -100)
     );
@@ -322,27 +315,10 @@ export class MyScene extends CGFscene {
 
     this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
 
-    this.panorama.display();
-
-    // Draw axis
     this.axis.display();
 
-    this.setDefaultAppearance();
-
-    this.planeMask.apply();
-    this.waterMap.bind(1);
-    this.grassTexture.bind(2);
-    this.lakeTexture.bind(3);
-
-    this.pushMatrix();
-    this.scale(800, 1, 800);
-    this.rotate(-Math.PI / 2, 1, 0, 0);
-
-    this.setActiveShader(this.planeShader);
-    this.plane.display();
-
-    this.popMatrix();
-    this.setActiveShader(this.defaultShader);
+    this.panorama.display();
+    this.ground.display();
 
     this.pushMatrix();
     this.translate(this.buildingX, 0, this.buildingZ);
