@@ -24,9 +24,9 @@ export class MyWaterBucket extends CGFobject {
 
         // Water material
         this.waterMaterial = new CGFappearance(this.scene);
-        this.waterMaterial.setAmbient(0.1, 0.1, 0.8, 1.0);
-        this.waterMaterial.setDiffuse(0.1, 0.1, 0.8, 1.0);
-        this.waterMaterial.setSpecular(0.2, 0.2, 0.8, 1.0);
+        this.waterMaterial.setAmbient(0.173,0.325,0.4, 1.0);
+        this.waterMaterial.setDiffuse(0.173,0.325,0.4, 1.0);
+        this.waterMaterial.setSpecular(0.173,0.325,0.4, 1.0);
         this.waterMaterial.setShininess(10);
         
         this.bucketMaterial = new CGFappearance(this.scene);
@@ -73,6 +73,7 @@ export class MyWaterBucket extends CGFobject {
         this.cable.display();
         this.scene.popMatrix();
     
+        this.waterMaterial.apply();
         for (let particle of this.particles) {
             this.scene.pushMatrix();
             this.scene.translate(particle.position[0], particle.position[1] - this.positionHeight, particle.position[2]);
