@@ -17,31 +17,48 @@ export class MyInterface extends CGFinterface {
         // https://github.com/dataarts/dat.gui/blob/master/API.md
         this.gui = new dat.GUI();
 
-        // Building Properties
-        this.gui.add(this.scene, 'buildingSize', 75, 150, 1).name("Building Size").onChange(this.scene.updateBuildingSize.bind(this.scene)).step(1);
-        this.gui.add(this.scene, 'floorNumber', 2, 5, 1).name("Num of Floors").onChange(this.scene.updateFloorNumber.bind(this.scene)).step(1);
-        this.gui.add(this.scene, 'windowNumber', 1, 4, 1).name("Num of Windows").onChange(this.scene.updateWindowNumber.bind(this.scene)).step(1);
-        this.gui.add(this.scene, 'backWindows').name("Back Windows").onChange(this.scene.updateBackWindows.bind(this.scene));
-        this.gui.add(this.scene, 'selectedBannerTexture', this.scene.bannerTexturesIds).name('Selected Banner Texture').onChange(this.scene.updateBannerTexture.bind(this.scene));
-        this.gui.add(this.scene, 'selectedDoorTexture', this.scene.doorTexturesIds).name('Selected Door Texture').onChange(this.scene.updateDoorTexture.bind(this.scene));
-        this.gui.add(this.scene, 'selectedWindowTexture', this.scene.windowTexturesIds).name('Selected Window Texture').onChange(this.scene.updateWindowTexture.bind(this.scene));
-        this.gui.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingColor.bind(this.scene));
-        this.gui.addColor(this.scene,'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
-        this.gui.addColor(this.scene,'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
-        this.gui.add(this.scene, 'treeRows', 1, 10, 1).name("Tree Rows").onChange(this.scene.resetForest.bind(this.scene)).step(1);
-        this.gui.add(this.scene, 'treeCols', 1, 10, 1).name("Tree Columns").onChange(this.scene.resetForest.bind(this.scene)).step(1);
-        this.gui.addColor(this.scene, 'darkTree').name("Dark Tree").onChange(this.scene.resetForest.bind(this.scene));
-        this.gui.addColor(this.scene, 'lightTree').name("Light Tree").onChange(this.scene.resetForest.bind(this.scene));
-        this.gui.add(this.scene, 'resetForest').name("Reset Forest");
-        this.gui.add(this.scene, 'numFires', 0, 20, 2).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene));
-        this.gui.add(this.scene, 'resetFire').name("Reset Fire");
-        this.gui.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
-        this.gui.add(this.scene, 'selectedPanoramaTexture', this.scene.panoramaTextureIds).name("Panorama Texture").onChange(this.scene.updatePanoramaTexture.bind(this.scene));
-        this.gui.add(this.scene, 'selectedGrassTexture', this.scene.grassTexturesIds).name('Selected Grass Texture').onChange(this.scene.updateGrassTexture.bind(this.scene));
-        this.gui.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
-        this.gui.add(this.scene, 'selectedPreset', this.scene.presetIds).name('Preset').onChange(this.scene.applyPreset.bind(this.scene));
+        // Panorama
+        const panoramaFolder = this.gui.addFolder("Panorama Settings");
+        panoramaFolder.add(this.scene, 'selectedPanoramaTexture', this.scene.panoramaTextureIds).name("Panorama Texture").onChange(this.scene.updatePanoramaTexture.bind(this.scene));
 
-        this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene)).step(0.1);
+        // Plane
+        const planeFolder = this.gui.addFolder("Plane Settings");
+        planeFolder.add(this.scene, 'selectedGrassTexture', this.scene.grassTexturesIds).name('Selected Grass Texture').onChange(this.scene.updateGrassTexture.bind(this.scene));
+        planeFolder.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
+        
+        // Building
+        const buildingFolder = this.gui.addFolder("Building Settings");
+        buildingFolder.add(this.scene, 'buildingSize', 75, 150, 1).name("Building Size").onChange(this.scene.updateBuildingSize.bind(this.scene)).step(1);
+        buildingFolder.add(this.scene, 'floorNumber', 2, 5, 1).name("Num of Floors").onChange(this.scene.updateFloorNumber.bind(this.scene)).step(1);
+        buildingFolder.add(this.scene, 'windowNumber', 1, 4, 1).name("Num of Windows").onChange(this.scene.updateWindowNumber.bind(this.scene)).step(1);
+        buildingFolder.add(this.scene, 'backWindows').name("Back Windows").onChange(this.scene.updateBackWindows.bind(this.scene));
+        buildingFolder.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingColor.bind(this.scene));
+        buildingFolder.add(this.scene, 'selectedBannerTexture', this.scene.bannerTexturesIds).name('Selected Banner Texture').onChange(this.scene.updateBannerTexture.bind(this.scene));
+        buildingFolder.add(this.scene, 'selectedDoorTexture', this.scene.doorTexturesIds).name('Selected Door Texture').onChange(this.scene.updateDoorTexture.bind(this.scene));
+        buildingFolder.add(this.scene, 'selectedWindowTexture', this.scene.windowTexturesIds).name('Selected Window Texture').onChange(this.scene.updateWindowTexture.bind(this.scene));
+
+        // Helicopter
+        const helicopterFolder = this.gui.addFolder("Helicopter Settings");
+        helicopterFolder.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene)).step(0.1);
+        helicopterFolder.addColor(this.scene,'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
+        helicopterFolder.addColor(this.scene,'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
+        helicopterFolder.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
+
+        // Forest
+        const forestFolder = this.gui.addFolder("Forest Settings");
+        forestFolder.add(this.scene, 'treeRows', 1, 10, 1).name("Tree Rows").onChange(this.scene.resetForest.bind(this.scene)).step(1);
+        forestFolder.add(this.scene, 'treeCols', 1, 10, 1).name("Tree Columns").onChange(this.scene.resetForest.bind(this.scene)).step(1);
+        forestFolder.addColor(this.scene, 'darkTree').name("Dark Tree").onChange(this.scene.resetForest.bind(this.scene));
+        forestFolder.addColor(this.scene, 'lightTree').name("Light Tree").onChange(this.scene.resetForest.bind(this.scene));
+        forestFolder.add(this.scene, 'resetForest').name("Reset Forest");
+
+        // Fire
+        const fireFolder = this.gui.addFolder("Fire Settings");
+        fireFolder.add(this.scene, 'numFires', 0, 20, 2).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene));
+        fireFolder.add(this.scene, 'resetFire').name("Reset Fire");
+        
+        // Preset
+        this.gui.add(this.scene, 'selectedPreset', this.scene.presetIds).name('Preset').onChange(this.scene.applyPreset.bind(this.scene));
 
         this.initKeys();
 
