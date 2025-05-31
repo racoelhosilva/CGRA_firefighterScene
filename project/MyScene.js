@@ -1,12 +1,12 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance, CGFshader } from "../lib/CGF.js";
 import { MyPanorama } from "./panorama/MyPanorama.js";
-import { MyPlane } from "./MyPlane.js";
 import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
 import { MyLake } from "./lake/MyLake.js";
 import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
+import { MyGround } from "./ground/MyGround.js";
 
 /**
  * MyScene
@@ -35,34 +35,31 @@ export class MyScene extends CGFscene {
     this.enableTextures(true);
     this.appearance = new CGFappearance(this);
 
-    this.groundTex = new CGFtexture(this, "textures/ground.png");
-		this.appearance.setTexture(this.groundTex);
-		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+    // TODO(Process-ing): Why is this here?
+    // this.groundTex = new CGFtexture(this, "textures/ground.png");
+		// this.appearance.setTexture(this.groundTex);
+		// this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
 
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
-    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
-
-    this.planeMask = new CGFappearance(this);
-    this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.planeMask.setShininess(1.0);
-    this.planeMask.loadTexture('textures/plane_mask.png');
-    this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
+    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg');
+    this.waterMap = new CGFtexture(this, 'textures/water_map.png');
+    this.elevationMap = new CGFtexture(this, 'textures/elevation_map.png');
+    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
 
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
-
-    this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
     // Building Properties
     this.buildingSize = 100;
     this.buildingX = -50;
-    this.buildingZ = -100;
+    this.buildingZ = -150;
     this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
@@ -114,6 +111,7 @@ export class MyScene extends CGFscene {
 
     // Helipad Shader
     this.movementShader = new CGFshader(this.gl, 'shaders/movement.vert', 'shaders/movement.frag');
+    this.movementShader.setUniformsValues({ timeFactor: 0, phase: 0, blinking: true, default: 0, textureUp : 1, textureDown : 2 });
 
     // Helipad Lights
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
@@ -122,14 +120,10 @@ export class MyScene extends CGFscene {
     this.lakeRadius = 150;
     this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 150];
 
-    // Lake Texture
-    this.waterMap = new CGFtexture(this, 'textures/water_map.png');
-    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
-
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.plane = new MyPlane(this, 128);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
+    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTexture, this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.floorNumber, this.windowNumber,
@@ -137,17 +131,23 @@ export class MyScene extends CGFscene {
       this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
-    this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest1 = new MyForest(this, 150, 150, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest2 = new MyForest(this, 150, 150, 4, 4, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
 
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
-    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader);
+    const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader)
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], 2, this.fireTexture, this.fireShader);
+    this.fires = fires1.concat(fires2);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
     this.t = new Date().getTime();
+
+    this.view = "FREE";
+    this.viewIds = { 'Free': "FREE", 'Helicopter': "HELICOPTER" };
   }
 
   initLights() {
@@ -155,16 +155,28 @@ export class MyScene extends CGFscene {
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].enable();
     this.lights[0].update();
+
+    this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
   }
+
+  getInitialCameraPosition() {
+    return vec3.fromValues(250, 250, 250);
+  }
+
+  getInitialCameraTarget() {
+    return vec3.fromValues(-50, 20, -150);
+  }
+
   initCameras() {
     this.camera = new CGFcamera(
       0.4,
       0.1,
-      2000,
-      vec3.fromValues(300, 300, 300),
-      vec3.fromValues(-50, 0, -100)
+      2200,
+      this.getInitialCameraPosition(),
+      this.getInitialCameraTarget()
     );
   }
+
   checkKeys(deltaT) {
     var text = "Keys pressed: ";
     var keysPressed = false;
@@ -211,7 +223,8 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyL")) {
       text += " L ";
       keysPressed = true;
-      if (this.helicopter.isOverLake(this.lakeCenter, this.lakeRadius)) {
+
+      if (this.ground.isAboveWater(this.helicopter.position)) {
         this.helicopter.lower()
       } else {
         this.helicopter.land();
@@ -243,9 +256,9 @@ export class MyScene extends CGFscene {
     this.movePhase = this.helicopter.getMovePhase();
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0)});
     this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
-    this.planeShader.setUniformsValues({ waterMap: 1, grassTexture: 2, lakeTexture: 3, timeFactor: t  / 400000.0 % 1.0 });
+    this.planeShader.setUniformsValues({ timeFactor: t / 400000.0 % 100 });
   }
 
   setDefaultAppearance() {
@@ -309,6 +322,15 @@ export class MyScene extends CGFscene {
     this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor));
   }
 
+  updateView() {
+    switch (this.view) {
+      case "PLANE":
+        this.camera.setPosition(this.getInitialCameraPosition());
+        this.camera.setTarget(this.getInitialCameraTarget());
+        break;
+    }
+  }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -317,39 +339,40 @@ export class MyScene extends CGFscene {
     // Initialize Model-View matrix as identity (no transformation
     this.updateProjectionMatrix();
     this.loadIdentity();
+
+    if (this.view == "HELICOPTER") {
+      const offset = 220;
+      const cameraPos = vec3.fromValues(
+        this.helicopter.position[0] - Math.cos(this.helicopter.orientation) * offset,
+        this.helicopter.position[1] + offset,
+        this.helicopter.position[2] + Math.sin(this.helicopter.orientation) * offset
+      );
+
+      this.camera.setPosition(cameraPos);
+      this.camera.setTarget(this.helicopter.position);
+    }
+
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
-    this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
-
-    this.panorama.display();
-
-    // Draw axis
+    this.setDefaultAppearance();
     this.axis.display();
 
-    this.setDefaultAppearance();
-
-    this.planeMask.apply();
-    this.waterMap.bind(1);
-    this.grassTexture.bind(2);
-    this.lakeTexture.bind(3);
-
-    this.pushMatrix();
-    this.scale(800, 1, 800);
-    this.rotate(-Math.PI / 2, 1, 0, 0);
-
-    this.setActiveShader(this.planeShader);
-    this.plane.display();
-
-    this.popMatrix();
-    this.setActiveShader(this.defaultShader);
+    this.panorama.display();
+    this.ground.display();
 
     this.pushMatrix();
     this.translate(this.buildingX, 0, this.buildingZ);
     this.building.display();
     this.popMatrix();
 
-    this.forest.display();
+    this.forest1.display();
+
+    this.pushMatrix();
+    this.translate(150, 0, 100);
+    this.forest2.display();
+    this.popMatrix();
+
     this.helicopter.display();
 
     // Transparent object should be displayed at the end to prevent hiding objects behind transparency

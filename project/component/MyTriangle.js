@@ -73,15 +73,15 @@ export class MyTriangle extends CGFobject {
   }
 
   pushFaces() {
-    for (let i = 0; i < this.complexity + 1; i++) {
-      for (let j = 0; j < this.complexity - i + 1; j++) {
-        const a = i * (2 * this.complexity - i + 3) / 2 + j;
-        const b = a + 1;
-        const c = a + (this.complexity - i + 2);
+    for (let u = 0; u < this.complexity + 1; u++) {
+      for (let v = 0; v < this.complexity - u + 1; v++) {
+        const a = u * (this.complexity + 3 - (u + 1) / 2) + v;
+        const b = a + this.complexity - u + 2;
+        const c = a + 1;
 
         this.indices.push(a, b, c);
-        if (j < this.complexity - i) {
-          const d = c + 1;
+        if (v < this.complexity - u) {
+          const d = b + 1;
           this.indices.push(b, d, c);
         }
       }

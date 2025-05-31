@@ -76,9 +76,10 @@ export class MyHelicopter extends CGFobject {
     display() {
         this.scene.pushMatrix();
 
-        this.scene.translate(0, 7.4, 0);
         this.scene.translate(...this.position);
 
+        // this.scene.scale(0.5, 0.5, 0.5);
+        this.scene.translate(0, 7.4, 0);
         this.scene.rotate(this.orientation, 0, 1, 0);
 
         this.scene.pushMatrix();
@@ -162,12 +163,6 @@ export class MyHelicopter extends CGFobject {
         }
     }
 
-    isOverLake(center, radius) {
-        const dx = this.position[0] - center[0];
-        const dz = this.position[2] - center[2];
-        return (this.velocity[0] == 0 && this.velocity[1] == 0) && (dx * dx + dz * dz) <= (radius * radius);
-    }
-
     openBucket() {
         if (this.state !== "FLYING" || this.waterBucket.getWaterLevel() == 0)
             return;
@@ -212,14 +207,14 @@ export class MyHelicopter extends CGFobject {
     }
 
     lower() {
-        if (this.state === "FLYING") {
+        if (this.state === "FLYING" && this.velocityNorm === 0) {
             this.state = "LOWERING";
             this.animDuration = 0;
         }
     }
 
     land() {
-        if (this.state === "FLYING" && this.isEmpty()) {
+        if (this.state === "FLYING" && this.isEmpty() && this.velocityNorm === 0) {
             const atStart = this.position[0] !== this.initPosition[0] || this.position[2] !== this.initPosition[2];
             this.state = atStart ? "LANDING1" : "LANDING4";
 

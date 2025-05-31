@@ -4,21 +4,23 @@ import { MyTree } from "./MyTree.js";
 export class MyForest extends CGFobject {
   MIN_RADIUS
   MAX_TILT = Math.PI / 18;
-  MIN_RADIUS = 1.5;
-  MAX_RADIUS = 2.5;
-  MIN_HEIGHT = 20;
-  MAX_HEIGHT = 25;
+  MIN_RADIUS = 3;
+  MAX_RADIUS = 5;
+  MIN_HEIGHT = 35;
+  MAX_HEIGHT = 50;
   MIN_COLOR = [0.0, 0.3, 0.0];
   MAX_COLOR = [0.15, 0.5, 0.1];
 
   GRID_SQUARE_SIZE = 20;
   POS_MAX_OFFSET = 6;
 
-  constructor(scene, rows, columns, truncMaterial, crownMaterial) {
+  constructor(scene, width, height, rows, columns, truncMaterial, crownMaterial) {
     super(scene);
 
     this.rows = rows;
     this.columns = columns;
+    this.width = width;
+    this.height = height;
 
     this.trees = this.buildTrees(rows, columns, truncMaterial, crownMaterial);
     this.displacements = this.buildDisplacements(rows, columns);
@@ -77,8 +79,8 @@ export class MyForest extends CGFobject {
     const dz = this.randomBetween(-this.POS_MAX_OFFSET, this.POS_MAX_OFFSET);
 
     return [
-      (col + 0.5 - this.columns / 2) * this.GRID_SQUARE_SIZE + dx,
-      (row + 0.5 - this.rows / 2) * this.GRID_SQUARE_SIZE + dz
+      (col + 0.5 - this.columns / 2) * this.width / this.columns + dx,
+      (row + 0.5 - this.rows / 2) * this.height / this.rows + dz
     ];
   }
 
