@@ -92,12 +92,7 @@ export class MyScene extends CGFscene {
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
     this.numFires = 6;
 
-    this.planeMask = new CGFappearance(this);
-    this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.planeMask.setShininess(1.0);
-    this.planeMask.loadTexture('textures/plane_mask.png');
-    this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
-
+    this.planeMaskPath = 'textures/plane_mask.png';
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
     this.maxElevation = 50.0;
     this.updateMaxElevation();
@@ -167,7 +162,7 @@ export class MyScene extends CGFscene {
 
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
 
-    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
+    this.ground = new MyGround(this, 800, this.planeMaskPath, this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
 
     this.building = new MyBuilding(this,
       this.buildingSize,
