@@ -1,4 +1,4 @@
-import { CGFobject, CGFappearance } from "../../lib/CGF.js";
+import { CGFobject } from "../../lib/CGF.js";
 import { MyCylinder } from "../component/MyCylinder.js";
 import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
@@ -7,7 +7,7 @@ export class MySkid extends CGFobject {
 
     constructor(scene, right, skidMaterial) {
         super(scene);
-     
+
         this.right = right;
 
         this.skidMaterial = skidMaterial;
@@ -19,7 +19,7 @@ export class MySkid extends CGFobject {
 
     display() {
         this.skidMaterial.apply();
-        
+
         this.scene.pushMatrix();
         this.scene.rotate(this.right ? -Math.PI / 6 : Math.PI / 6, 1, 0, 0);
         this.scene.translate(this.LENGTH / 4, 0, 0);

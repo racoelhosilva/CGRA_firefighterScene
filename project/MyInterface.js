@@ -34,7 +34,7 @@ export class MyInterface extends CGFinterface {
         buildingFolder.add(this.scene, 'floorNumber', 2, 5, 1).name("Num of Floors").onChange(this.scene.updateFloorNumber.bind(this.scene));
         buildingFolder.add(this.scene, 'windowNumber', 1, 4, 1).name("Num of Windows").onChange(this.scene.updateWindowNumber.bind(this.scene));
         buildingFolder.add(this.scene, 'backWindows').name("Back Windows").onChange(this.scene.updateBackWindows.bind(this.scene));
-        buildingFolder.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingColor.bind(this.scene));
+        buildingFolder.addColor(this.scene, 'buildingColor').name("Building Color").onChange(this.scene.updateBuildingColor.bind(this.scene));
         buildingFolder.add(this.scene, 'selectedBuildingTexture', this.scene.buildingTexturesIds).name('Selected Building Texture').onChange(this.scene.updateBuildingTexture.bind(this.scene));
         buildingFolder.add(this.scene, 'selectedBannerTexture', this.scene.bannerTexturesIds).name('Selected Banner Texture').onChange(this.scene.updateBannerTexture.bind(this.scene));
         buildingFolder.add(this.scene, 'selectedDoorTexture', this.scene.doorTexturesIds).name('Selected Door Texture').onChange(this.scene.updateDoorTexture.bind(this.scene));
@@ -43,8 +43,8 @@ export class MyInterface extends CGFinterface {
         // Helicopter
         const helicopterFolder = this.gui.addFolder("Helicopter Settings");
         helicopterFolder.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene));
-        helicopterFolder.addColor(this.scene,'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
-        helicopterFolder.addColor(this.scene,'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
+        helicopterFolder.addColor(this.scene, 'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
+        helicopterFolder.addColor(this.scene, 'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
         helicopterFolder.add(this.scene, 'helicopterScaleFactor', 0.5, 1.2, 0.1).name("Helicopter Scale Factor").onChange(this.scene.updateHelicopterScaleFactor.bind(this.scene));
 
         // Forest

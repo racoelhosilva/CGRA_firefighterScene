@@ -1,5 +1,4 @@
 import { CGFobject } from "../../lib/CGF.js";
-import { MyRotor } from "./MyRotor.js";
 import { MyParallelogram } from "../component/MyParallelogram.js";
 
 export class MyRudder extends CGFobject {
@@ -8,8 +7,6 @@ export class MyRudder extends CGFobject {
 
     this.topParallelogram = new MyParallelogram(this.scene, 2, 4, Math.PI / 6, true);
     this.bottomParallelogram = new MyParallelogram(this.scene, 2, 2, Math.PI / 5, true);
-
-    this.initBuffers();
   }
 
   display() {

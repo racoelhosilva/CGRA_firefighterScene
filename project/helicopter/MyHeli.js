@@ -6,7 +6,7 @@ import { MyRotor } from "./MyRotor.js";
 import { MyRudder } from "./MyRudder.js";
 import { MyWaterBucket } from "./MyWaterBucket.js";
 
-export class MyHelicopter extends CGFobject {
+export class MyHeli extends CGFobject {
     MAX_ROTOR_SPEED = 0.015;
     MAX_TILT = Math.PI / 10;
     MAX_ANIMATION2_ANGLE = Math.PI / 36;

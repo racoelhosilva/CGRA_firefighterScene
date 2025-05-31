@@ -2,7 +2,7 @@ import { CGFscene, CGFcamera, CGFaxis, CGFtexture, CGFappearance, CGFshader } fr
 import { MyPanorama } from "./panorama/MyPanorama.js";
 import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
-import { MyHelicopter } from "./helicopter/MyHelicopter.js";
+import { MyHeli } from "./helicopter/MyHeli.js";
 import { MyFire } from "./fire/MyFire.js";
 import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
 import { MyTerrain } from "./terrain/MyTerrain.js";
@@ -212,7 +212,7 @@ export class MyScene extends CGFscene {
         this.metalTexture2 = new CGFtexture(this, 'textures/metal2.jpg');
 
         // Helicopter Object
-        this.helicopter = new MyHelicopter(
+        this.helicopter = new MyHeli(
             this,
             this.hexToRgb(this.helicopterColor),
             this.helicopterTexture,

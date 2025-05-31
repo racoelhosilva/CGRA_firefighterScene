@@ -22,13 +22,12 @@ export class MyWaterBucket extends CGFobject {
         this.water = new MyCircle(this.scene, 8, this.radius - this.scene.Z_CLASHING_OFFSET);
         this.particles = [];
 
-        // Water material
         this.waterMaterial = new CGFappearance(this.scene);
-        this.waterMaterial.setAmbient(0.173,0.325,0.4, 1.0);
-        this.waterMaterial.setDiffuse(0.173,0.325,0.4, 1.0);
-        this.waterMaterial.setSpecular(0.173,0.325,0.4, 1.0);
+        this.waterMaterial.setAmbient(0.173, 0.325, 0.4, 1.0);
+        this.waterMaterial.setDiffuse(0.173, 0.325, 0.4, 1.0);
+        this.waterMaterial.setSpecular(0.173, 0.325, 0.4, 1.0);
         this.waterMaterial.setShininess(10);
-        
+
         this.bucketMaterial = new CGFappearance(this.scene);
         this.bucketMaterial.setAmbient(0.3, 0.3, 0.3, 1.0);
         this.bucketMaterial.setDiffuse(0.3, 0.3, 0.3, 1.0);
@@ -49,18 +48,21 @@ export class MyWaterBucket extends CGFobject {
         this.bucket.display();
 
         if (this.isOpen) {
+            // Draw bottom portion of water if open
             this.scene.pushMatrix();
             this.scene.rotate(Math.PI, 1, 0, 0);
             this.waterMaterial.apply();
             this.water.display();
             this.scene.popMatrix();
         } else {
+            // Draw base of the bucket if closed
             this.scene.pushMatrix();
             this.base.display();
             this.scene.popMatrix();
         }
 
         if (this.waterLevel > 0) {
+            // Draw water surface level
             this.scene.pushMatrix();
             this.scene.translate(0, this.waterLevel, 0);
             this.waterMaterial.apply();
@@ -73,7 +75,7 @@ export class MyWaterBucket extends CGFobject {
         this.cableMaterial.apply();
         this.cable.display();
         this.scene.popMatrix();
-    
+
         this.waterMaterial.apply();
         for (let particle of this.particles) {
             this.scene.pushMatrix();

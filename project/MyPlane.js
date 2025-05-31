@@ -1,4 +1,5 @@
-import {CGFobject} from '../lib/CGF.js';
+import { CGFobject } from '../lib/CGF.js';
+
 /**
 * MyPlane
 * @constructor
@@ -9,6 +10,7 @@ import {CGFobject} from '../lib/CGF.js';
  * @param minT - minimum texture coordinate in T
  * @param maxT - maximum texture coordinate in T
 */
+
 export class MyPlane extends CGFobject {
 	constructor(scene, nrDivs, minS, maxS, minT, maxT) {
 		super(scene);
@@ -24,6 +26,7 @@ export class MyPlane extends CGFobject {
 		this.w = (this.maxT - this.minT) / this.nrDivs;
 		this.initBuffers();
 	}
+
 	initBuffers() {
 		// Generate vertices, normals, and texCoords
 		this.vertices = [];
@@ -60,12 +63,11 @@ export class MyPlane extends CGFobject {
 	}
 
 	setFillMode() {
-		this.primitiveType=this.scene.gl.TRIANGLE_STRIP;
+		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
 	}
 
-	setLineMode()
-	{
-		this.primitiveType=this.scene.gl.LINES;
+	setLineMode() {
+		this.primitiveType = this.scene.gl.LINES;
 	};
 
 }
