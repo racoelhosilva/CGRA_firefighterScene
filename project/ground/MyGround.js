@@ -89,4 +89,8 @@ export class MyGround extends CGFobject {
   updateGrassTexture(newGrassTex) {
     this.grassTex = newGrassTex;
   }
+
+  updateWaterTexture(newWaterTex) {
+    this.lakeTex = newWaterTex;
+  }
 }
