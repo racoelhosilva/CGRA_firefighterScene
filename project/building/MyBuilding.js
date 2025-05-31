@@ -3,7 +3,7 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, floors, windows, windowMaterial, buildingColor, doorMaterial, bannerMaterial, helipadMaterial, upTexture, downTexture) {
+    constructor(scene, total_width, floors, windows, windowTexture, buildingColor, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.total_width = total_width;
         this.width = 2 * total_width / 5;
@@ -11,7 +11,7 @@ export class MyBuilding extends CGFobject {
         this.depth = total_width / 3;
         this.floors = floors;
         this.windows = windows;
-        this.windowMaterial = windowMaterial;
+        this.windowTexture = windowTexture;
         this.buildingColor = buildingColor;
 
         this.buildingMaterial = new CGFappearance(scene);
@@ -20,8 +20,8 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
         this.buildingMaterial.setShininess(1.0);
 
-        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowMaterial, doorMaterial, bannerMaterial);
-        this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadMaterial, upTexture, downTexture);
+        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowTexture, doorTexture, bannerTexture);
+        this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadTexture, upTexture, downTexture);
     }
 
     display() {
@@ -92,6 +92,11 @@ export class MyBuilding extends CGFobject {
     updateWindowNumber(windows) {
         this.windows = windows;
         this.floor.updateWindowNumber(this.windows);
+    }
+
+    updateWindowTexture(windowTexture) {
+        this.windowTexture = windowTexture;
+        this.floor.updateWindowTexture(this.windowTexture);
     }
 
     updateBuildingColor(color) {

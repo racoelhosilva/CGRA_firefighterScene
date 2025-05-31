@@ -65,23 +65,13 @@ export class MyScene extends CGFscene {
     this.buildingZ = -100;
     this.floorNumber = 3;
     this.windowNumber = 3;
-    this.buildingColor = '#8F8B7E';
+    this.buildingColor = '#d9d2b5';
 
     // Door Texture
     this.doorTexture = new CGFtexture(this, "textures/door.png");
-    this.doorMaterial = new CGFappearance(this);
-    this.doorMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-    this.doorMaterial.setShininess(1.0);
-    this.doorMaterial.setTexture(this.doorTexture);
-    this.doorMaterial.setTextureWrap("REPEAT", "REPEAT");
 
     // Banner Texture
     this.bannerTexture = new CGFtexture(this, "textures/banner.png");
-    this.bannerMaterial = new CGFappearance(this);
-    this.bannerMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-    this.bannerMaterial.setShininess(1.0);
-    this.bannerMaterial.setTexture(this.bannerTexture);
-    this.bannerMaterial.setTextureWrap("REPEAT", "REPEAT");
 
     // Window Textures
     this.windowTexture1 = new CGFtexture(this, 'textures/window.png');
@@ -90,20 +80,8 @@ export class MyScene extends CGFscene {
     this.windowTexturesIds = {'Window1': 0, 'Window2': 1};
     this.selectedWindowTexture = 0;
 
-    this.windowMaterial = new CGFappearance(this);
-    this.windowMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.windowMaterial.setShininess(1.0);
-    this.windowMaterial.setTexture(this.windowTexture1);
-    this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
-    // Helipad Texture
+    // Helipad Textures
     this.helipadTexture = new CGFtexture(this, "textures/helipad.png");
-    this.helipadMaterial = new CGFappearance(this);
-    this.helipadMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-    this.helipadMaterial.setShininess(1.0);
-    this.helipadMaterial.setTexture(this.helipadTexture);
-    this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
-
     this.upTexture = new CGFtexture(this, "textures/helipad_up.png");
     this.downTexture = new CGFtexture(this, "textures/helipad_down.png");
 
@@ -128,9 +106,9 @@ export class MyScene extends CGFscene {
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.floorNumber, this.windowNumber,
-      this.windowMaterial, this.hexToRgbA(this.buildingColor),
-      this.doorMaterial, this.bannerMaterial,
-      this.helipadMaterial, this.upTexture, this.downTexture);
+      this.windowTextures[this.selectedWindowTexture], this.hexToRgbA(this.buildingColor),
+      this.doorTexture, this.bannerTexture,
+      this.helipadTexture, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
@@ -296,7 +274,7 @@ export class MyScene extends CGFscene {
   }
 
   updateWindowTexture() {
-    this.windowMaterial.setTexture(this.windowTextures[this.selectedWindowTexture]);
+    this.building.updateWindowTexture(this.windowTextures[this.selectedWindowTexture]);
   }
 
   updateBuildingMaterial() {

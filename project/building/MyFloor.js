@@ -2,15 +2,36 @@ import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyFloor extends CGFobject {
-    constructor(scene, width, depth, height, windows, windowMaterial, doorMaterial, bannerMaterial) {
+    constructor(scene, width, depth, height, windows, windowTexture, doorTexture, bannerTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
         this.height = height;
         this.windows = windows;
-        this.windowMaterial = windowMaterial;
-        this.doorMaterial = doorMaterial;
-        this.bannerMaterial = bannerMaterial;
+        this.windowTexture = windowTexture;
+        this.doorTexture = doorTexture;
+        this.bannerTexture = bannerTexture;
+
+        // Window Material
+        this.windowMaterial = new CGFappearance(scene);
+        this.windowMaterial.setAmbient(1.0, 1.0, 1.0, 1);
+        this.windowMaterial.setShininess(1.0);
+        this.windowMaterial.setTexture(this.windowTexture);
+        this.windowMaterial.setTextureWrap("REPEAT", "REPEAT");
+
+        // Door Material
+        this.doorMaterial = new CGFappearance(scene);
+        this.doorMaterial.setAmbient(0.3, 0.3, 0.3, 1);
+        this.doorMaterial.setShininess(1.0);
+        this.doorMaterial.setTexture(this.doorTexture);
+        this.doorMaterial.setTextureWrap("REPEAT", "REPEAT");
+
+        // Banner Material
+        this.bannerMaterial = new CGFappearance(scene);
+        this.bannerMaterial.setAmbient(0.3, 0.3, 0.3, 1);
+        this.bannerMaterial.setShininess(1.0);
+        this.bannerMaterial.setTexture(this.bannerTexture);
+        this.bannerMaterial.setTextureWrap("REPEAT", "REPEAT");
 
         // Floor
         this.xFloor = new MyRectangle(this.scene, depth, height);
@@ -115,5 +136,10 @@ export class MyFloor extends CGFobject {
     updateWindowNumber(windows) {
         this.windows = windows;
         this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
+    }
+
+    updateWindowTexture(texture) {
+        this.windowTexture = texture;
+        this.windowMaterial.setTexture(this.windowTexture);
     }
 }
