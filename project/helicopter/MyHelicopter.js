@@ -8,6 +8,7 @@ import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
     MAX_VELOCITY = 0.25;
+    MAX_ROTOR_SPEED = 0.015;
     MAX_TILT = Math.PI / 10;
     LIFTING_DURATION = 2000;
     LANDING4_DURATION = 2000;
@@ -268,13 +269,13 @@ export class MyHelicopter extends CGFobject {
                 if (this.animDuration < this.LIFTING_DURATION) {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
                     this.position[1] = this.initPosition[1] + progressFactor * this.flyingHeight;
-                    this.rotorSpeed = progressFactor;
+                    this.rotorSpeed = progressFactor * this.MAX_ROTOR_SPEED;
                     this.animationAngle2 = this.MAX_ANIMATION2_ANGLE * progressFactor;
                     this.bucketHeight = this.BUCKET_HEIGHT * progressFactor;
                 } else {
                     this.state = "FLYING";
                     this.position[1] = this.initPosition[1] + this.flyingHeight;
-                    this.rotorSpeed = 1;
+                    this.rotorSpeed = this.MAX_ROTOR_SPEED;
                     this.animationAngle2 = this.MAX_ANIMATION2_ANGLE;
                     this.bucketHeight = this.BUCKET_HEIGHT;
                 }
@@ -358,7 +359,7 @@ export class MyHelicopter extends CGFobject {
                 if (this.animDuration < this.LIFTING_DURATION) {
                     const progressFactor = Math.sin(this.animDuration * Math.PI / (this.LIFTING_DURATION * 2));
                     this.position[1] = this.initPosition[1] + this.flyingHeight - progressFactor * this.flyingHeight;
-                    this.rotorSpeed = 1 - progressFactor;
+                    this.rotorSpeed = (1 - progressFactor) * this.MAX_ROTOR_SPEED;
                     this.animationAngle2 = this.MAX_ANIMATION2_ANGLE * (1 - progressFactor);
                     this.bucketHeight = this.BUCKET_HEIGHT * (1 - progressFactor);
                 } else {
