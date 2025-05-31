@@ -130,13 +130,16 @@ export class MyScene extends CGFscene {
       this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
-    this.forest = new MyForest(this, 150, 150, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest1 = new MyForest(this, 150, 150, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest2 = new MyForest(this, 150, 150, 4, 4, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
 
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
-    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader);
+    const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader)
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], 2, this.fireTexture, this.fireShader);
+    this.fires = fires1.concat(fires2);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
@@ -150,6 +153,8 @@ export class MyScene extends CGFscene {
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].enable();
     this.lights[0].update();
+
+    this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
   }
   initCameras() {
     this.camera = new CGFcamera(
@@ -315,8 +320,6 @@ export class MyScene extends CGFscene {
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
-    this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
-
     this.axis.display();
 
     this.panorama.display();
@@ -327,7 +330,13 @@ export class MyScene extends CGFscene {
     this.building.display();
     this.popMatrix();
 
-    this.forest.display();
+    this.forest1.display();
+
+    this.pushMatrix();
+    this.translate(150, 0, 100);
+    this.forest2.display();
+    this.popMatrix();
+
     this.helicopter.display();
 
     // Transparent object should be displayed at the end to prevent hiding objects behind transparency
