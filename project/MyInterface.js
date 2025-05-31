@@ -33,7 +33,7 @@ export class MyInterface extends CGFinterface {
         this.gui.addColor(this.scene, 'darkTree').name("Dark Tree").onChange(this.scene.resetForest.bind(this.scene));
         this.gui.addColor(this.scene, 'lightTree').name("Light Tree").onChange(this.scene.resetForest.bind(this.scene));
         this.gui.add(this.scene, 'resetForest').name("Reset Forest");
-        this.gui.add(this.scene, 'numFires', 0, 20, 2).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'numFires', 0, 20, 2).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene));
         this.gui.add(this.scene, 'resetFire').name("Reset Fire");
         this.gui.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
         this.gui.add(this.scene, 'selectedPanoramaTexture', this.scene.panoramaTextureIds).name("Panorama Texture").onChange(this.scene.updatePanoramaTexture.bind(this.scene));
