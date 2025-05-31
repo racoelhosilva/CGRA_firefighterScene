@@ -12,6 +12,7 @@ uniform sampler2D elevationMap;
 
 uniform float timeFactor;
 uniform float maxElevation;
+uniform float maxWaterDepth;
 
 varying vec2 vTextureCoord;
 
@@ -23,7 +24,7 @@ void main(void) {
     if (maskValue < 0.5) {
         vec2 mapPos = mod(aTextureCoord * 0.1 + 0.3 * timeFactor, 1.0);
         vec4 mapColor = texture2D(waterMap, mapPos);
-        newPosition.z -= mapColor.r * 8.0;
+        newPosition.z -= mapColor.r * maxWaterDepth;
     } else {
         vec4 mapColor = texture2D(elevationMap, aTextureCoord);
         newPosition.z += (1.0 - mapColor.r) * maxElevation;
