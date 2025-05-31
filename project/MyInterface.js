@@ -64,6 +64,9 @@ export class MyInterface extends CGFinterface {
         // Perspective
         this.gui.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
 
+        // Axis
+        this.gui.add(this.scene, 'displayAxis').name("Display Axis");
+
         this.initKeys();
 
         return true;

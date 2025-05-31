@@ -39,6 +39,8 @@ export class MyScene extends CGFscene {
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
 
+    this.displayAxis = false;
+
     // Presets
     this.presets = [this.defaultPreset, this.fallPreset];
     this.presetIds = {
@@ -106,8 +108,8 @@ export class MyScene extends CGFscene {
 
     // Building Properties
     this.buildingSize = 100;
-    this.buildingX = -50;
-    this.buildingZ = -150;
+    this.buildingX = -75;
+    this.buildingZ = -175;
     this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = '#d9d2b5';
@@ -115,9 +117,9 @@ export class MyScene extends CGFscene {
 
     // Building Textures
     this.buildingTexture1 = new CGFtexture(this, "textures/brick.jpg");
-    this.buildingTexture2 = new CGFtexture(this, "textures/popcorn.jpg");
+    this.buildingTexture2 = new CGFtexture(this, "textures/stone.jpg");
     this.buildingTextures = [null, this.buildingTexture1, this.buildingTexture2];
-    this.buildingTexturesIds = {'None': 0, 'Brick': 1, 'Popcorn': 2};
+    this.buildingTexturesIds = {'None': 0, 'Brick': 1, 'Stone': 2};
     this.selectedBuildingTexture = 0;
 
     // Door Texture
@@ -162,6 +164,7 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
+
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
 
     this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
@@ -483,7 +486,9 @@ export class MyScene extends CGFscene {
     this.applyViewMatrix();
 
     this.setDefaultAppearance();
-    this.axis.display();
+    if (this.displayAxis) {
+      this.axis.display();
+    }
 
     this.panorama.display();
     this.ground.display();
