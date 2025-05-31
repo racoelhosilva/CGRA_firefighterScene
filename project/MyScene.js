@@ -314,9 +314,32 @@ export class MyScene extends CGFscene {
     this.building.updateWindowTexture(this.windowTextures[this.selectedWindowTexture]);
   }
 
-  updateBuildingMaterial() {
-    this.buildingMaterial.setAmbient(...this.hexToRgbA(this.buildingColor));
-    this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor));
+  updateBannerTexture() {
+    this.building.updateBannerTexture(this.bannerTextures[this.selectedBannerTexture]);
+  }
+
+  updateDoorTexture() {
+    this.building.updateDoorTexture(this.doorTextures[this.selectedDoorTexture]);
+  }
+
+  updateBuildingColor() {
+    this.building.updateBuildingColor(this.hexToRgb(this.buildingColor));
+  }
+
+  updateHelicopterColor() {
+    this.helicopter.updateColor(this.hexToRgb(this.helicopterColor));
+  }
+
+  updateHelicopterMarkerColor() {
+    this.helicopterMarker.updateColor(this.hexToRgb(this.helicopterMarkerColor));
+  }
+
+  resetFire() {
+    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader);
+  }
+
+  resetForest() {
+    this.forest = new MyForest(this, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture);
   }
 
   updateView() {

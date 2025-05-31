@@ -22,7 +22,7 @@ void main(void) {
     if (maskValue < 0.5) {
         vec2 mapPos = mod(aTextureCoord * 0.1 + timeFactor, 1.0);
         vec4 mapColor = texture2D(waterMap, mapPos);
-        newPosition.z -= mapColor.r * 10.0;
+        newPosition.z -= mapColor.r * 4.0;
     } else {
         vec4 mapColor = texture2D(elevationMap, aTextureCoord);
         newPosition.z += (1.0 - mapColor.r) * 50.0;
