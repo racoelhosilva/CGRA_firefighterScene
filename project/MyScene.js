@@ -4,7 +4,6 @@ import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
-import { MyLake } from "./lake/MyLake.js";
 import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
 import { MyTerrain } from "./terrain/MyTerrain.js";
 
@@ -153,10 +152,6 @@ export class MyScene extends CGFscene {
     // Helipad Lights Shader
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
 
-    // Lake Properties
-    this.lakeRadius = 150;
-    this.lakeCenter = [-150, this.Z_CLASHING_OFFSET, 150];
-
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
 
@@ -187,8 +182,6 @@ export class MyScene extends CGFscene {
     const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires / 2, this.fireTexture, this.fireShader)
     const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires / 2, this.fireTexture, this.fireShader);
     this.fires = fires1.concat(fires2);
-
-    this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
     this.t = new Date().getTime();
 
