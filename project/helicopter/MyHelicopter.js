@@ -16,7 +16,7 @@ export class MyHelicopter extends CGFobject {
     BUCKET_HEIGHT = 24;
     MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
-    constructor(scene, cockpitTexture, metalTexture, metalTexture2, flyingHeight) {
+    constructor(scene, color, cockpitTexture, metalTexture, metalTexture2, flyingHeight) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
@@ -46,24 +46,24 @@ export class MyHelicopter extends CGFobject {
         this.tail = new MySkewedPyramid(this.scene, 6, 4, 1.5, 32, 3);
 
         this.cockpitMaterial = new CGFappearance(this.scene);
-        this.cockpitMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
-        this.cockpitMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
-        this.cockpitMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
-        this.cockpitMaterial.setShininess(200);
+        this.cockpitMaterial.setAmbient(...color, 1.0);
+        this.cockpitMaterial.setDiffuse(...color, 1.0);
+        this.cockpitMaterial.setSpecular(...color, 1.0);
+        this.cockpitMaterial.setShininess(10.0);
         this.cockpitMaterial.setTexture(cockpitTexture);
 
         this.tailMaterial = new CGFappearance(this.scene);
-        this.tailMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
-        this.tailMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
-        this.tailMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
-        this.tailMaterial.setShininess(200);
+        this.tailMaterial.setAmbient(...color, 1.0);
+        this.tailMaterial.setDiffuse(...color, 1.0);
+        this.tailMaterial.setSpecular(...color, 1.0);
+        this.tailMaterial.setShininess(10.0);
         this.tailMaterial.setTexture(metalTexture);
 
         this.rudderMaterial = new CGFappearance(this.scene);
-        this.rudderMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
-        this.rudderMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
-        this.rudderMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
-        this.rudderMaterial.setShininess(200);
+        this.rudderMaterial.setAmbient(...color, 1.0);
+        this.rudderMaterial.setDiffuse(...color, 1.0);
+        this.rudderMaterial.setSpecular(...color, 1.0);
+        this.rudderMaterial.setShininess(10.0);
         this.rudderMaterial.setTexture(metalTexture);
 
         this.detailMaterial = new CGFappearance(this.scene);
@@ -418,5 +418,17 @@ export class MyHelicopter extends CGFobject {
         this.state = "STATIONARY";
         this.animationAngle2 = 0;
         this.waterBucket.setWaterLevel(0);
+    }
+
+    updateColor(color) {
+        this.cockpitMaterial.setAmbient(...color, 1.0);
+        this.cockpitMaterial.setDiffuse(...color, 1.0);
+        this.cockpitMaterial.setSpecular(...color, 1.0);
+        this.tailMaterial.setAmbient(...color, 1.0);
+        this.tailMaterial.setDiffuse(...color, 1.0);
+        this.tailMaterial.setSpecular(...color, 1.0);
+        this.rudderMaterial.setAmbient(...color, 1.0);
+        this.rudderMaterial.setDiffuse(...color, 1.0);
+        this.rudderMaterial.setSpecular(...color, 1.0);
     }
 }

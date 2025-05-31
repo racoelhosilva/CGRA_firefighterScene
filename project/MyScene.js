@@ -61,6 +61,9 @@ export class MyScene extends CGFscene {
 
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
 
+    // Helicopter Properties
+    this.helicopterColor = '#a00000';
+
     // Building Properties
     this.buildingSize = 100;
     this.buildingX = -50;
@@ -124,7 +127,7 @@ export class MyScene extends CGFscene {
       this.helipadTexture, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
-    this.helicopter = new MyHelicopter(this, this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
+    this.helicopter = new MyHelicopter(this, this.hexToRgbA(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
 
@@ -298,8 +301,12 @@ export class MyScene extends CGFscene {
     this.building.updateDoorTexture(this.doorTextures[this.selectedDoorTexture]);
   }
 
-  updateBuildingMaterial() {
+  updateBuildingColor() {
     this.building.updateBuildingColor(this.hexToRgbA(this.buildingColor));
+  }
+
+  updateHelicopterColor() {
+    this.helicopter.updateColor(this.hexToRgbA(this.helicopterColor));
   }
 
   display() {
