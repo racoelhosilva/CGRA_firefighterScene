@@ -46,22 +46,22 @@ export class MyHelicopter extends CGFobject {
         this.tail = new MySkewedPyramid(this.scene, 6, 4, 1.5, 32, 3);
 
         this.cockpitMaterial = new CGFappearance(this.scene);
-        this.cockpitMaterial.setAmbient(0.5, 0.0, 0.0, 1.0);
-        this.cockpitMaterial.setDiffuse(0.5, 0.0, 0.0, 1.0);
-        this.cockpitMaterial.setSpecular(1.0, 0.0, 0.0, 1.0);
+        this.cockpitMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
+        this.cockpitMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
+        this.cockpitMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
         this.cockpitMaterial.setShininess(200);
         this.cockpitMaterial.setTexture(cockpitTexture);
 
         this.tailMaterial = new CGFappearance(this.scene);
-        this.tailMaterial.setAmbient(0.5, 0.0, 0.0, 1.0);
-        this.tailMaterial.setDiffuse(0.5, 0.0, 0.0, 1.0);
-        this.tailMaterial.setSpecular(1.0, 0.0, 0.0, 1.0);
+        this.tailMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
+        this.tailMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
+        this.tailMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
         this.tailMaterial.setShininess(200);
 
         this.rudderMaterial = new CGFappearance(this.scene);
-        this.rudderMaterial.setAmbient(0.5, 0.0, 0.0, 1.0);
-        this.rudderMaterial.setDiffuse(0.5, 0.0, 0.0, 1.0);
-        this.rudderMaterial.setSpecular(1.0, 0.0, 0.0, 1.0);
+        this.rudderMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
+        this.rudderMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
+        this.rudderMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
         this.rudderMaterial.setShininess(200);
 
         this.skidRight = new MySkid(this.scene, true);
