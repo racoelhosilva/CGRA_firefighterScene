@@ -392,6 +392,7 @@ export class MyHelicopter extends CGFobject {
 
                 this.scene.fires.filter(fire => fire.collidesWith([this.position[0], 0, this.position[2]]))
                     .forEach(fire => fire.setHeightFactor(Math.max(0, fire.getHeightFactor() - 0.001 * t)));
+                this.scene.fires = this.scene.fires.filter(fire => fire.getHeightFactor() > 0);
 
                 if (this.waterBucket.particles.length == 0) {
                     this.state = "FLYING";

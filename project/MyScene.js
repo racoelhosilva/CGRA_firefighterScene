@@ -35,21 +35,24 @@ export class MyScene extends CGFscene {
     this.enableTextures(true);
     this.appearance = new CGFappearance(this);
 
-    this.groundTex = new CGFtexture(this, "textures/ground.png");
-		this.appearance.setTexture(this.groundTex);
-		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
-
+    
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
+    this.treeRows = 5;
+    this.treeCols = 5;
+    
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.jpg');
     this.metalTexture = new CGFtexture(this, 'textures/metal.jpg');
     this.metalTexture2 = new CGFtexture(this, 'textures/metal2.jpg');
-    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
+
+    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg');
+    this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
+    this.numFires = 5;
 
     this.planeMask = new CGFappearance(this);
     this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
@@ -127,13 +130,12 @@ export class MyScene extends CGFscene {
       this.doorTextures[this.selectedDoorTexture], this.bannerTextures[this.selectedBannerTexture],
       this.helipadTexture, this.upTexture, this.downTexture);
 
-    this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest = new MyForest(this, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
     this.setHelicopterInitPos();
 
-    this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
-    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader);
+    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
@@ -310,6 +312,14 @@ export class MyScene extends CGFscene {
 
   updateHelicopterMarkerColor() {
     this.helicopterMarker.updateColor(this.hexToRgb(this.helicopterMarkerColor));
+  }
+
+  resetFire() {
+    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader);
+  }
+
+  resetForest() {
+    this.forest = new MyForest(this, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture);
   }
 
   display() {

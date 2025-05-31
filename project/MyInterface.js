@@ -27,6 +27,11 @@ export class MyInterface extends CGFinterface {
         this.gui.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingColor.bind(this.scene));
         this.gui.addColor(this.scene,'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
         this.gui.addColor(this.scene,'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
+        this.gui.add(this.scene, 'treeRows', 1, 10, 1).name("Tree Rows").onChange(this.scene.resetForest.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'treeCols', 1, 10, 1).name("Tree Columns").onChange(this.scene.resetForest.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'resetForest').name("Reset Forest");
+        this.gui.add(this.scene, 'numFires', 1, 20, 1).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene)).step(1);
+        this.gui.add(this.scene, 'resetFire').name("Reset Fire");
 
         this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").step(0.1);
 
