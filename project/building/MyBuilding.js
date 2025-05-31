@@ -101,6 +101,10 @@ export class MyBuilding extends CGFobject {
         this.floor.updateBannerTexture(bannerTexture);
     }
 
+    updateDoorTexture(doorTexture) {
+        this.floor.updateDoorTexture(doorTexture);
+    }
+
     updateBuildingColor(color) {
         this.buildingColor = color;
         this.buildingMaterial.setAmbient(...this.buildingColor.map(c => c * 0.5), 1.0);

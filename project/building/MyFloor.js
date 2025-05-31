@@ -14,7 +14,7 @@ export class MyFloor extends CGFobject {
 
         // Window Material
         this.windowMaterial = new CGFappearance(scene);
-        this.windowMaterial.setAmbient(1.0, 1.0, 1.0, 1);
+        this.windowMaterial.setAmbient(0.8, 0.8, 0.8, 1);
         this.windowMaterial.setDiffuse(0.8, 0.8, 0.8, 1);
         this.windowMaterial.setSpecular(0.2, 0.2, 0.2, 1);
         this.windowMaterial.setShininess(200.0);
@@ -23,8 +23,10 @@ export class MyFloor extends CGFobject {
 
         // Door Material
         this.doorMaterial = new CGFappearance(scene);
-        this.doorMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-        this.doorMaterial.setShininess(1.0);
+        this.doorMaterial.setAmbient(0.8, 0.8, 0.8, 1);
+        this.doorMaterial.setDiffuse(0.4, 0.4, 0.4, 1);
+        this.doorMaterial.setSpecular(0.2, 0.2, 0.2, 1);
+        this.doorMaterial.setShininess(10.0);
         this.doorMaterial.setTexture(this.doorTexture);
         this.doorMaterial.setTextureWrap("REPEAT", "REPEAT");
 
@@ -149,5 +151,10 @@ export class MyFloor extends CGFobject {
     updateBannerTexture(texture) {
         this.bannerTexture = texture;
         this.bannerMaterial.setTexture(this.bannerTexture);
+    }
+
+    updateDoorTexture(texture) {
+        this.doorTexture = texture;
+        this.doorMaterial.setTexture(this.doorTexture);
     }
 }

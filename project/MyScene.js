@@ -46,7 +46,7 @@ export class MyScene extends CGFscene {
     this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
-    this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
+    this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.jpg');
     this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
 
     this.planeMask = new CGFappearance(this);
@@ -68,7 +68,11 @@ export class MyScene extends CGFscene {
     this.buildingColor = '#d9d2b5';
 
     // Door Texture
-    this.doorTexture = new CGFtexture(this, "textures/door.png");
+    this.doorTexture1 = new CGFtexture(this, "textures/door1.jpg");
+    this.doorTexture2 = new CGFtexture(this, "textures/door2.jpg");
+    this.doorTextures = [this.doorTexture1, this.doorTexture2];
+    this.doorTexturesIds = {'Door 1': 0, 'Door 2': 1};
+    this.selectedDoorTexture = 0;
 
     // Banner Texture
     this.bannerTextureEn = new CGFtexture(this, "textures/banner_en.jpg");
@@ -114,7 +118,7 @@ export class MyScene extends CGFscene {
       this.buildingSize,
       this.floorNumber, this.windowNumber,
       this.windowTextures[this.selectedWindowTexture], this.hexToRgbA(this.buildingColor),
-      this.doorTexture, this.bannerTextures[this.selectedBannerTexture],
+      this.doorTextures[this.selectedDoorTexture], this.bannerTextures[this.selectedBannerTexture],
       this.helipadTexture, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
@@ -286,6 +290,10 @@ export class MyScene extends CGFscene {
 
   updateBannerTexture() {
     this.building.updateBannerTexture(this.bannerTextures[this.selectedBannerTexture]);
+  }
+
+  updateDoorTexture() {
+    this.building.updateDoorTexture(this.doorTextures[this.selectedDoorTexture]);
   }
 
   updateBuildingMaterial() {
