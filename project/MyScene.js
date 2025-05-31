@@ -51,6 +51,8 @@ export class MyScene extends CGFscene {
 
     this.treeRows = 5;
     this.treeCols = 5;
+    this.darkTree = "#0b352b";
+    this.lightTree = "#43873c";
     
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.jpg');
     this.metalTexture = new CGFtexture(this, 'textures/metal.jpg');
@@ -137,14 +139,14 @@ export class MyScene extends CGFscene {
       this.helipadTexture, this.upTexture, this.downTexture
     );
 
-    this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture);
-    this.forest2 = new MyForest(this, 150, 150, 4, 4, this.truncTexture, this.crownTexture);
+    this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+    this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
     this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
     this.setHelicopterInitPos();
 
     const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader)
-    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], 2, this.fireTexture, this.fireShader);
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires, this.fireTexture, this.fireShader);
     this.fires = fires1.concat(fires2);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
@@ -346,10 +348,13 @@ export class MyScene extends CGFscene {
 
   resetFire() {
     this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader);
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires, this.fireTexture, this.fireShader);
+    this.fires = this.fires.concat(fires2);
   }
 
   resetForest() {
-    this.forest = new MyForest(this, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture);
+    this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+    this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
   }
 
   updateView() {

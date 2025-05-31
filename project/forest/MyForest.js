@@ -8,19 +8,20 @@ export class MyForest extends CGFobject {
   MAX_RADIUS = 5;
   MIN_HEIGHT = 35;
   MAX_HEIGHT = 50;
-  MIN_COLOR = [0.043,0.173,0.11];
-  MAX_COLOR = [0.263,0.529,0.235];
 
   GRID_SQUARE_SIZE = 20;
   POS_MAX_OFFSET = 6;
 
-  constructor(scene, width, height, rows, columns, truncMaterial, crownMaterial) {
+  constructor(scene, width, height, rows, columns, truncMaterial, crownMaterial, min_color, max_color) {
     super(scene);
 
     this.rows = rows;
     this.columns = columns;
     this.width = width;
     this.height = height;
+
+    this.min_color = min_color;
+    this.max_color = max_color;
 
     this.trees = this.buildTrees(rows, columns, truncMaterial, crownMaterial);
     this.displacements = this.buildDisplacements(rows, columns);
@@ -55,9 +56,9 @@ export class MyForest extends CGFobject {
 
   randomColor() {
     return [
-      this.randomBetween(this.MIN_COLOR[0], this.MAX_COLOR[0]),
-      this.randomBetween(this.MIN_COLOR[1], this.MAX_COLOR[1]),
-      this.randomBetween(this.MIN_COLOR[2], this.MAX_COLOR[2])
+      this.randomBetween(this.min_color[0], this.max_color[0]),
+      this.randomBetween(this.min_color[1], this.max_color[1]),
+      this.randomBetween(this.min_color[2], this.max_color[2])
     ];
   }
 
