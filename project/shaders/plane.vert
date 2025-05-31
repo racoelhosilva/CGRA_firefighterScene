@@ -11,6 +11,7 @@ uniform sampler2D waterMap;
 uniform sampler2D elevationMap;
 
 uniform float timeFactor;
+uniform float maxElevation;
 
 varying vec2 vTextureCoord;
 
@@ -25,7 +26,7 @@ void main(void) {
         newPosition.z -= mapColor.r * 8.0;
     } else {
         vec4 mapColor = texture2D(elevationMap, aTextureCoord);
-        newPosition.z += (1.0 - mapColor.r) * 50.0;
+        newPosition.z += (1.0 - mapColor.r) * maxElevation;
     }
 
     gl_Position = uPMatrix * uMVMatrix * vec4(newPosition, 1.0);

@@ -60,7 +60,7 @@ export class MyInterface extends CGFinterface {
 
         // Preset
         this.gui.add(this.scene, 'selectedPreset', this.scene.presetIds).name('Preset').onChange(this.scene.applyPreset.bind(this.scene));
-        this.gui.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateElevationMax.bind(this.scene));
+        this.gui.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateMaxElevation.bind(this.scene));
 
         this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene));
 

@@ -71,7 +71,7 @@ export class MyScene extends CGFscene {
     this.waterTextures = [this.waterTexture1, this.waterTexture2];
     this.waterTexturesIds = { 'Water 1': 0, 'Water 2': 1 };
     this.selectedWaterTexture = 0;
-    
+
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.waterMap = new CGFtexture(this, 'textures/water_map.png');
@@ -97,6 +97,8 @@ export class MyScene extends CGFscene {
     this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
 
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
+    this.maxElevation = 50.0;
+    this.updateMaxElevation();
 
     // Helicopter Properties
     this.helicopterColor = '#a00000';
@@ -161,7 +163,9 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
+
     this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
+
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.hexToRgb(this.buildingColor),
@@ -408,9 +412,13 @@ export class MyScene extends CGFscene {
   updateGrassTexture() {
     this.ground.updateGrassTexture(this.grassTextures[this.selectedGrassTexture]);
   }
-  
+
   updateWaterTexture() {
     this.ground.updateWaterTexture(this.waterTextures[this.selectedWaterTexture]);
+  }
+
+  updateMaxElevation() {
+    this.planeShader.setUniformsValues({ maxElevation: this.maxElevation });
   }
 
   updateView() {
