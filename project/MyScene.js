@@ -53,7 +53,11 @@ export class MyScene extends CGFscene {
     this.panoramaTextureChoice = 2;
 
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
-    
+    this.dirtTexture = new CGFtexture(this, 'textures/dirt.jpg');
+    this.grassTextures = [this.grassTexture, this.dirtTexture];
+    this.grassTexturesIds = { 'Grass': 0, 'Dirt': 1 };
+    this.selectedGrassTexture = 0;    
+
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.waterMap = new CGFtexture(this, 'textures/water_map.png');
@@ -137,7 +141,7 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.panoramaTextureChoice]);
-    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTexture, this.lakeTexture, this.planeShader);
+    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.hexToRgb(this.buildingColor),
@@ -370,6 +374,10 @@ export class MyScene extends CGFscene {
 
   updatePanoramaTexture() {
     this.panorama.updateTexture(this.panoramaTextures[this.panoramaTextureChoice]);
+  }
+
+  updateGrassTexture() {
+    this.ground.updateGrassTexture(this.grassTextures[this.selectedGrassTexture]);
   }
 
   updateView() {
