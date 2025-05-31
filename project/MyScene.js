@@ -59,7 +59,7 @@ export class MyScene extends CGFscene {
     // Building Properties
     this.buildingSize = 100;
     this.buildingX = -50;
-    this.buildingZ = -100;
+    this.buildingZ = -150;
     this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
@@ -130,7 +130,7 @@ export class MyScene extends CGFscene {
       this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
-    this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
+    this.forest = new MyForest(this, 200, 150, 7, 8, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
@@ -141,6 +141,8 @@ export class MyScene extends CGFscene {
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
 
     this.t = new Date().getTime();
+
+    this.view = "plane";  // plane or helicopter
   }
 
   initLights() {

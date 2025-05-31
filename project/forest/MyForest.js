@@ -14,11 +14,13 @@ export class MyForest extends CGFobject {
   GRID_SQUARE_SIZE = 20;
   POS_MAX_OFFSET = 6;
 
-  constructor(scene, rows, columns, truncMaterial, crownMaterial) {
+  constructor(scene, width, height, rows, columns, truncMaterial, crownMaterial) {
     super(scene);
 
     this.rows = rows;
     this.columns = columns;
+    this.width = width;
+    this.height = height;
 
     this.trees = this.buildTrees(rows, columns, truncMaterial, crownMaterial);
     this.displacements = this.buildDisplacements(rows, columns);
@@ -77,8 +79,8 @@ export class MyForest extends CGFobject {
     const dz = this.randomBetween(-this.POS_MAX_OFFSET, this.POS_MAX_OFFSET);
 
     return [
-      (col + 0.5 - this.columns / 2) * this.GRID_SQUARE_SIZE + dx,
-      (row + 0.5 - this.rows / 2) * this.GRID_SQUARE_SIZE + dz
+      (col + 0.5 - this.columns / 2) * this.width / this.columns + dx,
+      (row + 0.5 - this.rows / 2) * this.height / this.rows + dz
     ];
   }
 
