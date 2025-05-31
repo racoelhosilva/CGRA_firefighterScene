@@ -38,7 +38,7 @@ export class MyScene extends CGFscene {
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
-    
+
     // Presets
     this.presets = [this.defaultPreset, this.fallPreset];
     this.presetIds = {
@@ -291,7 +291,7 @@ export class MyScene extends CGFscene {
     this.movePhase = this.helicopter.getMovePhase();
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 400) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 400) % 2) == 0) });
     this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
     this.planeShader.setUniformsValues({ timeFactor: t / 400000.0 % 100 });
   }
