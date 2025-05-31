@@ -41,7 +41,7 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
         this.gui.add(this.scene, 'selectedPreset', this.scene.presetIds).name('Preset').onChange(this.scene.applyPreset.bind(this.scene));
 
-        this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").step(0.1);
+        this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene)).step(0.1);
 
         this.initKeys();
 

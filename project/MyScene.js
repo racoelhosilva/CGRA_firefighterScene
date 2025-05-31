@@ -332,6 +332,10 @@ export class MyScene extends CGFscene {
     ]);
   }
 
+  updateSpeedFactor() {
+    this.helicopter.setSpeedValues(this.speedFactor);
+  }
+
   updateBuildingSize() {
     this.building.updateSize(this.buildingSize);
     this.setHelicopterInitPos();

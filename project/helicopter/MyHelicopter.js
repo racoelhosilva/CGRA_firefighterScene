@@ -7,7 +7,6 @@ import { MyRudder } from "./MyRudder.js";
 import { MyWaterBucket } from "./MyWaterBucket.js";
 
 export class MyHelicopter extends CGFobject {
-    MAX_VELOCITY = 0.25;
     MAX_ROTOR_SPEED = 0.015;
     MAX_TILT = Math.PI / 10;
     LIFTING_DURATION = 2000;
@@ -26,8 +25,6 @@ export class MyHelicopter extends CGFobject {
         this.orientation = -Math.PI / 2;
         this.velocityNorm = 0;
         this.velocity = [0, 0];
-        this.acceleration = scene.speedFactor / 6000;
-        this.orientationVelocity = scene.speedFactor * Math.PI / 30;
 
         this.flyingHeight = flyingHeight;
 
@@ -159,6 +156,12 @@ export class MyHelicopter extends CGFobject {
         this.waterBucket.setPositionHeight(this.initPosition[1] + this.flyingHeight - this.BUCKET_HEIGHT - 4);
     }
 
+    setSpeedValues(speedFactor) {
+        this.acceleration = speedFactor / 6000;
+        this.orientationVelocity = speedFactor * Math.PI / 30;
+        this.maxVelocity = speedFactor * 0.25;
+    }
+
     getState() {
         return this.state;
     }
@@ -199,7 +202,7 @@ export class MyHelicopter extends CGFobject {
     }
 
     accelerate(velocityDelta) {
-        this.velocityNorm = this.normalize(this.velocityNorm + velocityDelta, 0, this.MAX_VELOCITY);
+        this.velocityNorm = this.normalize(this.velocityNorm + velocityDelta, 0, this.maxVelocity);
         this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
         this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
 
