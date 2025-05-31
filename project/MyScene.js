@@ -38,7 +38,10 @@ export class MyScene extends CGFscene {
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
-    
+
+    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+
+
     this.panoramaTextureSunrise = new CGFtexture(this, 'textures/panorama_sunrise.jpg');
     this.panoramaTextureDay = new CGFtexture(this, 'textures/panorama_day.jpg');
     this.panoramaTextureSunset = new CGFtexture(this, 'textures/panorama_sunset.jpg');
@@ -53,10 +56,6 @@ export class MyScene extends CGFscene {
     this.panoramaTextureChoice = 2;
 
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
-    this.dirtTexture = new CGFtexture(this, 'textures/dirt.jpg');
-    this.grassTextures = [this.grassTexture, this.dirtTexture];
-    this.grassTexturesIds = { 'Grass': 0, 'Dirt': 1 };
-    this.selectedGrassTexture = 0;    
 
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
@@ -68,14 +67,14 @@ export class MyScene extends CGFscene {
     this.treeCols = 5;
     this.darkTree = "#0b352b";
     this.lightTree = "#43873c";
-    
+
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.jpg');
     this.metalTexture = new CGFtexture(this, 'textures/metal.jpg');
     this.metalTexture2 = new CGFtexture(this, 'textures/metal2.jpg');
 
     this.fireTexture = new CGFtexture(this, 'textures/fire.jpg');
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
-    this.numFires = 5;
+    this.numFires = 6;
 
     this.planeMask = new CGFappearance(this);
     this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
@@ -145,11 +144,11 @@ export class MyScene extends CGFscene {
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.hexToRgb(this.buildingColor),
-      this.floorNumber, 
+      this.floorNumber,
       this.windowNumber,
-      this.windowTextures[this.selectedWindowTexture], 
-      this.backWindows, 
-      this.doorTextures[this.selectedDoorTexture], 
+      this.windowTextures[this.selectedWindowTexture],
+      this.backWindows,
+      this.doorTextures[this.selectedDoorTexture],
       this.bannerTextures[this.selectedBannerTexture],
       this.helipadTexture, this.upTexture, this.downTexture
     );
@@ -160,8 +159,8 @@ export class MyScene extends CGFscene {
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
     this.setHelicopterInitPos();
 
-    const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader)
-    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires, this.fireTexture, this.fireShader);
+    const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires / 2, this.fireTexture, this.fireShader)
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires / 2, this.fireTexture, this.fireShader);
     this.fires = fires1.concat(fires2);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
