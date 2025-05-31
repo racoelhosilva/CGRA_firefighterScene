@@ -5,42 +5,44 @@ export class MyBlaze extends CGFobject {
   FIRE_MIN_GREEN = 0.2;
   FIRE_MAX_GREEN = 0.7;
 
-  constructor(scene, radius, height, material, fire) {
+  constructor(scene, minHeight, maxHeight, radiusRatio, material, fire) {
     super(scene);
 
-    this.radius = radius;
-    this.height = height;
+    this.triangle = this.buildTriangle(minHeight, maxHeight, radiusRatio);
+    console.log(this.triangle);
+
     this.material = material;
     this.fire = fire;
 
-    this.triangle = this.buildTriangle();
-    this.green = this.buildGreen(this.triangle.p3);
+    this.green = this.buildGreen(this.triangle.p3, minHeight, maxHeight);
     this.randomFactor = 0.5 + Math.random() * 1.5;
   }
 
-  buildTriangle() {
-    const base1 = this.buildRandomBaseVertex();
-    const base2 = this.buildRandomBaseVertex();
-    const top = this.buildRandomTopVertex(base1, base2);
+  buildTriangle(minHeight, maxHeight, radiusRatio) {
+    const height = minHeight + Math.random() ** 1.4 * (maxHeight - minHeight);
+    const radius = radiusRatio * height;
 
-    return new MyTriangle(this.scene, base1, base2, top, Math.round(8 * top[1] / this.height), true);
+    const base1 = this.buildRandomBaseVertex(radius);
+    const base2 = this.buildRandomBaseVertex(radius);
+    const top = this.buildRandomTopVertex(height, base1, base2);
+
+    return new MyTriangle(this.scene, base1, base2, top, Math.round(8 * top[1] / maxHeight), true);
   }
 
-  buildGreen(topVertex) {
-    return this.FIRE_MIN_GREEN + ((this.height - topVertex[1]) / this.height) * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN);
+  buildGreen(topVertex, minHeight, maxHeight) {
+    return this.FIRE_MIN_GREEN + ((maxHeight - topVertex[1]) / (maxHeight - minHeight)) * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN);
   }
 
-  buildRandomBaseVertex() {
-    const [r, theta] = [Math.random() * this.radius, Math.random() * 2 * Math.PI];
+  buildRandomBaseVertex(radius) {
+    const [r, theta] = [Math.random() * radius, Math.random() * 2 * Math.PI];
     const [x, z] = [r * Math.cos(theta), r * Math.sin(theta)];
 
     return [x, 0, z];
   }
 
-  buildRandomTopVertex(baseVertex1, baseVertex2) {
-    const y = Math.random() ** 1.4 * this.height;
+  buildRandomTopVertex(height, baseVertex1, baseVertex2) {
     const [x, z] = [(baseVertex1[0] + baseVertex2[0]) / 2, (baseVertex1[2] + baseVertex2[2]) / 2];
-    return [x, y, z];
+    return [x, height, z];
   }
 
   display() {

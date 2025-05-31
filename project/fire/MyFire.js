@@ -25,7 +25,7 @@ export class MyFire extends CGFobject {
   buildBlazes() {
     let blazes = [];
     for (let i = 0; i < this.numBlazes; i++) {
-      blazes.push(new MyBlaze(this.scene, this.radius, this.height, this.material, this));
+      blazes.push(new MyBlaze(this.scene, this.height / 3, this.height, this.radius / this.height, this.material, this));
     }
     return blazes;
   }
