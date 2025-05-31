@@ -49,28 +49,28 @@ export class MyHelicopter extends CGFobject {
         this.cockpitMaterial.setAmbient(...color, 1.0);
         this.cockpitMaterial.setDiffuse(...color, 1.0);
         this.cockpitMaterial.setSpecular(...color, 1.0);
-        this.cockpitMaterial.setShininess(10.0);
+        this.cockpitMaterial.setShininess(200.0);
         this.cockpitMaterial.setTexture(cockpitTexture);
 
         this.tailMaterial = new CGFappearance(this.scene);
         this.tailMaterial.setAmbient(...color, 1.0);
         this.tailMaterial.setDiffuse(...color, 1.0);
         this.tailMaterial.setSpecular(...color, 1.0);
-        this.tailMaterial.setShininess(10.0);
+        this.tailMaterial.setShininess(200.0);
         this.tailMaterial.setTexture(metalTexture);
 
         this.rudderMaterial = new CGFappearance(this.scene);
         this.rudderMaterial.setAmbient(...color, 1.0);
         this.rudderMaterial.setDiffuse(...color, 1.0);
         this.rudderMaterial.setSpecular(...color, 1.0);
-        this.rudderMaterial.setShininess(10.0);
+        this.rudderMaterial.setShininess(200.0);
         this.rudderMaterial.setTexture(metalTexture);
 
         this.detailMaterial = new CGFappearance(this.scene);
         this.detailMaterial.setAmbient(0.5, 0.5, 0.5, 1.0);
         this.detailMaterial.setDiffuse(0.5, 0.5, 0.5, 1.0);
         this.detailMaterial.setSpecular(0.5, 0.5, 0.5, 1.0);
-        this.detailMaterial.setShininess(10.0);
+        this.detailMaterial.setShininess(200.0);
         this.detailMaterial.setTexture(metalTexture2);
 
         this.skidRight = new MySkid(this.scene, true, this.detailMaterial);
