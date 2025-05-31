@@ -4,7 +4,7 @@ import { MyBuilding } from "./building/MyBuilding.js";
 import { MyForest } from "./forest/MyForest.js";
 import { MyHeli } from "./helicopter/MyHeli.js";
 import { MyFire } from "./fire/MyFire.js";
-import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
+import { MyHeliMarker } from "./helicopter/MyHeliMarker.js";
 import { MyTerrain } from "./terrain/MyTerrain.js";
 
 /**
@@ -224,7 +224,7 @@ export class MyScene extends CGFscene {
         this.setHelicopterInitPos();
 
         // Helicopter Marker
-        this.helicopterMarker = new MyHelicopterMarker(
+        this.helicopterMarker = new MyHeliMarker(
             this,
             this.helicopter,
             this.hexToRgb(this.helicopterMarkerColor)
