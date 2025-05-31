@@ -43,7 +43,7 @@ export class MyRotor extends CGFobject {
         for (let i = 0; i < this.blades; i++) {
             this.scene.pushMatrix();
             this.scene.rotate((i * 2 * Math.PI) / this.blades, 0, 0, 1);
-            this.scene.translate(-0.25, 0, 0);
+            this.scene.translate(-this.bladeWidth / 2, 0, 0);
             this.blade.display();
             this.scene.popMatrix();
         }
