@@ -6,7 +6,7 @@ import { MyHelicopter } from "./helicopter/MyHelicopter.js";
 import { MyFire } from "./fire/MyFire.js";
 import { MyLake } from "./lake/MyLake.js";
 import { MyHelicopterMarker } from "./helicopter/MyHelicopterMarker.js";
-import { MyGround } from "./ground/MyGround.js";
+import { MyTerrain } from "./terrain/MyTerrain.js";
 
 /**
  * MyScene
@@ -117,21 +117,21 @@ export class MyScene extends CGFscene {
     this.buildingTexture1 = new CGFtexture(this, "textures/brick.jpg");
     this.buildingTexture2 = new CGFtexture(this, "textures/popcorn.jpg");
     this.buildingTextures = [null, this.buildingTexture1, this.buildingTexture2];
-    this.buildingTexturesIds = {'None': 0, 'Brick': 1, 'Popcorn': 2};
+    this.buildingTexturesIds = { 'None': 0, 'Brick': 1, 'Popcorn': 2 };
     this.selectedBuildingTexture = 0;
 
     // Door Texture
     this.doorTexture1 = new CGFtexture(this, "textures/door1.jpg");
     this.doorTexture2 = new CGFtexture(this, "textures/door2.jpg");
     this.doorTextures = [this.doorTexture1, this.doorTexture2];
-    this.doorTexturesIds = {'Door 1': 0, 'Door 2': 1};
+    this.doorTexturesIds = { 'Door 1': 0, 'Door 2': 1 };
     this.selectedDoorTexture = 0;
 
     // Banner Texture
     this.bannerTextureEn = new CGFtexture(this, "textures/banner_en.jpg");
     this.bannerTexturePt = new CGFtexture(this, "textures/banner_pt.jpg");
     this.bannerTextures = [this.bannerTextureEn, this.bannerTexturePt];
-    this.bannerTexturesIds = {'English': 0, 'Portuguese': 1};
+    this.bannerTexturesIds = { 'English': 0, 'Portuguese': 1 };
     this.selectedBannerTexture = 0;
 
     // Window Textures
@@ -141,7 +141,7 @@ export class MyScene extends CGFscene {
     this.windowTexture4 = new CGFtexture(this, 'textures/window4.jpg');
     this.stainedTexture1 = new CGFtexture(this, 'textures/stained1.jpg');
     this.windowTextures = [this.windowTexture1, this.windowTexture2, this.windowTexture3, this.windowTexture4, this.stainedTexture1];
-    this.windowTexturesIds = {'Window 1': 0, 'Window 2': 1, 'Window 3': 2, 'Window 4': 3, 'Stained Glass': 4};
+    this.windowTexturesIds = { 'Window 1': 0, 'Window 2': 1, 'Window 3': 2, 'Window 4': 3, 'Stained Glass': 4 };
     this.selectedWindowTexture = 3;
 
     // Helipad Textures
@@ -151,7 +151,7 @@ export class MyScene extends CGFscene {
 
     // Helipad Shader
     this.movementShader = new CGFshader(this.gl, 'shaders/movement.vert', 'shaders/movement.frag');
-    this.movementShader.setUniformsValues({ timeFactor: 0, phase: 0, blinking: true, default: 0, textureUp : 1, textureDown : 2 });
+    this.movementShader.setUniformsValues({ timeFactor: 0, phase: 0, blinking: true, default: 0, textureUp: 1, textureDown: 2 });
 
     // Helipad Lights Shader
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
@@ -164,7 +164,7 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this, 20, 1);
     this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
 
-    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
+    this.ground = new MyTerrain(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
 
     this.building = new MyBuilding(this,
       this.buildingSize,
@@ -181,9 +181,10 @@ export class MyScene extends CGFscene {
 
     this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
     this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
-    this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
-    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
+    this.helicopterScaleFactor = 0.8;
+    this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 30, this.helicopterScaleFactor);
     this.setHelicopterInitPos();
+    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
 
     const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires / 2, this.fireTexture, this.fireShader)
     const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires / 2, this.fireTexture, this.fireShader);
@@ -302,8 +303,8 @@ export class MyScene extends CGFscene {
     this.helicopter.update(deltaT);
     this.movePhase = this.helicopter.getMovePhase();
 
-    this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 400) % 2) == 0) });
+    this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase: this.movePhase });
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking: ((Math.round(t / 400) % 2) == 0) });
     this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
     this.planeShader.setUniformsValues({ timeFactor: t / 400000.0 % 100 });
   }
@@ -318,22 +319,22 @@ export class MyScene extends CGFscene {
   }
 
   hexToRgb(hex) {
-      var ret;
-      //either we receive a html/css color or a RGB vector
-      if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-          ret=[
-              parseInt(hex.substring(1,3),16).toPrecision()/255.0,
-              parseInt(hex.substring(3,5),16).toPrecision()/255.0,
-              parseInt(hex.substring(5,7),16).toPrecision()/255.0,
-          ];
-      }
-      else
-          ret=[
-              hex[0].toPrecision()/255.0,
-              hex[1].toPrecision()/255.0,
-              hex[2].toPrecision()/255.0,
-          ];
-      return ret;
+    var ret;
+    //either we receive a html/css color or a RGB vector
+    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+      ret = [
+        parseInt(hex.substring(1, 3), 16).toPrecision() / 255.0,
+        parseInt(hex.substring(3, 5), 16).toPrecision() / 255.0,
+        parseInt(hex.substring(5, 7), 16).toPrecision() / 255.0,
+      ];
+    }
+    else
+      ret = [
+        hex[0].toPrecision() / 255.0,
+        hex[1].toPrecision() / 255.0,
+        hex[2].toPrecision() / 255.0,
+      ];
+    return ret;
   }
 
   setHelicopterInitPos() {
@@ -421,6 +422,10 @@ export class MyScene extends CGFscene {
     this.planeShader.setUniformsValues({ maxElevation: this.maxElevation });
   }
 
+  updateHelicopterScaleFactor() {
+    this.helicopter.setScaleFactor(this.helicopterScaleFactor);
+  }
+
   updateView() {
     switch (this.view) {
       case "PLANE":
@@ -468,7 +473,7 @@ export class MyScene extends CGFscene {
     this.loadIdentity();
 
     if (this.view == "HELICOPTER") {
-      const offset = 220;
+      const offset = 230;
       const cameraPos = vec3.fromValues(
         this.helicopter.position[0] - Math.cos(this.helicopter.orientation) * offset,
         this.helicopter.position[1] + offset,

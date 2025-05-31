@@ -1,9 +1,8 @@
 import { CGFobject, CGFappearance } from "../../lib/CGF.js";
 import { MyPlane } from "../MyPlane.js";
 
-
-export class MyGround extends CGFobject {
-  constructor(scene, side, planeMaskPath, waterMap, elevationMap, grassTex, lakeTex, shader) {
+export class MyTerrain extends CGFobject {
+  constructor(scene, side, terrainMaskPath, waterMap, elevationMap, grassTex, lakeTex, shader) {
     super(scene);
 
     this.side = side;
@@ -12,7 +11,7 @@ export class MyGround extends CGFobject {
     this.material = new CGFappearance(this.scene);
     this.material.setAmbient(1.0, 1.0, 1.0, 1.0);
     this.material.setShininess(1.0);
-    this.material.loadTexture(planeMaskPath);
+    this.material.loadTexture(terrainMaskPath);
     this.material.setTextureWrap('REPEAT', 'REPEAT');
 
     this.waterMap = waterMap;
@@ -28,23 +27,23 @@ export class MyGround extends CGFobject {
       lakeTexture: 4
     });
 
-    this.buildLakeMap(planeMaskPath);
+    this.buildLakeMap(terrainMaskPath);
   }
 
-  buildLakeMap(planeMaskPath) {
-    this.lakeMapData = null;
+  buildLakeMap(terrainMaskPath) {
+    this.terrainMaskData = null;
 
     const canvas = document.createElement('canvas');
     canvas.width = this.side;
     canvas.height = this.side;
     const ctx = canvas.getContext('2d');
 
-    const lakeMapImg = new Image();
-    lakeMapImg.src = planeMaskPath;
-    lakeMapImg.onload = () => {
-      ctx.drawImage(lakeMapImg, 0, 0, this.side, this.side);
+    const terrainMaskImg = new Image();
+    terrainMaskImg.src = terrainMaskPath;
+    terrainMaskImg.onload = () => {
+      ctx.drawImage(terrainMaskImg, 0, 0, this.side, this.side);
       const imageData = ctx.getImageData(0, 0, this.side, this.side);
-      this.lakeMapData = imageData.data;
+      this.terrainMaskData = imageData.data;
     };
   }
 
@@ -69,7 +68,7 @@ export class MyGround extends CGFobject {
   }
 
   isAboveWater(position) {
-    if (!this.lakeMapData)
+    if (!this.terrainMaskData)
       return false; // Lake map not ready
 
     const [x, z] = [position[0], position[2]];
@@ -82,7 +81,7 @@ export class MyGround extends CGFobject {
     const px = Math.floor(u * (this.side - 1));
     const py = Math.floor(v * (this.side - 1));
 
-    const value = this.lakeMapData[(py * this.side + px) * 4];
+    const value = this.terrainMaskData[(py * this.side + px) * 4];
     return value < 128;
   }
 

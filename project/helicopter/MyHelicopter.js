@@ -9,14 +9,20 @@ import { MyWaterBucket } from "./MyWaterBucket.js";
 export class MyHelicopter extends CGFobject {
     MAX_ROTOR_SPEED = 0.015;
     MAX_TILT = Math.PI / 10;
+    MAX_ANIMATION2_ANGLE = Math.PI / 36;
+
     LIFTING_DURATION = 2000;
     LANDING4_DURATION = 2000;
     RISING_DURATION = 2000;
     LOWERING_DURATION = 2000;
-    BUCKET_HEIGHT = 24;
-    MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
-    constructor(scene, color, cockpitTexture, metalTexture, metalTexture2, flyingHeight) {
+    BUCKET_HEIGHT = 20;
+    TAIL_LENGTH = 32;
+    MAIN_ROTOR_RADIUS = 16;
+    TAIL_ROTOR_RADIUS = 3;
+    HELICOPTER_BOTTOM_HEIGHT = 7.4;
+
+    constructor(scene, color, cockpitTexture, metalTexture, metalTexture2, flyingHeight, scaleFactor) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
@@ -30,7 +36,7 @@ export class MyHelicopter extends CGFobject {
         this.flyingHeight = flyingHeight;
 
         this.bucketHeight = 0;
-        this.lakeHeight = this.BUCKET_HEIGHT - 14;
+        this.lakeHeight = this.BUCKET_HEIGHT - 16;
 
         this.tilt = 0;
         this.rotorAngle = 0;
@@ -41,8 +47,8 @@ export class MyHelicopter extends CGFobject {
         this.state = "STATIONARY";
         this.animDuration = 0;
 
-        this.cockpit = new MyEllipsoid(this.scene, 10, 6, 6, 12, 12);
-        this.tail = new MySkewedPyramid(this.scene, 6, 4, 1.5, 32, 3);
+        this.cockpit = new MyEllipsoid(this.scene, 10, 6, 6, 12, 24);
+        this.tail = new MySkewedPyramid(this.scene, 6, 4, 1.5, this.TAIL_LENGTH, 3);
 
         this.cockpitMaterial = new CGFappearance(this.scene);
         this.cockpitMaterial.setAmbient(...color, 1.0);
@@ -75,19 +81,20 @@ export class MyHelicopter extends CGFobject {
         this.skidRight = new MySkid(this.scene, true, this.detailMaterial);
         this.skidLeft = new MySkid(this.scene, false, this.detailMaterial);
 
-        this.mainRotor = new MyRotor(this.scene, 16, 5, 1, 2, 0.8, this.detailMaterial);
-        this.tailRotor = new MyRotor(this.scene, 3, 3, 0.7, 0.5, 0.2, this.detailMaterial);
+        this.mainRotor = new MyRotor(this.scene, this.MAIN_ROTOR_RADIUS, 5, 1, 2, 0.8, this.detailMaterial);
+        this.tailRotor = new MyRotor(this.scene, this.TAIL_ROTOR_RADIUS, 3, 0.7, 0.5, 0.2, this.detailMaterial);
         this.rudder = new MyRudder(this.scene);
         this.waterBucket = new MyWaterBucket(this.scene, 4, 6, 0, this.metalTexture2);
+
+        this.scaleFactor = scaleFactor;
     }
 
     display() {
         this.scene.pushMatrix();
 
         this.scene.translate(...this.position);
-
-        // this.scene.scale(0.5, 0.5, 0.5);
-        this.scene.translate(0, 7.4, 0);
+        this.scene.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+        this.scene.translate(0, this.HELICOPTER_BOTTOM_HEIGHT, 0);
         this.scene.rotate(this.orientation, 0, 1, 0);
 
         this.scene.pushMatrix();
@@ -125,7 +132,7 @@ export class MyHelicopter extends CGFobject {
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-        this.scene.translate(-32, 5, 0);
+        this.scene.translate(-this.TAIL_LENGTH, 5, 0);
 
         this.scene.pushMatrix();
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
@@ -154,7 +161,7 @@ export class MyHelicopter extends CGFobject {
         for (let i = 0; i < 3; i++)
             this.position[i] += initPosition[i] - this.initPosition[i];
         this.initPosition = initPosition;
-        this.waterBucket.setPositionHeight(this.initPosition[1] + this.flyingHeight - this.BUCKET_HEIGHT - 4);
+        this.waterBucket.setPositionHeight(this.initPosition[1] + this.flyingHeight - this.BUCKET_HEIGHT * this.scaleFactor);
     }
 
     setSpeedValues(speedFactor) {
@@ -163,17 +170,23 @@ export class MyHelicopter extends CGFobject {
         this.maxVelocity = speedFactor * 0.25;
     }
 
+    setScaleFactor(scaleFactor) {
+        this.scaleFactor = scaleFactor;
+        this.lakeHeight = this.BUCKET_HEIGHT - 16;
+    }
+
     getState() {
         return this.state;
     }
 
     getMovePhase() {
-        if (this.state == "LIFTING") { // up
-            return 1;
-        } else if (this.state == "LANDING5") { // down
-            return 2;
-        } else {
-            return 0;
+        switch (this.state) {
+            case "LIFTING":
+                return 1;  // UP
+            case "LANDING5":
+                return 2;  // DOWN
+            default:
+                return 0;  // H
         }
     }
 
@@ -245,13 +258,18 @@ export class MyHelicopter extends CGFobject {
         return [this.position[0] + this.velocity[0] * t, this.position[1], this.position[2] + this.velocity[1] * t];
     }
 
+    interpolate(t, min, max) {
+        return min + (max - min) * t;
+    }
+
     update(t) {
         switch (this.state) {
             case "LOWERING":
                 this.animDuration += t;
                 if (this.animDuration < this.LOWERING_DURATION) {
                     const progressFactor = Math.sin((this.animDuration * Math.PI) / (this.LOWERING_DURATION * 2));
-                    this.position[1] = (this.initPosition[1] + this.flyingHeight) - progressFactor * (this.flyingHeight + this.initPosition[1] - this.lakeHeight);
+                    this.position[1] = this.interpolate(progressFactor,
+                        this.initPosition[1] + this.flyingHeight, this.lakeHeight);
                 } else {
                     this.state = "LAKE";
                     this.position[1] = this.lakeHeight;
@@ -261,7 +279,8 @@ export class MyHelicopter extends CGFobject {
                 this.animDuration += t;
                 if (this.animDuration < this.RISING_DURATION) {
                     const progressFactor = Math.sin((this.animDuration * Math.PI) / (this.RISING_DURATION * 2))
-                    this.position[1] = this.lakeHeight + progressFactor * (this.flyingHeight + this.initPosition[1] - this.lakeHeight);
+                    this.position[1] = this.interpolate(progressFactor,
+                        this.lakeHeight, this.initPosition[1] + this.flyingHeight);
                 } else {
                     this.state = "FLYING";
                     this.position[1] = this.initPosition[1] + this.flyingHeight;
@@ -291,7 +310,11 @@ export class MyHelicopter extends CGFobject {
 
             case "LANDING1":
                 {
-                    const targetOrientation = Math.atan2(this.position[2] - this.initPosition[2], this.initPosition[0] - this.position[0]);
+                    const targetOrientation = Math.atan2(
+                        this.position[2] - this.initPosition[2],
+                        this.initPosition[0] - this.position[0]
+                    );
+
                     const orientationDelta = this.orientation <= targetOrientation
                         ? Math.min(this.orientationVelocity, targetOrientation - this.orientation)
                         : Math.max(-this.orientationVelocity, targetOrientation - this.orientation);
@@ -349,8 +372,6 @@ export class MyHelicopter extends CGFobject {
                         this.velocityNorm = 0;
                         break;
                     }
-
-
                 }
                 break;
 
