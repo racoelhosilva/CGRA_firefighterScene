@@ -38,9 +38,14 @@ export class MyScene extends CGFscene {
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
-
-    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
-
+    
+    // Presets
+    this.presets = [this.defaultPreset, this.fallPreset];
+    this.presetIds = {
+      "Default": 0,
+      "Fall": 1
+    };
+    this.selectedPreset = 0;
 
     this.panoramaTextureSunrise = new CGFtexture(this, 'textures/panorama_sunrise.jpg');
     this.panoramaTextureDay = new CGFtexture(this, 'textures/panorama_day.jpg');
@@ -53,9 +58,13 @@ export class MyScene extends CGFscene {
       'Sunset': 2,
       'Night': 3
     };
-    this.panoramaTextureChoice = 2;
+    this.selectedPanoramaTexture = 2;
 
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
+    this.dirtTexture = new CGFtexture(this, 'textures/dirt.jpg');
+    this.grassTextures = [this.grassTexture, this.dirtTexture];
+    this.grassTexturesIds = { 'Grass': 0, 'Dirt': 1 };
+    this.selectedGrassTexture = 0;
 
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
@@ -139,7 +148,7 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.panoramaTextureChoice]);
+    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
     this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
@@ -372,7 +381,7 @@ export class MyScene extends CGFscene {
   }
 
   updatePanoramaTexture() {
-    this.panorama.updateTexture(this.panoramaTextures[this.panoramaTextureChoice]);
+    this.panorama.updateTexture(this.panoramaTextures[this.selectedPanoramaTexture]);
   }
 
   updateGrassTexture() {
@@ -386,6 +395,28 @@ export class MyScene extends CGFscene {
         this.camera.setTarget(this.getInitialCameraTarget());
         break;
     }
+  }
+
+  applyPreset() {
+    this.presets[this.selectedPreset].call(this);
+  }
+
+  defaultPreset() {
+    this.selectedGrassTexture = 0;
+    this.updateGrassTexture();
+
+    this.darkTree = "#0b352b";
+    this.lightTree = "#43873c";
+    this.resetForest();
+  }
+
+  fallPreset() {
+    this.selectedGrassTexture = 1;
+    this.updateGrassTexture();
+
+    this.darkTree = "#4a2c0f";
+    this.lightTree = "#b57a2c";
+    this.resetForest();
   }
 
   display() {
