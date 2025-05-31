@@ -85,4 +85,12 @@ export class MyGround extends CGFobject {
     const value = this.lakeMapData[(py * this.side + px) * 4];
     return value < 128;
   }
+
+  updateGrassTexture(newGrassTex) {
+    this.grassTex = newGrassTex;
+  }
+
+  updateWaterTexture(newWaterTex) {
+    this.lakeTex = newWaterTex;
+  }
 }

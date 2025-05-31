@@ -35,26 +35,74 @@ export class MyScene extends CGFscene {
     this.enableTextures(true);
     this.appearance = new CGFappearance(this);
 
-    // TODO(Process-ing): Why is this here?
-    // this.groundTex = new CGFtexture(this, "textures/ground.png");
-		// this.appearance.setTexture(this.groundTex);
-		// this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
     this.updatePeriod = 50;
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
 
-    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
+    // Presets
+    this.presets = [this.defaultPreset, this.fallPreset];
+    this.presetIds = {
+      "Default": 0,
+      "Fall": 1
+    };
+    this.selectedPreset = 0;
+
+    this.panoramaTextureSunrise = new CGFtexture(this, 'textures/panorama_sunrise.jpg');
+    this.panoramaTextureDay = new CGFtexture(this, 'textures/panorama_day.jpg');
+    this.panoramaTextureSunset = new CGFtexture(this, 'textures/panorama_sunset.jpg');
+    this.panoramaTextureNight = new CGFtexture(this, 'textures/panorama_night.jpg');
+    this.panoramaTextures = [this.panoramaTextureSunrise, this.panoramaTextureDay, this.panoramaTextureSunset, this.panoramaTextureNight];
+    this.panoramaTextureIds = {
+      'Sunrise': 0,
+      'Day': 1,
+      'Sunset': 2,
+      'Night': 3
+    };
+    this.selectedPanoramaTexture = 2;
+
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
+    this.dirtTexture = new CGFtexture(this, 'textures/dirt.jpg');
+    this.grassTextures = [this.grassTexture, this.dirtTexture];
+    this.grassTexturesIds = { 'Grass': 0, 'Dirt': 1 };
+    this.selectedGrassTexture = 0;
+
+    this.waterTexture1 = new CGFtexture(this, 'textures/water1.jpg');
+    this.waterTexture2 = new CGFtexture(this, 'textures/water2.png');
+    this.waterTextures = [this.waterTexture1, this.waterTexture2];
+    this.waterTexturesIds = { 'Water 1': 0, 'Water 2': 1 };
+    this.selectedWaterTexture = 0;
+
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
-    this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.png');
-    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg');
     this.waterMap = new CGFtexture(this, 'textures/water_map.png');
     this.elevationMap = new CGFtexture(this, 'textures/elevation_map.png');
-    this.lakeTexture = new CGFtexture(this, 'textures/water.png');
+
+    this.treeRows = 5;
+    this.treeCols = 5;
+    this.darkTree = "#0b352b";
+    this.lightTree = "#43873c";
+
+    this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.jpg');
+    this.metalTexture = new CGFtexture(this, 'textures/metal.jpg');
+    this.metalTexture2 = new CGFtexture(this, 'textures/metal2.jpg');
+
+    this.fireTexture = new CGFtexture(this, 'textures/fire.jpg');
+    this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
+    this.numFires = 6;
+
+    this.planeMask = new CGFappearance(this);
+    this.planeMask.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.planeMask.setShininess(1.0);
+    this.planeMask.loadTexture('textures/plane_mask.png');
+    this.planeMask.setTextureWrap('REPEAT', 'REPEAT');
 
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
+    this.maxElevation = 50.0;
+    this.updateMaxElevation();
+
+    // Helicopter Properties
+    this.helicopterColor = '#a00000';
+    this.helicopterMarkerColor = '#80ff80';
 
     // Building Properties
     this.buildingSize = 100;
@@ -62,50 +110,42 @@ export class MyScene extends CGFscene {
     this.buildingZ = -150;
     this.floorNumber = 3;
     this.windowNumber = 3;
-    this.buildingColor = this.hexToRgbA('#8F8B7E');
-    this.buildingMaterial = new CGFappearance(this);
-    this.buildingMaterial.setAmbient(0.565, 0.573, 0.522, 1.0);
-    this.buildingMaterial.setDiffuse(0.565, 0.573, 0.522, 1.0);
-    this.buildingMaterial.setSpecular(0, 0, 0, 0);
-    this.buildingMaterial.setShininess(1.0);
+    this.buildingColor = '#d9d2b5';
+    this.backWindows = false;
+
+    // Building Textures
+    this.buildingTexture1 = new CGFtexture(this, "textures/brick.jpg");
+    this.buildingTexture2 = new CGFtexture(this, "textures/popcorn.jpg");
+    this.buildingTextures = [null, this.buildingTexture1, this.buildingTexture2];
+    this.buildingTexturesIds = {'None': 0, 'Brick': 1, 'Popcorn': 2};
+    this.selectedBuildingTexture = 0;
 
     // Door Texture
-    this.doorTexture = new CGFtexture(this, "textures/door.png");
-    this.doorMaterial = new CGFappearance(this);
-    this.doorMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-    this.doorMaterial.setShininess(1.0);
-    this.doorMaterial.setTexture(this.doorTexture);
-    this.doorMaterial.setTextureWrap("REPEAT", "REPEAT");
+    this.doorTexture1 = new CGFtexture(this, "textures/door1.jpg");
+    this.doorTexture2 = new CGFtexture(this, "textures/door2.jpg");
+    this.doorTextures = [this.doorTexture1, this.doorTexture2];
+    this.doorTexturesIds = {'Door 1': 0, 'Door 2': 1};
+    this.selectedDoorTexture = 0;
 
     // Banner Texture
-    this.bannerTexture = new CGFtexture(this, "textures/banner.png");
-    this.bannerMaterial = new CGFappearance(this);
-    this.bannerMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-    this.bannerMaterial.setShininess(1.0);
-    this.bannerMaterial.setTexture(this.bannerTexture);
-    this.bannerMaterial.setTextureWrap("REPEAT", "REPEAT");
+    this.bannerTextureEn = new CGFtexture(this, "textures/banner_en.jpg");
+    this.bannerTexturePt = new CGFtexture(this, "textures/banner_pt.jpg");
+    this.bannerTextures = [this.bannerTextureEn, this.bannerTexturePt];
+    this.bannerTexturesIds = {'English': 0, 'Portuguese': 1};
+    this.selectedBannerTexture = 0;
 
     // Window Textures
-    this.windowTexture1 = new CGFtexture(this, 'textures/window.png');
+    this.windowTexture1 = new CGFtexture(this, 'textures/window1.jpg');
     this.windowTexture2 = new CGFtexture(this, 'textures/window2.jpg');
-    this.windowTextures = [this.windowTexture1, this.windowTexture2];
-    this.windowTexturesIds = {'Window1': 0, 'Window2': 1};
-    this.selectedWindowTexture = 0;
+    this.windowTexture3 = new CGFtexture(this, 'textures/window3.jpg');
+    this.windowTexture4 = new CGFtexture(this, 'textures/window4.jpg');
+    this.stainedTexture1 = new CGFtexture(this, 'textures/stained1.jpg');
+    this.windowTextures = [this.windowTexture1, this.windowTexture2, this.windowTexture3, this.windowTexture4, this.stainedTexture1];
+    this.windowTexturesIds = {'Window 1': 0, 'Window 2': 1, 'Window 3': 2, 'Window 4': 3, 'Stained Glass': 4};
+    this.selectedWindowTexture = 3;
 
-    this.windowMaterial = new CGFappearance(this);
-    this.windowMaterial.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.windowMaterial.setShininess(1.0);
-    this.windowMaterial.setTexture(this.windowTexture1);
-    this.windowMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
-    // Helipad Texture
+    // Helipad Textures
     this.helipadTexture = new CGFtexture(this, "textures/helipad.png");
-    this.helipadMaterial = new CGFappearance(this);
-    this.helipadMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-    this.helipadMaterial.setShininess(1.0);
-    this.helipadMaterial.setTexture(this.helipadTexture);
-    this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
-
     this.upTexture = new CGFtexture(this, "textures/helipad_up.png");
     this.downTexture = new CGFtexture(this, "textures/helipad_down.png");
 
@@ -113,7 +153,7 @@ export class MyScene extends CGFscene {
     this.movementShader = new CGFshader(this.gl, 'shaders/movement.vert', 'shaders/movement.frag');
     this.movementShader.setUniformsValues({ timeFactor: 0, phase: 0, blinking: true, default: 0, textureUp : 1, textureDown : 2 });
 
-    // Helipad Lights
+    // Helipad Lights Shader
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
 
     // Lake Properties
@@ -122,24 +162,31 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
-    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTexture, this.lakeTexture, this.planeShader);
+    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
+
+    this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTextures[this.selectedGrassTexture], this.waterTextures[this.selectedWaterTexture], this.planeShader);
+
     this.building = new MyBuilding(this,
       this.buildingSize,
-      this.floorNumber, this.windowNumber,
-      this.windowMaterial, this.buildingMaterial,
-      this.doorMaterial, this.bannerMaterial,
-      this.helipadMaterial, this.upTexture, this.downTexture);
+      this.hexToRgb(this.buildingColor),
+      this.floorNumber,
+      this.windowNumber,
+      this.windowTextures[this.selectedWindowTexture],
+      this.backWindows,
+      this.buildingTextures[this.selectedBuildingTexture],
+      this.doorTextures[this.selectedDoorTexture],
+      this.bannerTextures[this.selectedBannerTexture],
+      this.helipadTexture, this.upTexture, this.downTexture
+    );
 
-    this.forest1 = new MyForest(this, 150, 150, 5, 5, this.truncTexture, this.crownTexture);
-    this.forest2 = new MyForest(this, 150, 150, 4, 4, this.truncTexture, this.crownTexture);
-    this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
-    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
+    this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+    this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+    this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
+    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
     this.setHelicopterInitPos();
 
-    this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
-    const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], 5, this.fireTexture, this.fireShader)
-    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], 2, this.fireTexture, this.fireShader);
+    const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires / 2, this.fireTexture, this.fireShader)
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires / 2, this.fireTexture, this.fireShader);
     this.fires = fires1.concat(fires2);
 
     this.lake = new MyLake(this, this.lakeRadius, this.lakeCenter, this.lakeMaterial);
@@ -256,7 +303,7 @@ export class MyScene extends CGFscene {
     this.movePhase = this.helicopter.getMovePhase();
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0)});
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 400) % 2) == 0) });
     this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
     this.planeShader.setUniformsValues({ timeFactor: t / 400000.0 % 100 });
   }
@@ -270,7 +317,7 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  hexToRgbA(hex) {
+  hexToRgb(hex) {
       var ret;
       //either we receive a html/css color or a RGB vector
       if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
@@ -278,7 +325,6 @@ export class MyScene extends CGFscene {
               parseInt(hex.substring(1,3),16).toPrecision()/255.0,
               parseInt(hex.substring(3,5),16).toPrecision()/255.0,
               parseInt(hex.substring(5,7),16).toPrecision()/255.0,
-              1.0
           ];
       }
       else
@@ -286,7 +332,6 @@ export class MyScene extends CGFscene {
               hex[0].toPrecision()/255.0,
               hex[1].toPrecision()/255.0,
               hex[2].toPrecision()/255.0,
-              1.0
           ];
       return ret;
   }
@@ -297,6 +342,10 @@ export class MyScene extends CGFscene {
       this.building.getTotalHeight() + this.Z_CLASHING_OFFSET,
       this.buildingZ + this.building.getCentralFloorDepth() / 2
     ]);
+  }
+
+  updateSpeedFactor() {
+    this.helicopter.setSpeedValues(this.speedFactor);
   }
 
   updateBuildingSize() {
@@ -313,13 +362,63 @@ export class MyScene extends CGFscene {
     this.building.updateWindowNumber(this.windowNumber);
   }
 
-  updateWindowTexture() {
-    this.windowMaterial.setTexture(this.windowTextures[this.selectedWindowTexture]);
+  updateBuildingTexture() {
+    this.building.updateBuildingTexture(this.buildingTextures[this.selectedBuildingTexture]);
   }
 
-  updateBuildingMaterial() {
-    this.buildingMaterial.setAmbient(...this.hexToRgbA(this.buildingColor));
-    this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor));
+  updateWindowTexture() {
+    this.building.updateWindowTexture(this.windowTextures[this.selectedWindowTexture]);
+  }
+
+  updateBackWindows() {
+    this.building.updateBackWindows(this.backWindows);
+  }
+
+  updateBannerTexture() {
+    this.building.updateBannerTexture(this.bannerTextures[this.selectedBannerTexture]);
+  }
+
+  updateDoorTexture() {
+    this.building.updateDoorTexture(this.doorTextures[this.selectedDoorTexture]);
+  }
+
+  updateBuildingColor() {
+    this.building.updateBuildingColor(this.hexToRgb(this.buildingColor));
+  }
+
+  updateHelicopterColor() {
+    this.helicopter.updateColor(this.hexToRgb(this.helicopterColor));
+  }
+
+  updateHelicopterMarkerColor() {
+    this.helicopterMarker.updateColor(this.hexToRgb(this.helicopterMarkerColor));
+  }
+
+  resetFire() {
+    this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires, this.fireTexture, this.fireShader);
+    const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires, this.fireTexture, this.fireShader);
+    this.fires = this.fires.concat(fires2);
+  }
+
+  resetForest() {
+    this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+    this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+  }
+
+  updatePanoramaTexture() {
+    this.panorama.updateTexture(this.panoramaTextures[this.selectedPanoramaTexture]);
+  }
+
+  updateGrassTexture() {
+    this.ground.updateGrassTexture(this.grassTextures[this.selectedGrassTexture]);
+  }
+
+  updateWaterTexture() {
+    this.ground.updateWaterTexture(this.waterTextures[this.selectedWaterTexture]);
+  }
+
+  updateMaxElevation() {
+    this.planeShader.setUniformsValues({ maxElevation: this.maxElevation });
   }
 
   updateView() {
@@ -329,6 +428,34 @@ export class MyScene extends CGFscene {
         this.camera.setTarget(this.getInitialCameraTarget());
         break;
     }
+  }
+
+  applyPreset() {
+    this.presets[this.selectedPreset].call(this);
+  }
+
+  defaultPreset() {
+    this.selectedGrassTexture = 0;
+    this.updateGrassTexture();
+
+    this.darkTree = "#0b352b";
+    this.lightTree = "#43873c";
+    this.resetForest();
+
+    this.selectedWaterTexture = 0;
+    this.updateWaterTexture();
+  }
+
+  fallPreset() {
+    this.selectedGrassTexture = 1;
+    this.updateGrassTexture();
+
+    this.darkTree = "#a74039";
+    this.lightTree = "#c18748";
+    this.resetForest();
+
+    this.selectedWaterTexture = 1;
+    this.updateWaterTexture();
   }
 
   display() {

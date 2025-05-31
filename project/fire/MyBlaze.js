@@ -9,7 +9,6 @@ export class MyBlaze extends CGFobject {
     super(scene);
 
     this.triangle = this.buildTriangle(minHeight, maxHeight, radiusRatio);
-    console.log(this.triangle);
 
     this.material = material;
     this.fire = fire;

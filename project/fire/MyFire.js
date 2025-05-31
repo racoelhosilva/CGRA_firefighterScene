@@ -78,7 +78,7 @@ export class MyFire extends CGFobject {
       const centerZ = Math.random() * (bottomRight[2] - topLeft[2]) + topLeft[2];
       const centerY = 0;  // Ground level
 
-      fires.push(new MyFire(scene, radius, height, 20, [centerX, centerY, centerZ], texture, shader));
+      fires.push(new MyFire(scene, radius, height, 10, [centerX, centerY, centerZ], texture, shader));
     }
 
     return fires;

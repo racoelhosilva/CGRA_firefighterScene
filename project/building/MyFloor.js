@@ -2,15 +2,42 @@ import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyFloor extends CGFobject {
-    constructor(scene, width, depth, height, windows, windowMaterial, doorMaterial, bannerMaterial) {
+    constructor(scene, width, depth, height, windows, windowTexture, backWindows, doorTexture, bannerTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
         this.height = height;
         this.windows = windows;
-        this.windowMaterial = windowMaterial;
-        this.doorMaterial = doorMaterial;
-        this.bannerMaterial = bannerMaterial;
+        this.windowTexture = windowTexture;
+        this.backWindows = backWindows;
+        this.doorTexture = doorTexture;
+        this.bannerTexture = bannerTexture;
+
+        // Window Material
+        this.windowMaterial = new CGFappearance(scene);
+        this.windowMaterial.setAmbient(0.8, 0.8, 0.8, 1);
+        this.windowMaterial.setDiffuse(0.8, 0.8, 0.8, 1);
+        this.windowMaterial.setSpecular(0.2, 0.2, 0.2, 1);
+        this.windowMaterial.setShininess(200.0);
+        this.windowMaterial.setTexture(this.windowTexture);
+        this.windowMaterial.setTextureWrap("REPEAT", "REPEAT");
+
+        // Door Material
+        this.doorMaterial = new CGFappearance(scene);
+        this.doorMaterial.setAmbient(0.8, 0.8, 0.8, 1);
+        this.doorMaterial.setDiffuse(0.4, 0.4, 0.4, 1);
+        this.doorMaterial.setSpecular(0.2, 0.2, 0.2, 1);
+        this.doorMaterial.setShininess(10.0);
+        this.doorMaterial.setTexture(this.doorTexture);
+        this.doorMaterial.setTextureWrap("REPEAT", "REPEAT");
+
+        // Banner Material
+        this.bannerMaterial = new CGFappearance(scene);
+        this.bannerMaterial.setAmbient(0.7, 0.7, 0.7, 1);
+        this.bannerMaterial.setEmission(0.2, 0.2, 0.2, 1);
+        this.bannerMaterial.setShininess(10.0);
+        this.bannerMaterial.setTexture(this.bannerTexture);
+        this.bannerMaterial.setTextureWrap("REPEAT", "REPEAT");
 
         // Floor
         this.xFloor = new MyRectangle(this.scene, depth, height);
@@ -80,15 +107,17 @@ export class MyFloor extends CGFobject {
             this.scene.popMatrix();
         }
 
-        this.windowMaterial.apply();
-        this.scene.pushMatrix();
-        this.scene.rotate(Math.PI, 0, 1, 0);
-        this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
-        for (let i = 0; i < this.windows; i++) {
-            this.window.display();
-            this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
+        if (this.backWindows) {
+            this.windowMaterial.apply();
+            this.scene.pushMatrix();
+            this.scene.rotate(Math.PI, 0, 1, 0);
+            this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
+            for (let i = 0; i < this.windows; i++) {
+                this.window.display();
+                this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
+            }
+            this.scene.popMatrix();
         }
-        this.scene.popMatrix();
     }
 
     updateSize(width, depth, height) {
@@ -115,5 +144,24 @@ export class MyFloor extends CGFobject {
     updateWindowNumber(windows) {
         this.windows = windows;
         this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
+    }
+
+    updateWindowTexture(texture) {
+        this.windowTexture = texture;
+        this.windowMaterial.setTexture(this.windowTexture);
+    }
+
+    updateBannerTexture(texture) {
+        this.bannerTexture = texture;
+        this.bannerMaterial.setTexture(this.bannerTexture);
+    }
+
+    updateDoorTexture(texture) {
+        this.doorTexture = texture;
+        this.doorMaterial.setTexture(this.doorTexture);
+    }
+
+    updateBackWindows(backWindows) {
+        this.backWindows = backWindows;
     }
 }

@@ -3,13 +3,20 @@ import { MyCube } from "../component/MyCube.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyCeiling extends CGFobject {
-    constructor(scene, width, depth, helipadMaterial, upTexture, downTexture) {
+    constructor(scene, width, depth, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
-        this.helipadMaterial = helipadMaterial;
+        this.helipadTexture = helipadTexture;
         this.upTexture = upTexture;
         this.downTexture = downTexture;
+
+        // Helipad Material
+        this.helipadMaterial = new CGFappearance(scene);
+        this.helipadMaterial.setAmbient(0.5, 0.5, 0.5, 1);
+        this.helipadMaterial.setShininess(10.0);
+        this.helipadMaterial.setTexture(this.helipadTexture);
+        this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
 
         // Ceiling
         this.ceiling = new MyRectangle(this.scene, width, depth);

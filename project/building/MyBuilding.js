@@ -1,9 +1,9 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject, CGFappearance } from '../../lib/CGF.js';
 import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, floors, windows, windowMaterial, buildingMaterial, doorMaterial, bannerMaterial, helipadMaterial, upTexture, downTexture) {
+    constructor(scene, total_width, buildingColor, floors, windows, windowTexture, backWindows, facadeTexture, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.total_width = total_width;
         this.width = 2 * total_width / 5;
@@ -11,11 +11,18 @@ export class MyBuilding extends CGFobject {
         this.depth = total_width / 3;
         this.floors = floors;
         this.windows = windows;
-        this.windowMaterial = windowMaterial;
-        this.buildingMaterial = buildingMaterial;
+        this.backWindows = backWindows;
+        this.buildingColor = buildingColor;
 
-        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowMaterial, doorMaterial, bannerMaterial);
-        this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadMaterial, upTexture, downTexture);
+        this.buildingMaterial = new CGFappearance(scene);
+        this.buildingMaterial.setAmbient(...this.buildingColor.map(c => c * 0.5), 1.0);
+        this.buildingMaterial.setDiffuse(...this.buildingColor.map(c => c * 0.8), 1.0);
+        this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
+        this.buildingMaterial.setShininess(1.0);
+        this.buildingMaterial.setTexture(facadeTexture);
+
+        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, windowTexture, backWindows, doorTexture, bannerTexture);
+        this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadTexture, upTexture, downTexture);
     }
 
     display() {
@@ -55,8 +62,6 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.apply();
         this.ceiling.display(false);
         this.scene.popMatrix();
-
-        this.scene.setDefaultAppearance();
     }
 
     getTotalHeight() {
@@ -90,10 +95,30 @@ export class MyBuilding extends CGFobject {
         this.floor.updateWindowNumber(this.windows);
     }
 
+    updateWindowTexture(windowTexture) {
+        this.floor.updateWindowTexture(windowTexture);
+    }
+
+    updateBannerTexture(bannerTexture) {
+        this.floor.updateBannerTexture(bannerTexture);
+    }
+
+    updateDoorTexture(doorTexture) {
+        this.floor.updateDoorTexture(doorTexture);
+    }
+
     updateBuildingColor(color) {
         this.buildingColor = color;
-        this.appearance.setAmbient(...color);
-        this.appearance.setDiffuse(...color);
-        this.initBuffers();
+        this.buildingMaterial.setAmbient(...this.buildingColor.map(c => c * 0.5), 1.0);
+        this.buildingMaterial.setDiffuse(...this.buildingColor.map(c => c * 0.8), 1.0);
+    }
+
+    updateBackWindows(backWindows) {
+        this.backWindows = backWindows;
+        this.floor.updateBackWindows(this.backWindows);
+    }
+
+    updateBuildingTexture(facadeTexture) {
+        this.buildingMaterial.setTexture(facadeTexture);
     }
 }
