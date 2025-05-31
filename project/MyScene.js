@@ -414,8 +414,8 @@ export class MyScene extends CGFscene {
     this.selectedGrassTexture = 1;
     this.updateGrassTexture();
 
-    this.darkTree = "#4a2c0f";
-    this.lightTree = "#b57a2c";
+    this.darkTree = "#a74039";
+    this.lightTree = "#c18748";
     this.resetForest();
   }
 
