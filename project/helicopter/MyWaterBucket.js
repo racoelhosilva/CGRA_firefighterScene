@@ -5,7 +5,7 @@ import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 import { MyWaterParticle } from "./MyWaterParticle.js";
 
 export class MyWaterBucket extends CGFobject {
-    constructor(scene, radius, height, cableHeight) {
+    constructor(scene, radius, height, cableHeight, bucketTexture) {
         super(scene);
         this.radius = radius;
         this.height = height;
@@ -34,6 +34,7 @@ export class MyWaterBucket extends CGFobject {
         this.bucketMaterial.setDiffuse(0.3, 0.3, 0.3, 1.0);
         this.bucketMaterial.setSpecular(0.8, 0.8, 0.8, 1.0);
         this.bucketMaterial.setShininess(200);
+        this.bucketMaterial.setTexture(bucketTexture);
 
         this.cableMaterial = new CGFappearance(this.scene);
         this.cableMaterial.setAmbient(0.1, 0.1, 0.1, 1.0);

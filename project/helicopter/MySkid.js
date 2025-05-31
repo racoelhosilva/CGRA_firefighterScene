@@ -5,16 +5,12 @@ import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 export class MySkid extends CGFobject {
     LENGTH = 20;
 
-    constructor(scene, right) {
+    constructor(scene, right, skidMaterial) {
         super(scene);
      
         this.right = right;
 
-        this.skidMaterial = new CGFappearance(this.scene);
-        this.skidMaterial.setAmbient(0.3, 0.3, 0.3, 1.0);
-        this.skidMaterial.setDiffuse(0.3, 0.3, 0.3, 1.0);
-        this.skidMaterial.setSpecular(0.8, 0.8, 0.8, 1.0);
-        this.skidMaterial.setShininess(10.0);
+        this.skidMaterial = skidMaterial;
 
         this.smallCylinder = new MyCylinder(this.scene, 0.2, 3, 8, 2);
         this.bigCylinder = new MyCylinder(this.scene, 0.4, this.LENGTH, 8, 6);

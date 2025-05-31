@@ -16,7 +16,7 @@ export class MyHelicopter extends CGFobject {
     BUCKET_HEIGHT = 24;
     MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
-    constructor(scene, cockpitTexture, metalTexture, flyingHeight) {
+    constructor(scene, cockpitTexture, metalTexture, metalTexture2, flyingHeight) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
@@ -66,13 +66,20 @@ export class MyHelicopter extends CGFobject {
         this.rudderMaterial.setShininess(200);
         this.rudderMaterial.setTexture(metalTexture);
 
-        this.skidRight = new MySkid(this.scene, true);
-        this.skidLeft = new MySkid(this.scene, false);
+        this.detailMaterial = new CGFappearance(this.scene);
+        this.detailMaterial.setAmbient(0.5, 0.5, 0.5, 1.0);
+        this.detailMaterial.setDiffuse(0.5, 0.5, 0.5, 1.0);
+        this.detailMaterial.setSpecular(0.5, 0.5, 0.5, 1.0);
+        this.detailMaterial.setShininess(10.0);
+        this.detailMaterial.setTexture(metalTexture2);
 
-        this.mainRotor = new MyRotor(this.scene, 16, 5, 2, 0.8);
-        this.tailRotor = new MyRotor(this.scene, 3, 3, 0.5, 0.2);
+        this.skidRight = new MySkid(this.scene, true, this.detailMaterial);
+        this.skidLeft = new MySkid(this.scene, false, this.detailMaterial);
+
+        this.mainRotor = new MyRotor(this.scene, 16, 5, 1, 2, 0.8, this.detailMaterial);
+        this.tailRotor = new MyRotor(this.scene, 3, 3, 0.7, 0.5, 0.2, this.detailMaterial);
         this.rudder = new MyRudder(this.scene);
-        this.waterBucket = new MyWaterBucket(this.scene, 4, 6, 0);
+        this.waterBucket = new MyWaterBucket(this.scene, 4, 6, 0, this.metalTexture2);
     }
 
     display() {
