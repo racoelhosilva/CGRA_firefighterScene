@@ -130,7 +130,7 @@ export class MyScene extends CGFscene {
       this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
-    this.forest = new MyForest(this, 200, 150, 7, 8, this.truncTexture, this.crownTexture);
+    this.forest = new MyForest(this, 150, 150, 5, 5, this.truncTexture, this.crownTexture);
     this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
@@ -156,8 +156,8 @@ export class MyScene extends CGFscene {
       0.4,
       0.1,
       2200,
-      vec3.fromValues(300, 300, 300),
-      vec3.fromValues(-50, 0, -100)
+      vec3.fromValues(250, 250, 250),
+      vec3.fromValues(-50, 20, -150)
     );
   }
   checkKeys(deltaT) {

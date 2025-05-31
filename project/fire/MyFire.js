@@ -72,7 +72,7 @@ export class MyFire extends CGFobject {
     const fires = [];
 
     for (let i = 0; i < numFires; i++) {
-      const radius = 10 + Math.random() * (30 - 10);
+      const radius = 10 + Math.random() * (40 - 10);
       const height = radius * 1.5;
       const centerX = Math.random() * (bottomRight[0] - topLeft[0]) + topLeft[0];
       const centerZ = Math.random() * (bottomRight[2] - topLeft[2]) + topLeft[2];

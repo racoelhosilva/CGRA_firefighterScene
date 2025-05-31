@@ -4,10 +4,10 @@ import { MyTree } from "./MyTree.js";
 export class MyForest extends CGFobject {
   MIN_RADIUS
   MAX_TILT = Math.PI / 18;
-  MIN_RADIUS = 1.5;
-  MAX_RADIUS = 2.5;
-  MIN_HEIGHT = 20;
-  MAX_HEIGHT = 25;
+  MIN_RADIUS = 3;
+  MAX_RADIUS = 5;
+  MIN_HEIGHT = 35;
+  MAX_HEIGHT = 50;
   MIN_COLOR = [0.0, 0.3, 0.0];
   MAX_COLOR = [0.15, 0.5, 0.1];
 
