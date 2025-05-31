@@ -47,6 +47,7 @@ export class MyScene extends CGFscene {
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.helicopterTexture = new CGFtexture(this, 'textures/helicopter.jpg');
+    this.metalTexture = new CGFtexture(this, 'textures/metal.jpg');
     this.fireTexture = new CGFtexture(this, 'textures/fire.jpg')
 
     this.planeMask = new CGFappearance(this);
@@ -122,7 +123,7 @@ export class MyScene extends CGFscene {
       this.helipadTexture, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
-    this.helicopter = new MyHelicopter(this, this.helicopterTexture, 25);
+    this.helicopter = new MyHelicopter(this, this.helicopterTexture, this.metalTexture, 25);
     this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
     this.setHelicopterInitPos();
 

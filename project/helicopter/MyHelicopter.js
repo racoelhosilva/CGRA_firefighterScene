@@ -16,7 +16,7 @@ export class MyHelicopter extends CGFobject {
     BUCKET_HEIGHT = 24;
     MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
-    constructor(scene, cockpitTexture, flyingHeight) {
+    constructor(scene, cockpitTexture, metalTexture, flyingHeight) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
@@ -57,12 +57,14 @@ export class MyHelicopter extends CGFobject {
         this.tailMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
         this.tailMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
         this.tailMaterial.setShininess(200);
+        this.tailMaterial.setTexture(metalTexture);
 
         this.rudderMaterial = new CGFappearance(this.scene);
         this.rudderMaterial.setAmbient(0.627, 0.0, 0.0, 1.0);
         this.rudderMaterial.setDiffuse(0.627, 0.0, 0.0, 1.0);
         this.rudderMaterial.setSpecular(0.627, 0.0, 0.0, 1.0);
         this.rudderMaterial.setShininess(200);
+        this.rudderMaterial.setTexture(metalTexture);
 
         this.skidRight = new MySkid(this.scene, true);
         this.skidLeft = new MySkid(this.scene, false);
