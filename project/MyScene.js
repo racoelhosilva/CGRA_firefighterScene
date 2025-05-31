@@ -79,6 +79,7 @@ export class MyScene extends CGFscene {
     this.floorNumber = 3;
     this.windowNumber = 3;
     this.buildingColor = '#d9d2b5';
+    this.backWindows = false;
 
     // Door Texture
     this.doorTexture1 = new CGFtexture(this, "textures/door1.jpg");
@@ -126,10 +127,15 @@ export class MyScene extends CGFscene {
     this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTexture, this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
-      this.floorNumber, this.windowNumber,
-      this.windowTextures[this.selectedWindowTexture], this.hexToRgb(this.buildingColor),
-      this.doorTextures[this.selectedDoorTexture], this.bannerTextures[this.selectedBannerTexture],
-      this.helipadTexture, this.upTexture, this.downTexture);
+      this.hexToRgb(this.buildingColor),
+      this.floorNumber, 
+      this.windowNumber,
+      this.windowTextures[this.selectedWindowTexture], 
+      this.backWindows, 
+      this.doorTextures[this.selectedDoorTexture], 
+      this.bannerTextures[this.selectedBannerTexture],
+      this.helipadTexture, this.upTexture, this.downTexture
+    );
 
     this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture);
     this.forest2 = new MyForest(this, 150, 150, 4, 4, this.truncTexture, this.crownTexture);
@@ -312,6 +318,10 @@ export class MyScene extends CGFscene {
 
   updateWindowTexture() {
     this.building.updateWindowTexture(this.windowTextures[this.selectedWindowTexture]);
+  }
+
+  updateBackWindows() {
+    this.building.updateBackWindows(this.backWindows);
   }
 
   updateBannerTexture() {

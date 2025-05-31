@@ -2,13 +2,14 @@ import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
 export class MyFloor extends CGFobject {
-    constructor(scene, width, depth, height, windows, windowTexture, doorTexture, bannerTexture) {
+    constructor(scene, width, depth, height, windows, windowTexture, backWindows, doorTexture, bannerTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
         this.height = height;
         this.windows = windows;
         this.windowTexture = windowTexture;
+        this.backWindows = backWindows;
         this.doorTexture = doorTexture;
         this.bannerTexture = bannerTexture;
 
@@ -106,15 +107,17 @@ export class MyFloor extends CGFobject {
             this.scene.popMatrix();
         }
 
-        this.windowMaterial.apply();
-        this.scene.pushMatrix();
-        this.scene.rotate(Math.PI, 0, 1, 0);
-        this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
-        for (let i = 0; i < this.windows; i++) {
-            this.window.display();
-            this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
+        if (this.backWindows) {
+            this.windowMaterial.apply();
+            this.scene.pushMatrix();
+            this.scene.rotate(Math.PI, 0, 1, 0);
+            this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
+            for (let i = 0; i < this.windows; i++) {
+                this.window.display();
+                this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
+            }
+            this.scene.popMatrix();
         }
-        this.scene.popMatrix();
     }
 
     updateSize(width, depth, height) {
@@ -156,5 +159,9 @@ export class MyFloor extends CGFobject {
     updateDoorTexture(texture) {
         this.doorTexture = texture;
         this.doorMaterial.setTexture(this.doorTexture);
+    }
+
+    updateBackWindows(backWindows) {
+        this.backWindows = backWindows;
     }
 }

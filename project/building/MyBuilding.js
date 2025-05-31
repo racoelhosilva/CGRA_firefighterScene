@@ -3,7 +3,7 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, floors, windows, windowTexture, buildingColor, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
+    constructor(scene, total_width, buildingColor, floors, windows, windowTexture, backWindows, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.total_width = total_width;
         this.width = 2 * total_width / 5;
@@ -11,6 +11,7 @@ export class MyBuilding extends CGFobject {
         this.depth = total_width / 3;
         this.floors = floors;
         this.windows = windows;
+        this.backWindows = backWindows;
         this.buildingColor = buildingColor;
 
         this.buildingMaterial = new CGFappearance(scene);
@@ -19,7 +20,7 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
         this.buildingMaterial.setShininess(1.0);
 
-        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, windowTexture, doorTexture, bannerTexture);
+        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, windowTexture, backWindows, doorTexture, bannerTexture);
         this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadTexture, upTexture, downTexture);
     }
 
@@ -109,5 +110,10 @@ export class MyBuilding extends CGFobject {
         this.buildingColor = color;
         this.buildingMaterial.setAmbient(...this.buildingColor.map(c => c * 0.5), 1.0);
         this.buildingMaterial.setDiffuse(...this.buildingColor.map(c => c * 0.8), 1.0);
+    }
+
+    updateBackWindows(backWindows) {
+        this.backWindows = backWindows;
+        this.floor.updateBackWindows(this.backWindows);
     }
 }
