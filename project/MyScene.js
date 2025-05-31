@@ -111,6 +111,7 @@ export class MyScene extends CGFscene {
 
     // Helipad Shader
     this.movementShader = new CGFshader(this.gl, 'shaders/movement.vert', 'shaders/movement.frag');
+    this.movementShader.setUniformsValues({ timeFactor: 0, phase: 0, blinking: true, default: 0, textureUp : 1, textureDown : 2 });
 
     // Helipad Lights
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
@@ -145,7 +146,7 @@ export class MyScene extends CGFscene {
 
     this.t = new Date().getTime();
 
-    this.view = "plane";  // plane or helicopter
+    this.view = "HELICOPTER";  // plane or helicopter
   }
 
   initLights() {
@@ -156,15 +157,25 @@ export class MyScene extends CGFscene {
 
     this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
   }
+
+  getInitialCameraPosition() {
+    return vec3.fromValues(250, 250, 250);
+  }
+
+  getInitialCameraTarget() {
+    return vec3.fromValues(-50, 20, -150);
+  }
+
   initCameras() {
     this.camera = new CGFcamera(
       0.4,
       0.1,
       2200,
-      vec3.fromValues(250, 250, 250),
-      vec3.fromValues(-50, 20, -150)
+      this.getInitialCameraPosition(),
+      this.getInitialCameraTarget()
     );
   }
+
   checkKeys(deltaT) {
     var text = "Keys pressed: ";
     var keysPressed = false;
@@ -243,9 +254,9 @@ export class MyScene extends CGFscene {
     this.movePhase = this.helicopter.getMovePhase();
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0)});
     this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
-    this.planeShader.setUniformsValues({ timeFactor: t  / 400000.0 % 1.0 });
+    this.planeShader.setUniformsValues({ timeFactor: t / 400000.0 % 100 });
   }
 
   setDefaultAppearance() {
@@ -317,6 +328,19 @@ export class MyScene extends CGFscene {
     // Initialize Model-View matrix as identity (no transformation
     this.updateProjectionMatrix();
     this.loadIdentity();
+
+    if (this.view == "HELICOPTER") {
+      const offset = 220;
+      const cameraPos = vec3.fromValues(
+        this.helicopter.position[0] - Math.cos(this.helicopter.orientation) * offset,
+        this.helicopter.position[1] + offset,
+        this.helicopter.position[2] + Math.sin(this.helicopter.orientation) * offset
+      );
+
+      this.camera.setPosition(cameraPos);
+      this.camera.setTarget(this.helicopter.position);
+    }
+
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
