@@ -16,7 +16,7 @@ export class MyHeli extends CGFobject {
     RISING_DURATION = 2000;
     LOWERING_DURATION = 2000;
 
-    BUCKET_HEIGHT = 20;
+    BUCKET_HEIGHT = 24;
     TAIL_LENGTH = 32;
     MAIN_ROTOR_RADIUS = 16;
     TAIL_ROTOR_RADIUS = 3;
@@ -36,7 +36,7 @@ export class MyHeli extends CGFobject {
         this.flyingHeight = flyingHeight;
 
         this.bucketHeight = 0;
-        this.lakeHeight = this.BUCKET_HEIGHT - 16;
+        this.lakeHeight = this.BUCKET_HEIGHT - 20;
 
         this.tilt = 0;
         this.rotorAngle = 0;
@@ -149,7 +149,7 @@ export class MyHeli extends CGFobject {
 
         if (this.state !== "STATIONARY") {
             this.scene.pushMatrix();
-            this.scene.translate(0, -4 - this.bucketHeight, 0);
+            this.scene.translate(0, -this.bucketHeight, 0);
             this.waterBucket.display();
             this.scene.popMatrix();
         }
