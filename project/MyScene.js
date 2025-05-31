@@ -67,9 +67,9 @@ export class MyScene extends CGFscene {
     this.windowNumber = 3;
     this.buildingColor = this.hexToRgbA('#8F8B7E');
     this.buildingMaterial = new CGFappearance(this);
-    this.buildingMaterial.setAmbient(0.565, 0.573, 0.522, 1.0);
-    this.buildingMaterial.setDiffuse(0.565, 0.573, 0.522, 1.0);
-    this.buildingMaterial.setSpecular(0, 0, 0, 0);
+    this.buildingMaterial.setAmbient(...this.buildingColor.map(c => c * 0.5), 1.0);
+    this.buildingMaterial.setDiffuse(...this.buildingColor.map(c => c * 0.8), 1.0);
+    this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
     this.buildingMaterial.setShininess(1.0);
 
     // Door Texture
@@ -305,8 +305,8 @@ export class MyScene extends CGFscene {
   }
 
   updateBuildingMaterial() {
-    this.buildingMaterial.setAmbient(...this.hexToRgbA(this.buildingColor));
-    this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor));
+    this.buildingMaterial.setAmbient(...this.hexToRgbA(this.buildingColor).map(c => c * 0.5));
+    this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor).map(c => c * 0.8));
   }
 
   display() {

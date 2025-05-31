@@ -55,8 +55,6 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.apply();
         this.ceiling.display(false);
         this.scene.popMatrix();
-
-        this.scene.setDefaultAppearance();
     }
 
     getTotalHeight() {
