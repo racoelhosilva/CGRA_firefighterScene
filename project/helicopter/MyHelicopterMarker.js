@@ -22,7 +22,7 @@ export class MyHelicopterMarker extends CGFobject {
 
     this.material.apply();
     this.scene.pushMatrix();
-    this.scene.translate(this.helicopter.position[0], this.helicopter.position[1] - this.helicopter.bucketHeight + 4, this.helicopter.position[2]);
+    this.scene.translate(this.helicopter.position[0], this.helicopter.position[1] - (this.helicopter.bucketHeight - 4) * this.helicopter.scaleFactor, this.helicopter.position[2]);
     this.scene.rotate(Math.PI, 1, 0, 0);
     this.circle.display();
     this.scene.popMatrix();
