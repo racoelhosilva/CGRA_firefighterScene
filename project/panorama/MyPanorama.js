@@ -24,4 +24,8 @@ export class MyPanorama extends CGFobject {
 
     this.scene.popMatrix();
   }
+
+  updateTexture(texture) {
+    this.material.setTexture(texture);
+  }
 }

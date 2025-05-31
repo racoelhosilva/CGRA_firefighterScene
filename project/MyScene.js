@@ -39,8 +39,19 @@ export class MyScene extends CGFscene {
     this.setUpdatePeriod(this.updatePeriod);
     this.speedFactor = 1;
     
-    this.panoramaTexture = new CGFtexture(this, 'textures/panorama.jpg');
-    
+    this.panoramaTextureSunrise = new CGFtexture(this, 'textures/panorama_sunrise.jpg');
+    this.panoramaTextureDay = new CGFtexture(this, 'textures/panorama_day.jpg');
+    this.panoramaTextureSunset = new CGFtexture(this, 'textures/panorama_sunset.jpg');
+    this.panoramaTextureNight = new CGFtexture(this, 'textures/panorama_night.jpg');
+    this.panoramaTextures = [this.panoramaTextureSunrise, this.panoramaTextureDay, this.panoramaTextureSunset, this.panoramaTextureNight];
+    this.panoramaTextureIds = {
+      'Sunrise': 0,
+      'Day': 1,
+      'Sunset': 2,
+      'Night': 3
+    };
+    this.panoramaTextureChoice = 2;
+
     this.grassTexture = new CGFtexture(this, 'textures/grass.jpg');
     
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
@@ -125,7 +136,7 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this, 20, 1);
-    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTexture);
+    this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.panoramaTextureChoice]);
     this.ground = new MyGround(this, 800, 'textures/plane_mask2.png', this.waterMap, this.elevationMap, this.grassTexture, this.lakeTexture, this.planeShader);
     this.building = new MyBuilding(this,
       this.buildingSize,
@@ -355,6 +366,10 @@ export class MyScene extends CGFscene {
   resetForest() {
     this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
     this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
+  }
+
+  updatePanoramaTexture() {
+    this.panorama.updateTexture(this.panoramaTextures[this.panoramaTextureChoice]);
   }
 
   updateView() {

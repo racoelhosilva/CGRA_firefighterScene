@@ -36,6 +36,7 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'numFires', 1, 20, 1).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene)).step(1);
         this.gui.add(this.scene, 'resetFire').name("Reset Fire");
         this.gui.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
+        this.gui.add(this.scene, 'panoramaTextureChoice', this.scene.panoramaTextureIds).name("Panorama Texture").onChange(this.scene.updatePanoramaTexture.bind(this.scene));
 
         this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").step(0.1);
 
