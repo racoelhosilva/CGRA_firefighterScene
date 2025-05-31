@@ -21,11 +21,12 @@ export class MyInterface extends CGFinterface {
         const panoramaFolder = this.gui.addFolder("Panorama Settings");
         panoramaFolder.add(this.scene, 'selectedPanoramaTexture', this.scene.panoramaTextureIds).name("Panorama Texture").onChange(this.scene.updatePanoramaTexture.bind(this.scene));
 
-        // Plane
-        const planeFolder = this.gui.addFolder("Plane Settings");
-        planeFolder.add(this.scene, 'selectedGrassTexture', this.scene.grassTexturesIds).name('Selected Grass Texture').onChange(this.scene.updateGrassTexture.bind(this.scene));
-        planeFolder.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
-        planeFolder.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateMaxElevation.bind(this.scene));
+        // Terrain
+        const terrainFolder = this.gui.addFolder("Terrain Settings");
+        terrainFolder.add(this.scene, 'selectedGrassTexture', this.scene.grassTexturesIds).name('Selected Grass Texture').onChange(this.scene.updateGrassTexture.bind(this.scene));
+        terrainFolder.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
+        terrainFolder.add(this.scene, 'maxWaterDepth', 0.0, 20.0, 0.2).name('Max Water Depth').onChange(this.scene.updateMaxWaterDepth.bind(this.scene));
+        terrainFolder.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateMaxElevation.bind(this.scene));
 
         // Building
         const buildingFolder = this.gui.addFolder("Building Settings");

@@ -86,11 +86,15 @@ export class MyScene extends CGFscene {
             'Water 2': 1
         };
         this.selectedWaterTexture = 0;
-        this.waterMap = new CGFtexture(this, 'textures/water_map.png');
 
         // Plane Mask and Shader
         this.planeMaskPath = 'textures/plane_mask.jpg';
         this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
+
+        // Water Depth
+        this.waterMap = new CGFtexture(this, 'textures/water_map.png');
+        this.maxWaterDepth = 10.0;
+        this.updateMaxWaterDepth();
 
         // Elevation Map
         this.elevationMap = new CGFtexture(this, 'textures/elevation_map.jpg');
@@ -523,6 +527,10 @@ export class MyScene extends CGFscene {
 
     updateMaxElevation() {
         this.planeShader.setUniformsValues({ maxElevation: this.maxElevation });
+    }
+
+    updateMaxWaterDepth() {
+        this.planeShader.setUniformsValues({ maxWaterDepth: this.maxWaterDepth });
     }
 
     updateHelicopterScaleFactor() {
