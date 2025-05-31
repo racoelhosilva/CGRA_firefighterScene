@@ -78,11 +78,14 @@ export class MyScene extends CGFscene {
     this.selectedBannerTexture = 0;
 
     // Window Textures
-    this.windowTexture1 = new CGFtexture(this, 'textures/window.png');
+    this.windowTexture1 = new CGFtexture(this, 'textures/window1.jpg');
     this.windowTexture2 = new CGFtexture(this, 'textures/window2.jpg');
-    this.windowTextures = [this.windowTexture1, this.windowTexture2];
-    this.windowTexturesIds = {'Window1': 0, 'Window2': 1};
-    this.selectedWindowTexture = 0;
+    this.windowTexture3 = new CGFtexture(this, 'textures/window3.jpg');
+    this.windowTexture4 = new CGFtexture(this, 'textures/window4.jpg');
+    this.stainedTexture1 = new CGFtexture(this, 'textures/stained1.jpg');
+    this.windowTextures = [this.windowTexture1, this.windowTexture2, this.windowTexture3, this.windowTexture4, this.stainedTexture1];
+    this.windowTexturesIds = {'Window 1': 0, 'Window 2': 1, 'Window 3': 2, 'Window 4': 3, 'Stained Glass': 4};
+    this.selectedWindowTexture = 3;
 
     // Helipad Textures
     this.helipadTexture = new CGFtexture(this, "textures/helipad.png");

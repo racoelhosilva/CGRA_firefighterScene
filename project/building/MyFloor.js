@@ -15,7 +15,9 @@ export class MyFloor extends CGFobject {
         // Window Material
         this.windowMaterial = new CGFappearance(scene);
         this.windowMaterial.setAmbient(1.0, 1.0, 1.0, 1);
-        this.windowMaterial.setShininess(1.0);
+        this.windowMaterial.setDiffuse(0.8, 0.8, 0.8, 1);
+        this.windowMaterial.setSpecular(0.2, 0.2, 0.2, 1);
+        this.windowMaterial.setShininess(200.0);
         this.windowMaterial.setTexture(this.windowTexture);
         this.windowMaterial.setTextureWrap("REPEAT", "REPEAT");
 
