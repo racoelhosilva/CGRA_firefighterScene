@@ -2,7 +2,7 @@ import { CGFobject, CGFappearance } from '../../lib/CGF.js';
 import { MyCylinder } from '../component/MyCylinder.js';
 
 export class MyHelicopterMarker extends CGFobject {
-  constructor(scene, helicopter) {
+  constructor(scene, helicopter, color) {
     super(scene);
 
     this.helicopter = helicopter;
@@ -12,7 +12,7 @@ export class MyHelicopterMarker extends CGFobject {
     this.material.setAmbient(0.0, 0.0, 0.0, 0.0);
     this.material.setDiffuse(0.0, 0.0, 0.0, 0.0);
     this.material.setSpecular(0.0, 0.0, 0.0, 0.0);
-    this.material.setEmission(0.5, 1.0, 0.5, 0.5);
+    this.material.setEmission(...color, 0.5);
     this.material.setShininess(10.0);
   }
 
@@ -26,5 +26,9 @@ export class MyHelicopterMarker extends CGFobject {
     this.scene.rotate(Math.PI, 1, 0, 0);
     this.circle.display();
     this.scene.popMatrix();
+  }
+
+  updateColor(color) {
+    this.material.setEmission(...color, 0.5);
   }
 }

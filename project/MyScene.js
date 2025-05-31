@@ -63,6 +63,7 @@ export class MyScene extends CGFscene {
 
     // Helicopter Properties
     this.helicopterColor = '#a00000';
+    this.helicopterMarkerColor = '#80ff80';
 
     // Building Properties
     this.buildingSize = 100;
@@ -122,13 +123,13 @@ export class MyScene extends CGFscene {
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.floorNumber, this.windowNumber,
-      this.windowTextures[this.selectedWindowTexture], this.hexToRgbA(this.buildingColor),
+      this.windowTextures[this.selectedWindowTexture], this.hexToRgb(this.buildingColor),
       this.doorTextures[this.selectedDoorTexture], this.bannerTextures[this.selectedBannerTexture],
       this.helipadTexture, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
-    this.helicopter = new MyHelicopter(this, this.hexToRgbA(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
-    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter);
+    this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
+    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
     this.setHelicopterInitPos();
 
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
@@ -246,7 +247,7 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  hexToRgbA(hex) {
+  hexToRgb(hex) {
       var ret;
       //either we receive a html/css color or a RGB vector
       if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
@@ -254,7 +255,6 @@ export class MyScene extends CGFscene {
               parseInt(hex.substring(1,3),16).toPrecision()/255.0,
               parseInt(hex.substring(3,5),16).toPrecision()/255.0,
               parseInt(hex.substring(5,7),16).toPrecision()/255.0,
-              1.0
           ];
       }
       else
@@ -262,7 +262,6 @@ export class MyScene extends CGFscene {
               hex[0].toPrecision()/255.0,
               hex[1].toPrecision()/255.0,
               hex[2].toPrecision()/255.0,
-              1.0
           ];
       return ret;
   }
@@ -302,11 +301,15 @@ export class MyScene extends CGFscene {
   }
 
   updateBuildingColor() {
-    this.building.updateBuildingColor(this.hexToRgbA(this.buildingColor));
+    this.building.updateBuildingColor(this.hexToRgb(this.buildingColor));
   }
 
   updateHelicopterColor() {
-    this.helicopter.updateColor(this.hexToRgbA(this.helicopterColor));
+    this.helicopter.updateColor(this.hexToRgb(this.helicopterColor));
+  }
+
+  updateHelicopterMarkerColor() {
+    this.helicopterMarker.updateColor(this.hexToRgb(this.helicopterMarkerColor));
   }
 
   display() {

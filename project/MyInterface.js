@@ -26,6 +26,7 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'selectedWindowTexture', this.scene.windowTexturesIds).name('Selected Window Texture').onChange(this.scene.updateWindowTexture.bind(this.scene));
         this.gui.addColor(this.scene,'buildingColor').name("Building Color").onChange(this.scene.updateBuildingColor.bind(this.scene));
         this.gui.addColor(this.scene,'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
+        this.gui.addColor(this.scene,'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
 
         this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").step(0.1);
 
