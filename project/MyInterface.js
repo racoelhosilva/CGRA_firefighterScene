@@ -25,7 +25,7 @@ export class MyInterface extends CGFinterface {
         const planeFolder = this.gui.addFolder("Plane Settings");
         planeFolder.add(this.scene, 'selectedGrassTexture', this.scene.grassTexturesIds).name('Selected Grass Texture').onChange(this.scene.updateGrassTexture.bind(this.scene));
         planeFolder.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
-        
+
         // Building
         const buildingFolder = this.gui.addFolder("Building Settings");
         buildingFolder.add(this.scene, 'buildingSize', 75, 150, 1).name("Building Size").onChange(this.scene.updateBuildingSize.bind(this.scene)).step(1);
@@ -57,9 +57,12 @@ export class MyInterface extends CGFinterface {
         const fireFolder = this.gui.addFolder("Fire Settings");
         fireFolder.add(this.scene, 'numFires', 0, 20, 2).name("Number of Fires").onChange(this.scene.resetFire.bind(this.scene));
         fireFolder.add(this.scene, 'resetFire').name("Reset Fire");
-        
+
         // Preset
         this.gui.add(this.scene, 'selectedPreset', this.scene.presetIds).name('Preset').onChange(this.scene.applyPreset.bind(this.scene));
+        this.gui.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateElevationMax.bind(this.scene));
+
+        this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene));
 
         this.initKeys();
 

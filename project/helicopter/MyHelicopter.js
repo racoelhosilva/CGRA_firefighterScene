@@ -25,6 +25,7 @@ export class MyHelicopter extends CGFobject {
         this.orientation = -Math.PI / 2;
         this.velocityNorm = 0;
         this.velocity = [0, 0];
+        this.setSpeedValues(scene.speedFactor);
 
         this.flyingHeight = flyingHeight;
 
@@ -192,7 +193,9 @@ export class MyHelicopter extends CGFobject {
     }
 
     turn(orientationDelta) {
-        this.orientation += orientationDelta;
+        // Normalize between -Math.PI and Math.PI
+        this.orientation = -Math.PI + ((this.orientation + Math.PI) + orientationDelta) % (2 * Math.PI);
+
         this.velocity[0] = this.velocityNorm * Math.cos(this.orientation);
         this.velocity[1] = -this.velocityNorm * Math.sin(this.orientation);
     }
@@ -230,9 +233,6 @@ export class MyHelicopter extends CGFobject {
         if (this.state === "FLYING" && this.isEmpty() && this.velocityNorm === 0) {
             const atStart = this.position[0] !== this.initPosition[0] || this.position[2] !== this.initPosition[2];
             this.state = atStart ? "LANDING1" : "LANDING4";
-
-            // Normalize the orientation to be between -PI and PI
-            this.orientation = ((this.orientation + Math.PI) % (2 * Math.PI)) - Math.PI;
         }
     }
 
@@ -299,7 +299,7 @@ export class MyHelicopter extends CGFobject {
                     if (this.velocityNorm > 0)
                         this.accelerate(-this.acceleration * t);
 
-                    if (orientationDelta !== 0) {
+                    if (Math.abs(orientationDelta) > 0.0001) {
                         this.turn(orientationDelta);
                     } else {
                         this.state = "LANDING2";
@@ -311,23 +311,37 @@ export class MyHelicopter extends CGFobject {
 
             case "LANDING2":
                 {
+                    this.accelerate(this.acceleration * t);
+
+                    const distance = this.getDistanceToInit(this.position);
+                    const nextPos = this.getNextPosition(t);
+                    const nextDistance = this.getDistanceToInit(nextPos);
                     const toleranceDistance = this.velocityNorm * this.velocityNorm / 2 / this.acceleration;
 
-                    if (this.getDistanceToInit(this.position) < toleranceDistance) {
+                    if (nextDistance < toleranceDistance) {
                         this.state = "LANDING3";
                         break;
                     }
 
-                    this.accelerate(this.acceleration * t);
+                    if (nextDistance >= distance) {
+                        this.state = "LANDING4";
+                        this.position[0] = this.initPosition[0];
+                        this.position[2] = this.initPosition[2];
+                        this.velocity = [0, 0];
+                        this.velocityNorm = 0;
+                        break;
+                    }
                 }
                 break;
 
             case "LANDING3":
                 {
+                    this.accelerate(-this.acceleration * t);
+
                     const distance = this.getDistanceToInit(this.position);
                     const nextPos = this.getNextPosition(t);
 
-                    if (this.getDistanceToInit(nextPos) > distance) {
+                    if (this.getDistanceToInit(nextPos) >= distance) {
                         this.state = "LANDING4";
                         this.position[0] = this.initPosition[0];
                         this.position[2] = this.initPosition[2];
@@ -336,7 +350,7 @@ export class MyHelicopter extends CGFobject {
                         break;
                     }
 
-                    this.accelerate(-this.acceleration * t);
+
                 }
                 break;
 
@@ -347,7 +361,7 @@ export class MyHelicopter extends CGFobject {
                         ? Math.min(this.orientationVelocity, targetOrientation - this.orientation)
                         : Math.max(-this.orientationVelocity, targetOrientation - this.orientation);
 
-                    if (orientationDelta !== 0) {
+                    if (Math.abs(orientationDelta) > 0.0001) {
                         this.turn(orientationDelta);
                     } else {
                         this.state = "LANDING5";
