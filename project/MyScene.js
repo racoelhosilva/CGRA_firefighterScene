@@ -210,16 +210,16 @@ export class MyScene extends CGFscene {
   }
 
   getInitialCameraPosition() {
-    return vec3.fromValues(250, 250, 250);
+    return vec3.fromValues(250, 275, 375);
   }
 
   getInitialCameraTarget() {
-    return vec3.fromValues(-50, 20, -150);
+    return vec3.fromValues(50, 0, 0);
   }
 
   initCameras() {
     this.camera = new CGFcamera(
-      0.4,
+      0.8,
       0.1,
       2200,
       this.getInitialCameraPosition(),
@@ -426,9 +426,13 @@ export class MyScene extends CGFscene {
 
   updateView() {
     switch (this.view) {
-      case "PLANE":
+      case "FREE":
         this.camera.setPosition(this.getInitialCameraPosition());
         this.camera.setTarget(this.getInitialCameraTarget());
+        this.camera.fov = 0.8;
+        break;
+      case "HELICOPTER":
+        this.camera.fov = 0.5;
         break;
     }
   }
@@ -471,11 +475,12 @@ export class MyScene extends CGFscene {
     this.loadIdentity();
 
     if (this.view == "HELICOPTER") {
-      const offset = 220;
+      const horizontalOffset = 250;
+      const verticalOffset = 200;
       const cameraPos = vec3.fromValues(
-        this.helicopter.position[0] - Math.cos(this.helicopter.orientation) * offset,
-        this.helicopter.position[1] + offset,
-        this.helicopter.position[2] + Math.sin(this.helicopter.orientation) * offset
+        this.helicopter.position[0] - Math.cos(this.helicopter.orientation) * horizontalOffset,
+        this.helicopter.position[1] + verticalOffset,
+        this.helicopter.position[2] + Math.sin(this.helicopter.orientation) * horizontalOffset
       );
 
       this.camera.setPosition(cameraPos);
