@@ -65,12 +65,7 @@ export class MyScene extends CGFscene {
     this.buildingZ = -100;
     this.floorNumber = 3;
     this.windowNumber = 3;
-    this.buildingColor = this.hexToRgbA('#8F8B7E');
-    this.buildingMaterial = new CGFappearance(this);
-    this.buildingMaterial.setAmbient(...this.buildingColor.map(c => c * 0.5), 1.0);
-    this.buildingMaterial.setDiffuse(...this.buildingColor.map(c => c * 0.8), 1.0);
-    this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
-    this.buildingMaterial.setShininess(1.0);
+    this.buildingColor = '#8F8B7E';
 
     // Door Texture
     this.doorTexture = new CGFtexture(this, "textures/door.png");
@@ -115,7 +110,7 @@ export class MyScene extends CGFscene {
     // Helipad Shader
     this.movementShader = new CGFshader(this.gl, 'shaders/movement.vert', 'shaders/movement.frag');
 
-    // Helipad Lights
+    // Helipad Lights Shader
     this.pulsatingShader = new CGFshader(this.gl, 'shaders/pulsating.vert', 'shaders/pulsating.frag');
 
     // Lake Properties
@@ -133,7 +128,7 @@ export class MyScene extends CGFscene {
     this.building = new MyBuilding(this,
       this.buildingSize,
       this.floorNumber, this.windowNumber,
-      this.windowMaterial, this.buildingMaterial,
+      this.windowMaterial, this.hexToRgbA(this.buildingColor),
       this.doorMaterial, this.bannerMaterial,
       this.helipadMaterial, this.upTexture, this.downTexture);
 
@@ -305,8 +300,7 @@ export class MyScene extends CGFscene {
   }
 
   updateBuildingMaterial() {
-    this.buildingMaterial.setAmbient(...this.hexToRgbA(this.buildingColor).map(c => c * 0.5));
-    this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor).map(c => c * 0.8));
+    this.building.updateBuildingColor(this.hexToRgbA(this.buildingColor));
   }
 
   display() {
