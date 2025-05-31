@@ -243,7 +243,7 @@ export class MyScene extends CGFscene {
     this.movePhase = this.helicopter.getMovePhase();
 
     this.pulsatingShader.setUniformsValues({ timeFactor: t / 100 % 100, phase : this.movePhase });
-    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 250) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
+    this.movementShader.setUniformsValues({ phase: this.movePhase, blinking : ((Math.round(t / 400) % 2) == 0), default:0, textureUp : 1, textureDown : 2});
     this.fireShader.setUniformsValues({ timeFactor: t / 200 % 200 })
     this.planeShader.setUniformsValues({ waterMap: 1, grassTexture: 2, lakeTexture: 3, timeFactor: t  / 400000.0 % 1.0 });
   }
