@@ -77,7 +77,7 @@ export class MyScene extends CGFscene {
     this.truncTexture = new CGFtexture(this, 'textures/bark.jpg');
     this.crownTexture = new CGFtexture(this, 'textures/leaves.jpg');
     this.waterMap = new CGFtexture(this, 'textures/water_map.png');
-    this.elevationMap = new CGFtexture(this, 'textures/elevation_map.png');
+    this.elevationMap = new CGFtexture(this, 'textures/elevation_map.jpg');
 
     this.treeRows = 5;
     this.treeCols = 5;
@@ -92,7 +92,7 @@ export class MyScene extends CGFscene {
     this.fireShader = new CGFshader(this.gl, "shaders/fire.vert", "shaders/fire.frag");
     this.numFires = 6;
 
-    this.planeMaskPath = 'textures/plane_mask.png';
+    this.planeMaskPath = 'textures/plane_mask.jpg';
     this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
     this.maxElevation = 50.0;
     this.updateMaxElevation();
@@ -192,7 +192,7 @@ export class MyScene extends CGFscene {
     this.t = new Date().getTime();
 
     this.view = "FREE";
-    this.viewIds = { 'Free': "FREE", 'Helicopter': "HELICOPTER" };
+    this.viewIds = { 'Free': "FREE", 'Helicopter': "HELICOPTER", "Far": "FAR" };
   }
 
   initLights() {
@@ -205,16 +205,16 @@ export class MyScene extends CGFscene {
   }
 
   getInitialCameraPosition() {
-    return vec3.fromValues(250, 275, 375);
+    return vec3.fromValues(-450, 300, 300);
   }
 
   getInitialCameraTarget() {
-    return vec3.fromValues(50, 0, 0);
+    return vec3.fromValues(0, 0, -125);
   }
 
   initCameras() {
     this.camera = new CGFcamera(
-      0.8,
+      0.4,
       0.1,
       2200,
       this.getInitialCameraPosition(),
@@ -424,10 +424,15 @@ export class MyScene extends CGFscene {
       case "FREE":
         this.camera.setPosition(this.getInitialCameraPosition());
         this.camera.setTarget(this.getInitialCameraTarget());
-        this.camera.fov = 0.8;
+        this.camera.fov = 0.4;
         break;
       case "HELICOPTER":
         this.camera.fov = 0.5;
+        break;
+      case "FAR":
+        this.camera.setPosition(vec3.fromValues(250, 275, 375));
+        this.camera.setTarget(vec3.fromValues(50, 0, 0));
+        this.camera.fov = 0.8;
         break;
     }
   }
