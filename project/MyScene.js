@@ -181,9 +181,10 @@ export class MyScene extends CGFscene {
 
     this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
     this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
-    this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 25);
-    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
+    this.helicopterScaleFactor = 0.8;
+    this.helicopter = new MyHelicopter(this, this.hexToRgb(this.helicopterColor), this.helicopterTexture, this.metalTexture, this.metalTexture2, 30, this.helicopterScaleFactor);
     this.setHelicopterInitPos();
+    this.helicopterMarker = new MyHelicopterMarker(this, this.helicopter, this.hexToRgb(this.helicopterMarkerColor));
 
     const fires1 = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires / 2, this.fireTexture, this.fireShader)
     const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires / 2, this.fireTexture, this.fireShader);
@@ -421,6 +422,10 @@ export class MyScene extends CGFscene {
     this.planeShader.setUniformsValues({ maxElevation: this.maxElevation });
   }
 
+  updateHelicopterScaleFactor() {
+    this.helicopter.setScaleFactor(this.helicopterScaleFactor);
+  }
+
   updateView() {
     switch (this.view) {
       case "PLANE":
@@ -468,7 +473,7 @@ export class MyScene extends CGFscene {
     this.loadIdentity();
 
     if (this.view == "HELICOPTER") {
-      const offset = 220;
+      const offset = 230;
       const cameraPos = vec3.fromValues(
         this.helicopter.position[0] - Math.cos(this.helicopter.orientation) * offset,
         this.helicopter.position[1] + offset,

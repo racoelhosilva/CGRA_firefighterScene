@@ -16,7 +16,7 @@ export class MyHelicopter extends CGFobject {
     BUCKET_HEIGHT = 24;
     MAX_ANIMATION2_ANGLE = Math.PI / 36;
 
-    constructor(scene, color, cockpitTexture, metalTexture, metalTexture2, flyingHeight) {
+    constructor(scene, color, cockpitTexture, metalTexture, metalTexture2, flyingHeight, scaleFactor) {
         super(scene);
 
         this.initPosition = [0, 0, 0];
@@ -30,7 +30,7 @@ export class MyHelicopter extends CGFobject {
         this.flyingHeight = flyingHeight;
 
         this.bucketHeight = 0;
-        this.lakeHeight = this.BUCKET_HEIGHT - 14;
+        this.lakeHeight = this.BUCKET_HEIGHT - 20;
 
         this.tilt = 0;
         this.rotorAngle = 0;
@@ -79,14 +79,15 @@ export class MyHelicopter extends CGFobject {
         this.tailRotor = new MyRotor(this.scene, 3, 3, 0.7, 0.5, 0.2, this.detailMaterial);
         this.rudder = new MyRudder(this.scene);
         this.waterBucket = new MyWaterBucket(this.scene, 4, 6, 0, this.metalTexture2);
+
+        this.scaleFactor = scaleFactor;
     }
 
     display() {
         this.scene.pushMatrix();
 
         this.scene.translate(...this.position);
-
-        // this.scene.scale(0.5, 0.5, 0.5);
+        this.scene.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         this.scene.translate(0, 7.4, 0);
         this.scene.rotate(this.orientation, 0, 1, 0);
 
@@ -154,13 +155,18 @@ export class MyHelicopter extends CGFobject {
         for (let i = 0; i < 3; i++)
             this.position[i] += initPosition[i] - this.initPosition[i];
         this.initPosition = initPosition;
-        this.waterBucket.setPositionHeight(this.initPosition[1] + this.flyingHeight - this.BUCKET_HEIGHT - 4);
+        this.waterBucket.setPositionHeight(this.initPosition[1] + this.flyingHeight - (this.BUCKET_HEIGHT - 4) * this.scaleFactor);
     }
 
     setSpeedValues(speedFactor) {
         this.acceleration = speedFactor / 6000;
         this.orientationVelocity = speedFactor * Math.PI / 30;
         this.maxVelocity = speedFactor * 0.25;
+    }
+
+    setScaleFactor(scaleFactor) {
+        this.scaleFactor = scaleFactor;
+        this.lakeHeight = this.BUCKET_HEIGHT - 20;
     }
 
     getState() {
@@ -349,8 +355,6 @@ export class MyHelicopter extends CGFobject {
                         this.velocityNorm = 0;
                         break;
                     }
-
-
                 }
                 break;
 
