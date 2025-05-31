@@ -111,6 +111,13 @@ export class MyScene extends CGFscene {
     this.buildingColor = '#d9d2b5';
     this.backWindows = false;
 
+    // Building Textures
+    this.buildingTexture1 = new CGFtexture(this, "textures/brick.jpg");
+    this.buildingTexture2 = new CGFtexture(this, "textures/popcorn.jpg");
+    this.buildingTextures = [null, this.buildingTexture1, this.buildingTexture2];
+    this.buildingTexturesIds = {'None': 0, 'Brick': 1, 'Popcorn': 2};
+    this.selectedBuildingTexture = 0;
+
     // Door Texture
     this.doorTexture1 = new CGFtexture(this, "textures/door1.jpg");
     this.doorTexture2 = new CGFtexture(this, "textures/door2.jpg");
@@ -162,6 +169,7 @@ export class MyScene extends CGFscene {
       this.windowNumber,
       this.windowTextures[this.selectedWindowTexture],
       this.backWindows,
+      this.buildingTextures[this.selectedBuildingTexture],
       this.doorTextures[this.selectedDoorTexture],
       this.bannerTextures[this.selectedBannerTexture],
       this.helipadTexture, this.upTexture, this.downTexture
@@ -348,6 +356,10 @@ export class MyScene extends CGFscene {
 
   updateWindowNumber() {
     this.building.updateWindowNumber(this.windowNumber);
+  }
+
+  updateBuildingTexture() {
+    this.building.updateBuildingTexture(this.buildingTextures[this.selectedBuildingTexture]);
   }
 
   updateWindowTexture() {

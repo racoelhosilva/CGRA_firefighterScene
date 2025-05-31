@@ -3,7 +3,7 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, buildingColor, floors, windows, windowTexture, backWindows, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
+    constructor(scene, total_width, buildingColor, floors, windows, windowTexture, backWindows, facadeTexture, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.total_width = total_width;
         this.width = 2 * total_width / 5;
@@ -19,6 +19,7 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.setDiffuse(...this.buildingColor.map(c => c * 0.8), 1.0);
         this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
         this.buildingMaterial.setShininess(1.0);
+        this.buildingMaterial.setTexture(facadeTexture);
 
         this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, windowTexture, backWindows, doorTexture, bannerTexture);
         this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadTexture, upTexture, downTexture);
@@ -115,5 +116,9 @@ export class MyBuilding extends CGFobject {
     updateBackWindows(backWindows) {
         this.backWindows = backWindows;
         this.floor.updateBackWindows(this.backWindows);
+    }
+
+    updateBuildingTexture(facadeTexture) {
+        this.buildingMaterial.setTexture(facadeTexture);
     }
 }
