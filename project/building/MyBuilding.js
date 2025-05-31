@@ -11,7 +11,6 @@ export class MyBuilding extends CGFobject {
         this.depth = total_width / 3;
         this.floors = floors;
         this.windows = windows;
-        this.windowTexture = windowTexture;
         this.buildingColor = buildingColor;
 
         this.buildingMaterial = new CGFappearance(scene);
@@ -20,7 +19,7 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.setSpecular(0, 0, 0, 1.0);
         this.buildingMaterial.setShininess(1.0);
 
-        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, this.windowTexture, doorTexture, bannerTexture);
+        this.floor = new MyFloor(this.scene, this.width, this.depth, this.height, this.windows, windowTexture, doorTexture, bannerTexture);
         this.ceiling = new MyCeiling(this.scene, this.width, this.depth, helipadTexture, upTexture, downTexture);
     }
 
@@ -95,8 +94,11 @@ export class MyBuilding extends CGFobject {
     }
 
     updateWindowTexture(windowTexture) {
-        this.windowTexture = windowTexture;
-        this.floor.updateWindowTexture(this.windowTexture);
+        this.floor.updateWindowTexture(windowTexture);
+    }
+
+    updateBannerTexture(bannerTexture) {
+        this.floor.updateBannerTexture(bannerTexture);
     }
 
     updateBuildingColor(color) {

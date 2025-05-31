@@ -13,8 +13,8 @@ export class MyCeiling extends CGFobject {
 
         // Helipad Material
         this.helipadMaterial = new CGFappearance(scene);
-        this.helipadMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-        this.helipadMaterial.setShininess(1.0);
+        this.helipadMaterial.setAmbient(0.5, 0.5, 0.5, 1);
+        this.helipadMaterial.setShininess(10.0);
         this.helipadMaterial.setTexture(this.helipadTexture);
         this.helipadMaterial.setTextureWrap("REPEAT", "REPEAT");
 

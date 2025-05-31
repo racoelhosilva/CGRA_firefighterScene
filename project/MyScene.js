@@ -71,7 +71,11 @@ export class MyScene extends CGFscene {
     this.doorTexture = new CGFtexture(this, "textures/door.png");
 
     // Banner Texture
-    this.bannerTexture = new CGFtexture(this, "textures/banner.png");
+    this.bannerTextureEn = new CGFtexture(this, "textures/banner_en.jpg");
+    this.bannerTexturePt = new CGFtexture(this, "textures/banner_pt.jpg");
+    this.bannerTextures = [this.bannerTextureEn, this.bannerTexturePt];
+    this.bannerTexturesIds = {'English': 0, 'Portuguese': 1};
+    this.selectedBannerTexture = 0;
 
     // Window Textures
     this.windowTexture1 = new CGFtexture(this, 'textures/window.png');
@@ -107,7 +111,7 @@ export class MyScene extends CGFscene {
       this.buildingSize,
       this.floorNumber, this.windowNumber,
       this.windowTextures[this.selectedWindowTexture], this.hexToRgbA(this.buildingColor),
-      this.doorTexture, this.bannerTexture,
+      this.doorTexture, this.bannerTextures[this.selectedBannerTexture],
       this.helipadTexture, this.upTexture, this.downTexture);
 
     this.forest = new MyForest(this, 5, 5, this.truncTexture, this.crownTexture);
@@ -275,6 +279,10 @@ export class MyScene extends CGFscene {
 
   updateWindowTexture() {
     this.building.updateWindowTexture(this.windowTextures[this.selectedWindowTexture]);
+  }
+
+  updateBannerTexture() {
+    this.building.updateBannerTexture(this.bannerTextures[this.selectedBannerTexture]);
   }
 
   updateBuildingMaterial() {

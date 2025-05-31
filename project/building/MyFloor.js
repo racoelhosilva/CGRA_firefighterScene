@@ -28,8 +28,9 @@ export class MyFloor extends CGFobject {
 
         // Banner Material
         this.bannerMaterial = new CGFappearance(scene);
-        this.bannerMaterial.setAmbient(0.3, 0.3, 0.3, 1);
-        this.bannerMaterial.setShininess(1.0);
+        this.bannerMaterial.setAmbient(0.7, 0.7, 0.7, 1);
+        this.bannerMaterial.setEmission(0.2, 0.2, 0.2, 1);
+        this.bannerMaterial.setShininess(10.0);
         this.bannerMaterial.setTexture(this.bannerTexture);
         this.bannerMaterial.setTextureWrap("REPEAT", "REPEAT");
 
@@ -141,5 +142,10 @@ export class MyFloor extends CGFobject {
     updateWindowTexture(texture) {
         this.windowTexture = texture;
         this.windowMaterial.setTexture(this.windowTexture);
+    }
+
+    updateBannerTexture(texture) {
+        this.bannerTexture = texture;
+        this.bannerMaterial.setTexture(this.bannerTexture);
     }
 }
