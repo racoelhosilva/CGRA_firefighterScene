@@ -25,6 +25,7 @@ export class MyInterface extends CGFinterface {
         const planeFolder = this.gui.addFolder("Plane Settings");
         planeFolder.add(this.scene, 'selectedGrassTexture', this.scene.grassTexturesIds).name('Selected Grass Texture').onChange(this.scene.updateGrassTexture.bind(this.scene));
         planeFolder.add(this.scene, 'selectedWaterTexture', this.scene.waterTexturesIds).name('Selected Water Texture').onChange(this.scene.updateWaterTexture.bind(this.scene));
+        planeFolder.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateMaxElevation.bind(this.scene));
 
         // Building
         const buildingFolder = this.gui.addFolder("Building Settings");
@@ -43,7 +44,6 @@ export class MyInterface extends CGFinterface {
         helicopterFolder.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene)).step(0.1);
         helicopterFolder.addColor(this.scene,'helicopterColor').name("Helicopter Color").onChange(this.scene.updateHelicopterColor.bind(this.scene));
         helicopterFolder.addColor(this.scene,'helicopterMarkerColor').name("Marker Color").onChange(this.scene.updateHelicopterMarkerColor.bind(this.scene));
-        helicopterFolder.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
 
         // Forest
         const forestFolder = this.gui.addFolder("Forest Settings");
@@ -60,9 +60,9 @@ export class MyInterface extends CGFinterface {
 
         // Preset
         this.gui.add(this.scene, 'selectedPreset', this.scene.presetIds).name('Preset').onChange(this.scene.applyPreset.bind(this.scene));
-        this.gui.add(this.scene, 'maxElevation', 0.0, 100.0, 0.5).name('Max Elevation').onChange(this.scene.updateMaxElevation.bind(this.scene));
 
-        this.gui.add(this.scene, 'speedFactor', 0.1, 3, 0.1).name("Speed Factor").onChange(this.scene.updateSpeedFactor.bind(this.scene));
+        // Perspective
+        this.gui.add(this.scene, 'view', this.scene.viewIds).name("Perspective").onChange(this.scene.updateView.bind(this.scene));
 
         this.initKeys();
 
