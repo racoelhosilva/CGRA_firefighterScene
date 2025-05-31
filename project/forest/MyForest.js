@@ -8,8 +8,8 @@ export class MyForest extends CGFobject {
   MAX_RADIUS = 2.5;
   MIN_HEIGHT = 20;
   MAX_HEIGHT = 25;
-  MIN_COLOR = [0.0, 0.3, 0.0];
-  MAX_COLOR = [0.15, 0.5, 0.1];
+  MIN_COLOR = [0.024,0.176,0.102];
+  MAX_COLOR = [0.261,0.427,0.141];
 
   GRID_SQUARE_SIZE = 20;
   POS_MAX_OFFSET = 6;

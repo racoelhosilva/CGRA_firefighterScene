@@ -30,9 +30,9 @@ export class MyTree extends CGFobject {
 
   buildTruncMaterial() {
     let material = new CGFappearance(this.scene);
-    material.setAmbient(0.2, 0.1, 0.05, 1.0);
-    material.setDiffuse(0.5, 0.25, 0.1, 1.0);
-    material.setSpecular(0.1, 0.1, 0.1, 1.0);
+    material.setAmbient(0.306,0.208,0.125, 1.0);
+    material.setDiffuse(0.306,0.208,0.125, 1.0);
+    material.setSpecular(0.306,0.208,0.125, 1.0);
     material.setShininess(10.0);
 
     return material;
@@ -60,7 +60,7 @@ export class MyTree extends CGFobject {
     const [r, g, b] = crownColor;
 
     let material = new CGFappearance(this.scene);
-    material.setAmbient(r * 0.5, g * 0.5, b * 0.5, 1.0);
+    material.setAmbient(r * 0.75, g * 0.75, b * 0.75, 1.0);
     material.setDiffuse(r, g, b, 1.0);
     material.setSpecular(r * 0.25, g * 0.25, b * 0.25, 1.0);
 
