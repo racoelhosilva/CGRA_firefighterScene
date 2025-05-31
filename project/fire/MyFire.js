@@ -25,7 +25,7 @@ export class MyFire extends CGFobject {
   buildBlazes() {
     let blazes = [];
     for (let i = 0; i < this.numBlazes; i++) {
-      blazes.push(new MyBlaze(this.scene, this.radius, this.height, this.material, this));
+      blazes.push(new MyBlaze(this.scene, this.height / 3, this.height, this.radius / this.height, this.material, this));
     }
     return blazes;
   }
@@ -72,7 +72,7 @@ export class MyFire extends CGFobject {
     const fires = [];
 
     for (let i = 0; i < numFires; i++) {
-      const radius = 10 + Math.random() * (30 - 10);
+      const radius = 10 + Math.random() * (40 - 10);
       const height = radius * 1.5;
       const centerX = Math.random() * (bottomRight[0] - topLeft[0]) + topLeft[0];
       const centerZ = Math.random() * (bottomRight[2] - topLeft[2]) + topLeft[2];
