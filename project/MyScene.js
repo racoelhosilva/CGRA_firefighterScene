@@ -146,7 +146,8 @@ export class MyScene extends CGFscene {
 
     this.t = new Date().getTime();
 
-    this.view = "HELICOPTER";  // plane or helicopter
+    this.view = "FREE";
+    this.viewIds = { 'Free': "FREE", 'Helicopter': "HELICOPTER" };
   }
 
   initLights() {
@@ -222,6 +223,7 @@ export class MyScene extends CGFscene {
     if (this.gui.isKeyPressed("KeyL")) {
       text += " L ";
       keysPressed = true;
+
       if (this.ground.isAboveWater(this.helicopter.position)) {
         this.helicopter.lower()
       } else {
@@ -320,6 +322,15 @@ export class MyScene extends CGFscene {
     this.buildingMaterial.setDiffuse(...this.hexToRgbA(this.buildingColor));
   }
 
+  updateView() {
+    switch (this.view) {
+      case "PLANE":
+        this.camera.setPosition(this.getInitialCameraPosition());
+        this.camera.setTarget(this.getInitialCameraTarget());
+        break;
+    }
+  }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -344,6 +355,7 @@ export class MyScene extends CGFscene {
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
+    this.setDefaultAppearance();
     this.axis.display();
 
     this.panorama.display();

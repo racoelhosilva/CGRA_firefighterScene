@@ -25,7 +25,7 @@ void main(void) {
         newPosition.z -= mapColor.r * 10.0;
     } else {
         vec4 mapColor = texture2D(elevationMap, aTextureCoord);
-        newPosition.z += (1.0 - mapColor.r) * 100.0;
+        newPosition.z += (1.0 - mapColor.r) * 50.0;
     }
 
     gl_Position = uPMatrix * uMVMatrix * vec4(newPosition, 1.0);
