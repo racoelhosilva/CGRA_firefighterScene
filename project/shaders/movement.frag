@@ -1,4 +1,6 @@
-precision mediump float;
+#ifdef GL_ES
+precision highp float;
+#endif
 
 varying vec2 vTextureCoord;
 
@@ -10,6 +12,7 @@ uniform sampler2D textureDown;
 
 void main() {
     vec4 color;
+
     if (blinking && phase == 1) {
         color = texture2D(textureUp, vTextureCoord);
     } else if (blinking && phase == 2) {
@@ -17,5 +20,6 @@ void main() {
     } else {
         color = texture2D(textureDefault, vTextureCoord);
     }
+
     gl_FragColor = color;
 }

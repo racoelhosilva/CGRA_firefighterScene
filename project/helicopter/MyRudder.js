@@ -1,28 +1,33 @@
 import { CGFobject } from "../../lib/CGF.js";
-import { MyRotor } from "./MyRotor.js";
 import { MyParallelogram } from "../component/MyParallelogram.js";
 
+/**
+ * @brief Class representing a helicopter rudder.
+ */
 export class MyRudder extends CGFobject {
-  constructor(scene) {
-    super(scene);
+    /**
+     * @brief Creates a new rudder object.
+     *
+     * @param {CGFscene} scene - The scene to which the rudder belongs.
+     */
+    constructor(scene) {
+        super(scene);
 
-    this.topParallelogram = new MyParallelogram(this.scene, 2, 4, Math.PI / 6, true);
-    this.bottomParallelogram = new MyParallelogram(this.scene, 2, 2, Math.PI / 5, true);
+        this.topParallelogram = new MyParallelogram(this.scene, 2, 4, Math.PI / 6, true);
+        this.bottomParallelogram = new MyParallelogram(this.scene, 2, 2, Math.PI / 5, true);
+    }
 
-    this.initBuffers();
-  }
+    display() {
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 0, 1, 0)
 
-  display() {
-    this.scene.pushMatrix();
-    this.scene.rotate(Math.PI, 0, 1, 0)
+        this.topParallelogram.display();
 
-    this.topParallelogram.display();
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 1, 0, 0);
+        this.bottomParallelogram.display();
+        this.scene.popMatrix();
 
-    this.scene.pushMatrix();
-    this.scene.rotate(Math.PI, 1, 0, 0);
-    this.bottomParallelogram.display();
-    this.scene.popMatrix();
-
-    this.scene.popMatrix();
-  }
+        this.scene.popMatrix();
+    }
 }
