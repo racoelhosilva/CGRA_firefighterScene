@@ -119,7 +119,7 @@ export class MyFloor extends CGFobject {
             return;
 
         // Display windows on the back face if enabled
-        //this.windowMaterial.apply();
+        this.windowMaterial.apply();
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 0, 1, 0);
         this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
