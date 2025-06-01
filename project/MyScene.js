@@ -92,7 +92,7 @@ export class MyScene extends CGFscene {
         this.planeShader = new CGFshader(this.gl, 'shaders/plane.vert', 'shaders/plane.frag');
 
         // Water Depth
-        this.waterMap = new CGFtexture(this, 'textures/water_map.png');
+        this.waterMap = new CGFtexture(this, 'textures/water_map.jpg');
         this.maxWaterDepth = 10.0;
         this.updateMaxWaterDepth();
 
