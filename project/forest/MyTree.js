@@ -3,10 +3,25 @@ import { MyCone } from "../component/MyCone.js";
 import { MyPyramid } from "../component/MyPyramid.js";
 import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
+/**
+ * @brief Class representing a tree in the scene.
+ */
 export class MyTree extends CGFobject {
     CROWN_SIDES = 6;
     ROOT_HEIGHT = 8;
 
+    /**
+     * @brief Constructs a new MyTree object.
+     *
+     * @param {CGFscene} scene - The scene to which this object belongs.
+     * @param {number} tilt - The tilt angle of the tree.
+     * @param {string} tiltAxis - The axis of the tilt ('x' or 'z').
+     * @param {number} trunkRadius - The radius of the tree trunk. Will also affect the crown radius.
+     * @param {number} height - The height of the tree.
+     * @param {Array<number>} crownColor - The color of the crown in RGB format.
+     * @param {string} trunkTexture - The texture for the trunk.
+     * @param {string} crownTexture - The texture for the crown.
+     */
     constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor, trunkTexture, crownTexture) {
         super(scene);
 
@@ -23,11 +38,24 @@ export class MyTree extends CGFobject {
         this.crownMaterial.setTexture(crownTexture);
     }
 
+    /**
+     * @brief Generates the trunk of the tree.
+     *
+     * @param {number} trunkRadius - The radius of the trunk.
+     * @param {number} height - The height of the trunk.
+     *
+     * @returns {MyCone} - The trunk object.
+     */
     buildTrunc(trunkRadius, height) {
         const realRadius = (height + this.ROOT_HEIGHT) * trunkRadius / height;
         return new MyCone(this.scene, 8, realRadius, height + this.ROOT_HEIGHT);
     }
 
+    /**
+     * @brief Generates the material for the trunk of the tree.
+     *
+     * @returns {CGFappearance} - The material for the trunk.
+     */
     buildTruncMaterial() {
         let material = new CGFappearance(this.scene);
         material.setAmbient(0.306, 0.208, 0.125, 1.0);
@@ -38,6 +66,14 @@ export class MyTree extends CGFobject {
         return material;
     }
 
+    /**
+     * @brief Generates the crown of the tree.
+     *
+     * @param {number} trunkRadius - The radius of the trunk.
+     * @param {number} height - The height of the tree.
+     *
+     * @returns {Array} - An array containing the crown parts, the starting height of the crown, and the height step for each crown part.
+     */
     buildCrown(trunkRadius, height) {
         let numPyramids = Math.round(height * 0.8 / trunkRadius) - 1;
         let pyramidHeight = height * 1.6 / (numPyramids + 1);
@@ -52,10 +88,21 @@ export class MyTree extends CGFobject {
         return [crown, height * 0.2, pyramidHeight / 2];
     }
 
+    /**
+     * @brief Generates the base of the crown.
+     *
+     * @returns {MyRegularPolygon} - The base of the crown.
+     */
     buildCrownBase() {
         return new MyRegularPolygon(this.scene, this.CROWN_SIDES);
     }
 
+    /**
+     * @brief Generates the material for the crown of the tree.
+     *
+     * @param {Array<number>} crownColor - The color of the crown in RGB format.
+     * @returns {CGFappearance} - The material for the crown.
+     */
     buildCrownMaterial(crownColor) {
         const [r, g, b] = crownColor;
 
@@ -89,6 +136,11 @@ export class MyTree extends CGFobject {
         this.scene.popMatrix();
     }
 
+    /**
+     * @brief Displays the base of the crown.
+     *
+     * @param {number} radius - The radius of the crown base.
+     */
     displayCrownBase(radius) {
         this.scene.pushMatrix();
         this.scene.scale(radius, 1, radius);

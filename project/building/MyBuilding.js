@@ -3,6 +3,7 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
+
     constructor(scene, total_width, buildingColor, numFloors,
         numWindows, windowTexture, backWindows, facadeTexture,
         doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {

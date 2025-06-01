@@ -55,7 +55,8 @@ export class MyTerrain extends CGFobject {
     buildTerrainMask(terrainMaskPath) {
         this.terrainMaskData = null;
 
-        // Loading the pixel data involves creating an HTML canvas
+        // The simplest way we found to load the image data involves creating
+        // and using an HTML canvas
         const canvas = document.createElement('canvas');
         canvas.width = this.side;
         canvas.height = this.side;
@@ -94,7 +95,7 @@ export class MyTerrain extends CGFobject {
     /**
      * @brief Checks if a certain position is above water.
      *
-     * @param {array} position - The position to check, given as an array [x, y, z].
+     * @param {Array<number>} position - The position to check, given as an array [x, y, z].
      * @returns {boolean} - Returns true if the position is above water, false otherwise.
      */
     isAboveWater(position) {
