@@ -123,14 +123,14 @@ A more detailed description of all the implemented features can be seen below:
 
 <figure>
     <img src="./screenshots/project-t13g01-7.png" alt="Project step 6.1">
-    <figcaption>Fig. 6: Screenshot of Fire Ondulation step 6.1</figcaption>
+    <figcaption>Fig. 7: Screenshot of Fire Ondulation step 6.1</figcaption>
 </figure>
 
 ### Additional Development
 
 <figure>
     <img src="./screenshots/project-t13g01-8.png" alt="Project step 7">
-    <figcaption>Fig. 6: Screenshot of Additional Development step 7</figcaption>
+    <figcaption>Fig. 8: Screenshot of Additional Development step 7</figcaption>
 </figure>
 
 ## Developers
