@@ -93,7 +93,7 @@ export class MyScene extends CGFscene {
 
         // Water Depth
         this.waterMap = new CGFtexture(this, 'textures/water_map.jpg');
-        this.maxWaterDepth = 10.0;
+        this.maxWaterDepth = 5.0;
         this.updateMaxWaterDepth();
 
         // Elevation Map

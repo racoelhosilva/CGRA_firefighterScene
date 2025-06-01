@@ -172,7 +172,7 @@ export class MyHeli extends CGFobject {
 
     setScaleFactor(scaleFactor) {
         this.scaleFactor = scaleFactor;
-        this.lakeHeight = this.BUCKET_HEIGHT - 16;
+        this.lakeHeight = this.BUCKET_HEIGHT - 20;
     }
 
     getState() {
