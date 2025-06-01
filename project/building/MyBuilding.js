@@ -3,15 +3,14 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, buildingColor, floors, numWindows, windowTexture, backWindows, facadeTexture, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
+    constructor(scene, total_width, buildingColor, numFloors, numWindows, windowTexture, backWindows, facadeTexture, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.total_width = total_width;
         this.floorWidth = 2 * total_width / 5;
         this.floorHeight = total_width / 5;
         this.floorDepth = total_width / 3;
-        this.numFloors = floors;
+        this.numFloors = numFloors;
         this.numWindows = numWindows;
-        this.backWindows = backWindows;
 
         this.buildingMaterial = new CGFappearance(scene);
         this.buildingMaterial.setAmbient(...buildingColor.map(c => c * 0.5), 1.0);
@@ -95,10 +94,6 @@ export class MyBuilding extends CGFobject {
         return this.floorDepth;
     }
 
-    updateFloorNumber(floors) {
-        this.numFloors = floors;
-    }
-
     updateSize(total_width) {
         this.total_width = total_width;
         this.floorWidth = 2 * total_width / 5;
@@ -109,21 +104,13 @@ export class MyBuilding extends CGFobject {
         this.ceiling.updateSize(this.floorWidth, this.floorDepth);
     }
 
+    updateFloorNumber(floors) {
+        this.numFloors = floors;
+    }
+
     updateWindowNumber(windows) {
         this.numWindows = windows;
         this.floor.updateWindowNumber(this.numWindows);
-    }
-
-    updateWindowTexture(windowTexture) {
-        this.floor.updateWindowTexture(windowTexture);
-    }
-
-    updateBannerTexture(bannerTexture) {
-        this.floor.updateBannerTexture(bannerTexture);
-    }
-
-    updateDoorTexture(doorTexture) {
-        this.floor.updateDoorTexture(doorTexture);
     }
 
     updateBuildingColor(color) {
@@ -131,12 +118,24 @@ export class MyBuilding extends CGFobject {
         this.buildingMaterial.setDiffuse(...color.map(c => c * 0.8), 1.0);
     }
 
-    updateBackWindows(backWindows) {
-        this.backWindows = backWindows;
-        this.floor.updateBackWindows(this.backWindows);
-    }
-
     updateBuildingTexture(facadeTexture) {
         this.buildingMaterial.setTexture(facadeTexture);
     }
+
+    updateDoorTexture(doorTexture) {
+        this.floor.updateDoorTexture(doorTexture);
+    }
+
+    updateBannerTexture(bannerTexture) {
+        this.floor.updateBannerTexture(bannerTexture);
+    }
+
+    updateWindowTexture(windowTexture) {
+        this.floor.updateWindowTexture(windowTexture);
+    }
+
+    updateBackWindows(backWindows) {
+        this.floor.updateBackWindows(backWindows);
+    }
+
 }

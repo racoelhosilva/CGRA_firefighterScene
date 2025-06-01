@@ -162,16 +162,16 @@ export class MyFloor extends CGFobject {
         this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
     }
 
-    updateWindowTexture(texture) {
-        this.windowMaterial.setTexture(texture);
+    updateDoorTexture(texture) {
+        this.doorMaterial.setTexture(texture);
     }
 
     updateBannerTexture(texture) {
         this.bannerMaterial.setTexture(texture);
     }
 
-    updateDoorTexture(texture) {
-        this.doorMaterial.setTexture(texture);
+    updateWindowTexture(texture) {
+        this.windowMaterial.setTexture(texture);
     }
 
     updateBackWindows(backWindows) {
