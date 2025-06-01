@@ -212,6 +212,7 @@ export class MyWaterBucket extends CGFobject {
      */
     updateParticles(deltaT) {
         for (let i = 0; i < this.particles.length; ) {
+            let particle = this.particles[i];
             particle.update(deltaT);
             if (particle.position[1] <= 0) {
                 this.particles.splice(this.particles.indexOf(particle), 1);
