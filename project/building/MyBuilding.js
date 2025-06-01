@@ -3,7 +3,10 @@ import { MyCeiling } from './MyCeiling.js';
 import { MyFloor } from './MyFloor.js';
 
 export class MyBuilding extends CGFobject {
-    constructor(scene, total_width, buildingColor, numFloors, numWindows, windowTexture, backWindows, facadeTexture, doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
+    constructor(scene, total_width, buildingColor, numFloors,
+        numWindows, windowTexture, backWindows, facadeTexture,
+        doorTexture, bannerTexture, helipadTexture, upTexture, downTexture) {
+
         super(scene);
         this.total_width = total_width;
         this.floorWidth = 2 * total_width / 5;
@@ -137,5 +140,4 @@ export class MyBuilding extends CGFobject {
     updateBackWindows(backWindows) {
         this.floor.updateBackWindows(backWindows);
     }
-
 }

@@ -1,7 +1,22 @@
 import { CGFobject, CGFappearance } from "../../lib/CGF.js";
 import { MyPlane } from "../MyPlane.js";
 
+/**
+ * @brief Class representing a terrain in the scene.
+ */
 export class MyTerrain extends CGFobject {
+    /**
+     * @brief Constructs a new MyTerrain object.
+     *
+     * @param {CGFscene} scene - The scene to which this object belongs.
+     * @param {number} side - The length of one side of the (square) terrain.
+     * @param {string} terrainMaskPath - Path to the terrain mask texture.
+     * @param {CGFtexture} waterMap - Texture representing the water map.
+     * @param {CGFtexture} elevationMap - Texture representing the elevation map.
+     * @param {CGFtexture} grassTex - Texture for the grass.
+     * @param {CGFtexture} lakeTex - Texture for the lake.
+     * @param {CGFshader} shader - Shader used for rendering the terrain.
+     */
     constructor(scene, side, terrainMaskPath, waterMap, elevationMap, grassTex, lakeTex, shader) {
         super(scene);
 
@@ -27,17 +42,26 @@ export class MyTerrain extends CGFobject {
             lakeTexture: 4
         });
 
-        this.buildLakeMap(terrainMaskPath);
+        this.buildTerrainMask(terrainMaskPath);
     }
 
-    buildLakeMap(terrainMaskPath) {
+    /**
+     * @brief Loads the terrain mask texture's pixel data into the terrainMaskData array.
+     *
+     * This is needed for checking if the helicopter is above water or not.
+     *
+     * @param {string} terrainMaskPath - Path to the terrain mask texture.
+     */
+    buildTerrainMask(terrainMaskPath) {
         this.terrainMaskData = null;
 
+        // Loading the pixel data involves creating an HTML canvas
         const canvas = document.createElement('canvas');
         canvas.width = this.side;
         canvas.height = this.side;
         const ctx = canvas.getContext('2d');
 
+        // The pixel data is obtained when the image is loaded
         const terrainMaskImg = new Image();
         terrainMaskImg.src = terrainMaskPath;
         terrainMaskImg.onload = () => {
@@ -67,6 +91,12 @@ export class MyTerrain extends CGFobject {
         this.scene.popMatrix();
     }
 
+    /**
+     * @brief Checks if a certain position is above water.
+     *
+     * @param {array} position - The position to check, given as an array [x, y, z].
+     * @returns {boolean} - Returns true if the position is above water, false otherwise.
+     */
     isAboveWater(position) {
         if (!this.terrainMaskData)
             return false; // Lake map not ready
@@ -81,14 +111,27 @@ export class MyTerrain extends CGFobject {
         const px = Math.floor(u * (this.side - 1));
         const py = Math.floor(v * (this.side - 1));
 
+        // Only works with 4 bytes per pixel (RGBA)
         const value = this.terrainMaskData[(py * this.side + px) * 4];
+        // Although the texture should be only black and white, we check if the value is below 128
+        // to determine if it's water (black) or land (white).
         return value < 128;
     }
 
+    /**
+     * @brief Updates the grass texture.
+     *
+     * @param {CGFtexture} newGrassTex - The new grass texture to apply.
+     */
     updateGrassTexture(newGrassTex) {
         this.grassTex = newGrassTex;
     }
 
+    /**
+     * @brief Updates the water texture.
+     *
+     * @param {CGFtexture} newWaterTex - The new water texture to apply.
+     */
     updateWaterTexture(newWaterTex) {
         this.lakeTex = newWaterTex;
     }
