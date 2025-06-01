@@ -1,7 +1,21 @@
-import { CGFobject, CGFappearance } from '../../lib/CGF.js';
+import { CGFobject, CGFappearance, CGFscene } from '../../lib/CGF.js';
 import { MyCylinder } from '../component/MyCylinder.js';
+import { MyHeli } from './MyHeli.js';
 
+/**
+ * @brief Class representing a helicopter marker in the scene.
+ *
+ * The helicopter marker denotes the direction to which the water drops, and is
+ * represented by a translucid cylinder below the helicopter.
+ */
 export class MyHeliMarker extends CGFobject {
+    /**
+     * @brief Creates a helicopter marker object.
+     *
+     * @param {CGFscene} scene - The scene to which the marker belongs.
+     * @param {MyHeli} helicopter - The helicopter to which the marker is attached.
+     * @param {Array<number>} color - The color of the marker, in RGB format.
+     */
     constructor(scene, helicopter, color) {
         super(scene);
 
@@ -23,6 +37,7 @@ export class MyHeliMarker extends CGFobject {
         this.material.apply();
         this.scene.pushMatrix();
 
+        // Displace top to the bottom of the bucket
         const translateY = this.helicopter.position[1]
             - (this.helicopter.bucketHeight - this.helicopter.HELICOPTER_BOTTOM_HEIGHT)
             * this.helicopter.scaleFactor;
@@ -37,6 +52,11 @@ export class MyHeliMarker extends CGFobject {
         this.scene.popMatrix();
     }
 
+    /**
+     * @brief Updates the color of the marker.
+     *
+     * @param {Array<number>} color - The new color of the marker, in RGB format.
+     */
     updateColor(color) {
         this.material.setEmission(...color, 0.5);
     }

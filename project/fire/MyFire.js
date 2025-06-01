@@ -26,16 +26,27 @@ export class MyFire extends CGFobject {
         this.center = center;
         this.numBlazes = numBlazes;
 
-        this.material = new CGFappearance(this.scene);
-        this.material.setAmbient(0.0, 0.0, 0.0, 0.0);
-        this.material.setDiffuse(0.0, 0.0, 0.0, 0.0);
-        this.material.setSpecular(0.0, 0.0, 0.0, 0.0);
-        this.material.setTexture(texture);
-
+        this.material = this.buildFireMaterial(texture);
         this.shader = shader;
 
         this.blazes = this.buildBlazes();
         this.heightFactor = 1.0;  // The height factor reduces as the fire is put down
+    }
+
+    /**
+     * @brief Builds the material for the fire.
+     *
+     * @param {CGFtexture} texture - The texture to apply to the fire material.
+     *
+     * @returns {CGFappearance} - The fire material.
+     */
+    buildFireMaterial(texture) {
+        const fireMaterial = new CGFappearance(this.scene);
+        fireMaterial.setAmbient(0.0, 0.0, 0.0, 0.0);
+        fireMaterial.setDiffuse(0.0, 0.0, 0.0, 0.0);
+        fireMaterial.setSpecular(0.0, 0.0, 0.0, 0.0);
+        fireMaterial.setTexture(texture);
+        return fireMaterial;
     }
 
     /**

@@ -3,9 +3,24 @@ import { MyCylinder } from "../component/MyCylinder.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
+/**
+ * @brief Class representing a helicopter rotor.
+ */
 export class MyRotor extends CGFobject {
     MAST_RADIUS_RATIO = 0.05;
 
+    /**
+     * @brief Creates a new rotor object.
+     *
+     * @param {CGFscene} scene - The scene to which the rotor belongs.
+     * @param {number} radius - The radius of the rotor blades.
+     * @param {number} blades - The number of blades in the rotor.
+     * @param {number} bladeWidth - The width of each rotor blade.
+     * @param {number} mastHeight - The height of the rotor mast.
+     * @param {number} mastRadius - The radius of the rotor mast.
+     *
+     * @param {CGFappearance} bladeMaterial - The material to apply to the rotor blades.
+     */
     constructor(scene, radius, blades, bladeWidth, mastHeight, mastRadius, bladeMaterial) {
         super(scene);
 
@@ -29,6 +44,7 @@ export class MyRotor extends CGFobject {
     }
 
     display() {
+        // Mast
         this.scene.pushMatrix();
         this.mastMaterial.apply();
         this.mast.display();
@@ -39,6 +55,7 @@ export class MyRotor extends CGFobject {
         this.scene.translate(0, - 0.2 * this.mastHeight, 0);
         this.scene.rotate(-Math.PI / 2, 1, 0, 0);
 
+        // Blades
         this.bladeMaterial.apply();
         for (let i = 0; i < this.blades; i++) {
             this.scene.pushMatrix();

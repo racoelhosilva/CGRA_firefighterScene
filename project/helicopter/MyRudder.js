@@ -1,7 +1,15 @@
 import { CGFobject } from "../../lib/CGF.js";
 import { MyParallelogram } from "../component/MyParallelogram.js";
 
+/**
+ * @brief Class representing a helicopter rudder.
+ */
 export class MyRudder extends CGFobject {
+    /**
+     * @brief Creates a new rudder object.
+     *
+     * @param {CGFscene} scene - The scene to which the rudder belongs.
+     */
     constructor(scene) {
         super(scene);
 

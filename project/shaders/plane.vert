@@ -1,4 +1,6 @@
-precision mediump float;
+#ifdef GL_ES
+precision highp float;
+#endif
 
 attribute vec3 aVertexPosition;
 attribute vec2 aTextureCoord;
@@ -21,11 +23,12 @@ void main(void) {
     vec3 newPosition = aVertexPosition;
     float maskValue = maskColor.r;
 
-    if (maskValue < 0.5) {
+    if (maskValue < 0.5) {  // Lake area -> Add water depth
         vec2 mapPos = mod(aTextureCoord * 0.1 + 0.3 * timeFactor, 1.0);
         vec4 mapColor = texture2D(waterMap, mapPos);
         newPosition.z -= mapColor.r * maxWaterDepth;
-    } else {
+
+    } else {  // Grass area -> Add elevation
         vec4 mapColor = texture2D(elevationMap, aTextureCoord);
         newPosition.z += (1.0 - mapColor.r) * maxElevation;
     }

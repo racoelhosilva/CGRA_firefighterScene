@@ -34,6 +34,7 @@ export class MyTriangle extends CGFobject {
     pushVertices() {
         const normal = this.normalize(this.crossProduct(this.difference(this.p2, this.p1), this.difference(this.p3, this.p1)));
 
+        // The construction of the vertices is based on barycentric interpolation.
         for (let i = 0; i <= this.complexity + 1; i++) {
             for (let j = 0; j <= this.complexity - i + 1; j++) {
                 const u = i / (this.complexity + 1);

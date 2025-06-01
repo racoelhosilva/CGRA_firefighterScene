@@ -8,16 +8,27 @@ import { MyHeliMarker } from "./helicopter/MyHeliMarker.js";
 import { MyTerrain } from "./terrain/MyTerrain.js";
 
 /**
- * MyScene
- * @constructor
+ * @brief MyScene class, representing the main scene of the application.
+ *
+ * This class extends CGFscene and initializes the scene with various objects
+ * including a panorama, terrain, building, helicopter, forest, and fire.
+ * It also handles camera setup, lighting, and user input for controlling the helicopter.
  */
 export class MyScene extends CGFscene {
     Z_CLASHING_OFFSET = 0.2;
 
+    /**
+     * @brief Constructor for MyScene.
+     */
     constructor() {
         super();
     }
 
+    /**
+     * @brief Initializes the scene with the given application.
+     *
+     * @param {CGFapplication} application - The application to which this scene belongs.
+     */
     init(application) {
         super.init(application);
 
@@ -302,6 +313,9 @@ export class MyScene extends CGFscene {
         this.t = new Date().getTime();
     }
 
+    /**
+     * @brief Initializes the lights for the scene.
+     */
     initLights() {
         this.lights[0].setPosition(200, 200, 200, 1);
         this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -311,14 +325,25 @@ export class MyScene extends CGFscene {
         this.setGlobalAmbientLight(0.4, 0.4, 0.4, 1.0);
     }
 
+    /**
+     * @brief Returns the initial camera position.
+     * @returns {vec3<number>} The initial camera position as a vec3.
+     */
     getInitialCameraPosition() {
         return vec3.fromValues(-450, 300, 300);
     }
 
+    /**
+     * @brief Returns the initial camera target.
+     * @returns {vec3<number>} The initial camera target as a vec3.
+     */
     getInitialCameraTarget() {
         return vec3.fromValues(0, 0, -125);
     }
 
+    /**
+     * @brief Initializes the camera for the scene.
+     */
     initCameras() {
         this.camera = new CGFcamera(
             0.4,
@@ -329,6 +354,11 @@ export class MyScene extends CGFscene {
         );
     }
 
+    /**
+     * @brief Checks for key presses and updates the helicopter state accordingly.
+     *
+     * @param {number} deltaT - The time since the last update in milliseconds.
+     */
     checkKeys(deltaT) {
         var text = "Keys pressed: ";
         var keysPressed = false;
@@ -399,6 +429,11 @@ export class MyScene extends CGFscene {
             console.log(text);
     }
 
+    /**
+     * @brief Updates the scene state based on the elapsed time.
+     *
+     * @param {number} t - The current time in milliseconds.
+     */
     update(t) {
         const deltaT = t - this.t;
         this.t = t;
@@ -416,6 +451,9 @@ export class MyScene extends CGFscene {
         this.planeShader.setUniformsValues({ timeFactor: t / 400000.0 % 100 });
     }
 
+    /**
+     * @brief Sets the default appearance for the scene.
+     */
     setDefaultAppearance() {
         this.setEmission(0.0, 0.0, 0.0, 1.0);
         this.activeTexture = null;
@@ -425,6 +463,12 @@ export class MyScene extends CGFscene {
         this.setShininess(10.0);
     }
 
+    /**
+     * @brief Converts a hex color string or RGB vector to an RGB array.
+     *
+     * @param {string|Array<number>} hex - The hex color string (e.g., "#RRGGBB") or RGB vector.
+     * @return {Array<number>} An array containing the RGB values normalized to the range [0, 1].
+     */
     hexToRgb(hex) {
         var ret;
         //either we receive a html/css color or a RGB vector
@@ -444,6 +488,9 @@ export class MyScene extends CGFscene {
         return ret;
     }
 
+    /**
+     * @brief Sets the initial position of the helicopter based on the building's position.
+     */
     setHelicopterInitPos() {
         this.helicopter.setInitPos([
             this.buildingX + this.building.getCentralFloorWidth() / 2,
@@ -452,95 +499,161 @@ export class MyScene extends CGFscene {
         ]);
     }
 
+    /**
+     * @brief Updates the panorama texture based on the selected texture.
+     */
     updatePanoramaTexture() {
         this.panorama.updateTexture(this.panoramaTextures[this.selectedPanoramaTexture]);
     }
 
+    /**
+     * @brief Updates the grass texture based on the selected texture.
+     */
     updateGrassTexture() {
         this.ground.updateGrassTexture(this.grassTextures[this.selectedGrassTexture]);
     }
 
+    /**
+     * @brief Updates the water texture based on the selected texture.
+     */
     updateWaterTexture() {
         this.ground.updateWaterTexture(this.waterTextures[this.selectedWaterTexture]);
     }
 
+    /**
+     * @brief Updates the elevation map and max elevation for the terrain.
+     */
     updateMaxElevation() {
         this.planeShader.setUniformsValues({ maxElevation: this.maxElevation });
     }
 
+    /**
+     * @brief Updates the maximum water depth for the terrain.
+     */
     updateMaxWaterDepth() {
         this.planeShader.setUniformsValues({ maxWaterDepth: this.maxWaterDepth });
     }
 
+    /**
+     * @brief Updates the building size and adjusts the helicopter's initial position accordingly.
+     */
     updateBuildingSize() {
         this.building.updateSize(this.buildingSize);
         this.setHelicopterInitPos();
     }
 
+    /**
+     * @brief Updates the number of floors in the building and adjusts the helicopter's initial position accordingly.
+     */
     updateFloorNumber() {
         this.building.updateFloorNumber(this.floorNumber);
         this.setHelicopterInitPos();
     }
 
+    /**
+     * @brief Updates the number of windows in the building.
+     */
     updateWindowNumber() {
         this.building.updateWindowNumber(this.windowNumber);
     }
 
+    /**
+     * @brief Updates the back windows visibility in the building.
+     */
     updateBackWindows() {
         this.building.updateBackWindows(this.backWindows);
     }
 
+    /**
+     * @brief Updates the building color based on the selected hex color.
+     */
     updateBuildingColor() {
         this.building.updateBuildingColor(this.hexToRgb(this.buildingColor));
     }
 
+    /**
+     * @brief Updates the building texture based on the selected texture.
+     */
     updateBuildingTexture() {
         this.building.updateBuildingTexture(this.buildingTextures[this.selectedBuildingTexture]);
     }
 
+    /**
+     * @brief Updates the banner texture based on the selected texture.
+     */
     updateBannerTexture() {
         this.building.updateBannerTexture(this.bannerTextures[this.selectedBannerTexture]);
     }
 
+    /**
+     * @brief Updates the door texture based on the selected texture.
+     */
     updateDoorTexture() {
         this.building.updateDoorTexture(this.doorTextures[this.selectedDoorTexture]);
     }
 
+    /**
+     * @brief Updates the window texture based on the selected texture.
+     */
     updateWindowTexture() {
         this.building.updateWindowTexture(this.windowTextures[this.selectedWindowTexture]);
     }
 
+    /**
+     * @brief Updates the helicopter's speed factor.
+     */
     updateSpeedFactor() {
         this.helicopter.setSpeedValues(this.speedFactor);
     }
 
+    /**
+     * @brief Updates the helicopter's color based on the selected hex color.
+     */
     updateHelicopterColor() {
         this.helicopter.updateColor(this.hexToRgb(this.helicopterColor));
     }
 
+    /**
+     * @brief Updates the helicopter marker's color based on the selected hex color.
+     */
     updateHelicopterMarkerColor() {
         this.helicopterMarker.updateColor(this.hexToRgb(this.helicopterMarkerColor));
     }
 
+    /**
+     * @brief Updates the helicopter's scale factor.
+     */
     updateHelicopterScaleFactor() {
         this.helicopter.setScaleFactor(this.helicopterScaleFactor);
     }
 
+    /**
+     * @brief Resets the forest by creating new instances of MyForest with the current properties.
+     */
     resetForest() {
         this.forest1 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
         this.forest2 = new MyForest(this, 150, 150, this.treeRows, this.treeCols, this.truncTexture, this.crownTexture, this.hexToRgb(this.darkTree), this.hexToRgb(this.lightTree));
     }
 
+    /**
+     * @brief Resets the fires by generating new instances of MyFire with the current properties.
+     */
     resetFire() {
         this.fires = MyFire.generateFires(this, [-60, 0, -60], [60, 0, 60], this.numFires / 2, this.fireTexture, this.fireShader);
         const fires2 = MyFire.generateFires(this, [-60 + 150, 0, -60 + 100], [60 + 150, 0, 60 + 100], this.numFires / 2, this.fireTexture, this.fireShader);
         this.fires = this.fires.concat(fires2);
     }
 
+    /**
+     * @brief Applies the selected preset to the scene.
+     */
     applyPreset() {
         this.presets[this.selectedPreset].call(this);
     }
 
+    /**
+     * @brief Applies the default preset to the scene.
+     */
     defaultPreset() {
         this.selectedGrassTexture = 0;
         this.updateGrassTexture();
@@ -553,6 +666,9 @@ export class MyScene extends CGFscene {
         this.updateWaterTexture();
     }
 
+    /**
+     * @brief Applies the fall preset to the scene.
+     */
     fallPreset() {
         this.selectedGrassTexture = 1;
         this.updateGrassTexture();
@@ -565,6 +681,9 @@ export class MyScene extends CGFscene {
         this.updateWaterTexture();
     }
 
+    /**
+     * @brief Updates the camera view based on the selected view.
+     */
     updateView() {
         switch (this.view) {
             case "FREE":
@@ -583,6 +702,9 @@ export class MyScene extends CGFscene {
         }
     }
 
+    /**
+     * @brief Displays the scene, rendering all objects and applying transformations.
+     */
     display() {
         // ---- BEGIN Background, camera and axis setup
         // Clear image and depth buffer everytime we update the scene

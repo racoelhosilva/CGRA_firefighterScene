@@ -1,10 +1,20 @@
-import { CGFobject } from "../../lib/CGF.js";
+import { CGFappearance, CGFobject, CGFscene } from "../../lib/CGF.js";
 import { MyCylinder } from "../component/MyCylinder.js";
 import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
+/**
+ * @brief Class representing a helicopter skid.
+ */
 export class MySkid extends CGFobject {
     LENGTH = 20;
 
+    /**
+     * @brief Creates a new skid object.
+     *
+     * @param {CGFscene} scene - The scene to which the skid belongs.
+     * @param {boolean} right - Indicates if the skid is on the right side of the helicopter.
+     * @param {CGFappearance} skidMaterial - The material to apply to the skid.
+     */
     constructor(scene, right, skidMaterial) {
         super(scene);
 
@@ -20,6 +30,7 @@ export class MySkid extends CGFobject {
     display() {
         this.skidMaterial.apply();
 
+        // Small Cylinders
         this.scene.pushMatrix();
         this.scene.rotate(this.right ? -Math.PI / 6 : Math.PI / 6, 1, 0, 0);
         this.scene.translate(this.LENGTH / 4, 0, 0);
@@ -28,6 +39,7 @@ export class MySkid extends CGFobject {
         this.smallCylinder.display();
         this.scene.popMatrix();
 
+        // Big Cylinder
         this.scene.pushMatrix();
         this.scene.rotate(-Math.PI / 2, 0, 0, 1);
         this.bigCylinder.display();
