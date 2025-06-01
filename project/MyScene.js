@@ -61,7 +61,7 @@ export class MyScene extends CGFscene {
         this.selectedPanoramaTexture = 2;
 
         // Panorama Object
-        this.panorama = new MyPanorama(this, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
+        this.panorama = new MyPanorama(this, 2000, 64, 64, this.panoramaTextures[this.selectedPanoramaTexture]);
 
         // Plane/Terrain Setup
 
