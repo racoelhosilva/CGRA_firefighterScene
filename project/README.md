@@ -31,7 +31,7 @@ The following keyboard controls are available for interacting with the helicopte
 | **D** | Turn helicopter right (when flying)                                                             |
 | **P** | Initiate helicopter takeoff (both from heliport and lake)                                       |
 | **L** | Land helicopter (if above land, empty and still) or lower helicopter (if above water and still) |
-| **O** | Open the helicopter's bucket (must have water)                                                  |
+| **O** | Open the helicopter's bucket (must have water and be over a fire)                                                  |
 | **R** | Reset helicopter to initial state                                                               |
 
 > **Note:**  
@@ -40,13 +40,31 @@ The following keyboard controls are available for interacting with the helicopte
 
 ## Implemented Functionalities
 
-- Panorama
-- Terrain
-- Building
-- Forest
-- Helicopter
-- Lake
-- Fire
+All of the core functionalities defined for this project are implemented and we also extended upon most of them. For the additional development, we chose option `C`: combine the lake and grass using a plane mask and set appropriate textures, waves and movement.
+
+A more detailed description of all the implemented features can be seen below:
+
+- **Panorama**: A dynamic sky sphere surrounding the entire scene, with selectable textures (day, night, sunrise, sunset) for customization purposes.
+- **Terrain**: The ground is generated using a shader with different masks: 
+  - **Plane Mask**: a binary map used to define the regions with water and ground
+  - **Elevation Map**: a height map used to create mountains and elevated regions
+  - The textures of grass and water and the elevation factor of each region can be customized in the interface.
+  - The lake region is defined through the plane mask, allowing for multiple lakes with irregular shapes.
+- **Building**: The firefighter building with 3 modules of adjustable size, number of floors, number of windows per floor and back windows. The building color and textures for walls, windows, doors, and banner can be changed through the GUI.
+- **Forest**: Procedurally generated forest with adjustable density (rows and columns) and foliage coloration. Random tilts and fixed tree trunk and crown textures are used for realism. The scene contains two forests side-by-side that can be re-generated/reset throught the interface. 
+- **Helicopter**: Fully interactive helicopter with animated rotors, takeoff/landing animations, and a water bucket system for fire-fighting. The helicopter color, speed factor and scale can be adjusted via the interface.
+  - The helicopter can pick up water on lakes, increasing the water level in the bucket. The water can then be dropped over the fires, creating water particles and reducing the water bucket until empty.
+- **Lake**: Realistic water surface with customizable texture and animated shaders to simulated waves and movement. 
+  - The lake interacts with the helicopter for water collection based on the plane mask previously mentioned.
+- **Fire**: Procedurally generated animated fire objects with realistic textures and ondulation shaders. The number of fires is customizable through the interface and can also be reset.
+  - The fire interacts with the water particles dropped by the helicopter after opening the bucket with water.
+- **Heliport Animation**: The helipad displays dynamic signage ("H", "UP", "DOWN") and corner lights that pulsate during helicopter maneuvers, implemented using custom shaders and textures.
+- **Helicopter Marker**: Vertical column from the bucket to the ground for better User Experience when clearing the fires.
+- **Camera Positions**: There are three defined cameras with different positions, fov and behaviours:
+  - **Free**: the default camera focused on the main components of the scene. This camera can be controlled with the mouse.
+  - **Helicopter**: a first-person camera to control the helicopter. It follows the helicopter through the scene.
+  - **Far**: a camera situated farther away providing a larger overview of the scene. This camera can be controlled with the mouse.
+- **Presets & Interface**: Some scene presets are available, instantly configuring multiple environment settings. The interface is organized into intuitive folders for easy control of all scene aspects.
 
 ## Checkpoint List
 
