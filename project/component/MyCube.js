@@ -10,7 +10,7 @@ export class MyCube extends CGFobject {
     }
 
     display() {
-        
+
         // Face in positive zz
         this.scene.pushMatrix();
         this.scene.translate(0, 0, this.size);
@@ -30,7 +30,7 @@ export class MyCube extends CGFobject {
         this.scene.rotate(Math.PI / 2, 0, 1, 0);
         this.face.display();
         this.scene.popMatrix();
-     
+
         // Face in negative xx
         this.scene.pushMatrix();
         this.scene.translate(0, 0, 0);
