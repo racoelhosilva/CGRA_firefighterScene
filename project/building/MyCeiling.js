@@ -2,11 +2,28 @@ import { CGFappearance, CGFobject, CGFtexture } from "../../lib/CGF.js";
 import { MyCube } from "../component/MyCube.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
+/**
+ * @brief Class representing the ceiling of a building.
+ *
+ * The ceiling is a rectangular surface that can display a helipad and lights.
+ */
 export class MyCeiling extends CGFobject {
-    constructor(scene, width, depth, helipadTexture, upTexture, downTexture) {
+    /**
+     * @brief Creates a new ceiling object.
+     *
+     * @param {CGFscene} scene - The scene to which the ceiling belongs.
+     * @param {number} width - The width of the ceiling.
+     * @param {number} depth - The depth of the ceiling.
+     * @param {CGFappearance} buildingMaterial - The material to apply to the ceiling.
+     * @param {CGFtexture} helipadTexture - The texture for the helipad.
+     * @param {CGFtexture} upTexture - The texture for the helipad during up maneuvers.
+     * @param {CGFtexture} downTexture - The texture for the helipad during down maneuvers.
+     */
+    constructor(scene, width, depth, buildingMaterial, helipadTexture, upTexture, downTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
+        this.buildingMaterial = buildingMaterial;
         this.helipadTexture = helipadTexture;
         this.upTexture = upTexture;
         this.downTexture = downTexture;
@@ -32,8 +49,13 @@ export class MyCeiling extends CGFobject {
         this.light = new MyCube(this.scene, this.lightSize);
     }
 
-    display(helipad, buildingMaterial) {
-        buildingMaterial.apply();
+    /**
+     * @brief Displays the ceiling and optionally the helipad and lights.
+     *
+     * @param {boolean} helipad - Whether to display the helipad.
+     */
+    display(helipad) {
+        this.buildingMaterial.apply();
 
         // Ceiling Floor
         this.scene.pushMatrix();
@@ -42,10 +64,10 @@ export class MyCeiling extends CGFobject {
         this.ceiling.display();
         this.scene.popMatrix();
 
-        if (!helipad) 
+        if (!helipad)
             return;
 
-        // Display helipad 
+        // Display helipad
         // Only if in central building
         this.helipadMaterial.apply();
         this.upTexture.bind(1);
@@ -86,6 +108,12 @@ export class MyCeiling extends CGFobject {
         this.scene.setActiveShader(this.scene.defaultShader);
     }
 
+    /**
+     * @brief Updates the size of the ceiling and helipad.
+     *
+     * @param {number} width - The new width of the ceiling.
+     * @param {number} depth - The new depth of the ceiling.
+     */
     updateSize(width, depth) {
         // Update dimensions of ceiling floor
         this.width = width;
@@ -97,5 +125,14 @@ export class MyCeiling extends CGFobject {
         this.helipadXSpacing = (width - this.helipadSize) / 2;
         this.helipadZSpacing = (depth - this.helipadSize) / 2;
         this.helipad.updateSize(this.helipadSize, this.helipadSize);
+    }
+
+    /**
+     * @brief Updates the building material of the ceiling.
+     *
+     * @param {CGFappearance} buildingMaterial - The new material to apply to the ceiling.
+     */
+    updateBuildingMaterial(buildingMaterial) {
+        this.buildingMaterial = buildingMaterial;
     }
 }

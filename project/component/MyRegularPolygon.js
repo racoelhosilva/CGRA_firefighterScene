@@ -1,6 +1,20 @@
 import { CGFobject } from "../../lib/CGF.js";
 
+/**
+ * @brief Class representing a regular polygon.
+ *
+ * This class creates a regular polygon with a specified number of sides and radius.
+ * It can be rendered as a single-sided or double-sided polygon.
+ */
 export class MyRegularPolygon extends CGFobject {
+    /**
+     * @brief Creates a new MyRegularPolygon object.
+     *
+     * @param {CGFscene} scene - The scene to which the polygon belongs.
+     * @param {number} sides - The number of sides of the polygon.
+     * @param {number} radius - The radius of the polygon.
+     * @param {boolean} [doubleSided=false] - Whether the polygon should be double-sided.
+     */
     constructor(scene, sides, radius, doubleSided = false) {
         super(scene);
 
@@ -11,6 +25,9 @@ export class MyRegularPolygon extends CGFobject {
         this.initBuffers();
     }
 
+    /**
+     * @brief Initializes the buffers for the polygon.
+     */
     initBuffers() {
         this.vertices = [];
         this.normals = [];
@@ -24,6 +41,9 @@ export class MyRegularPolygon extends CGFobject {
         this.initGLBuffers();
     }
 
+    /**
+     * @brief Pushes the vertices, normals, and texture coordinates into their respective arrays.
+     */
     pushVertices() {
         // Center
         this.vertices.push(0, 0, 0);
@@ -48,6 +68,9 @@ export class MyRegularPolygon extends CGFobject {
         this.texCoords.push(...this.texCoords);
     }
 
+    /**
+     * @brief Pushes the indices for the polygon faces into the indices array.
+     */
     pushFaces() {
         for (let side = 0; side < this.sides - 1; side++) {
             this.indices.push(side + 1, 0, side + 2);

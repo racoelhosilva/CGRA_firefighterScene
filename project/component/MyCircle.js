@@ -1,6 +1,18 @@
 import { CGFobject } from "../../lib/CGF.js";
 
+/**
+ * @brief Class representing a 2D circle.
+ *
+ * This class creates a circle with a specified number of slices and radius.
+ */
 export class MyCircle extends CGFobject {
+    /**
+     * @brief Creates a new circle object.
+     *
+     * @param {CGFscene} scene - The scene to which the circle belongs.
+     * @param {number} slices - The number of slices for the circle.
+     * @param {number} radius - The radius of the circle.
+     */
     constructor(scene, slices, radius) {
         super(scene);
 
@@ -10,6 +22,9 @@ export class MyCircle extends CGFobject {
         this.initBuffers()
     }
 
+    /**
+     * @brief Initializes the buffers for the circle.
+     */
     initBuffers() {
         this.vertices = [];
         this.normals = [];

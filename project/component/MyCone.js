@@ -1,6 +1,19 @@
 import { CGFobject } from "../../lib/CGF.js";
 
+/**
+ * @brief Class representing a cone object.
+ *
+ * This class creates a cone with a specified number of slices, radius, and height.
+ */
 export class MyCone extends CGFobject {
+    /**
+     * @brief Creates a new cone object.
+     *
+     * @param {CGFscene} scene - The scene to which the cone belongs.
+     * @param {number} slices - The number of slices for the cone's base.
+     * @param {number} radius - The radius of the cone's base.
+     * @param {number} height - The height of the cone.
+     */
     constructor(scene, slices, radius, height) {
         super(scene);
 
@@ -11,6 +24,9 @@ export class MyCone extends CGFobject {
         this.initBuffers()
     }
 
+    /**
+     * @brief Initializes the buffers for the cone.
+     */
     initBuffers() {
         this.vertices = [];
         this.normals = [];
@@ -24,6 +40,9 @@ export class MyCone extends CGFobject {
         this.initGLBuffers();
     }
 
+    /**
+     * @brief Pushes the vertices, normals, and texture coordinates for the cone.
+     */
     pushVertices() {
         // Top vertex
         this.vertices.push(0, this.height, 0);
@@ -41,6 +60,9 @@ export class MyCone extends CGFobject {
         }
     }
 
+    /**
+     * @brief Pushes the indices for the cone's faces.
+     */
     pushFaces() {
         for (let slice = 0; slice < this.slices - 1; slice++)
             this.indices.push(slice + 1, 0, slice + 2);

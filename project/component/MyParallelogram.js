@@ -1,6 +1,21 @@
 import { CGFobject } from "../../lib/CGF.js";
 
+/**
+ * @brief Class representing a parallelogram.
+ *
+ * This class creates a parallelogram with specified width, height, and angle.
+ * It can also be configured to be double-sided.
+ */
 export class MyParallelogram extends CGFobject {
+    /**
+     * @brief Constructs a MyParallelogram object.
+     *
+     * @param {CGFscene} scene - The scene to which the parallelogram belongs.
+     * @param {number} width - The width of the parallelogram.
+     * @param {number} height - The height of the parallelogram.
+     * @param {number} angle - The angle of the parallelogram in radians.
+     * @param {boolean} [doubleSided=false] - Whether the parallelogram is double-sided.
+     */
     constructor(scene, width, height, angle, doubleSided = false) {
         super(scene);
 
@@ -12,6 +27,9 @@ export class MyParallelogram extends CGFobject {
         this.initBuffers();
     }
 
+    /**
+     * @brief Initializes the buffers for the parallelogram.
+     */
     initBuffers() {
         this.vertices = [];
         this.normals = [];
@@ -25,6 +43,9 @@ export class MyParallelogram extends CGFobject {
         this.initGLBuffers();
     }
 
+    /**
+     * @brief Pushes the vertices, normals, and texture coordinates into their respective arrays.
+     */
     pushVertices() {
         const x1 = Math.tan(this.angle) * this.height;
         const x2 = this.width;
@@ -61,6 +82,9 @@ export class MyParallelogram extends CGFobject {
         }
     }
 
+    /**
+     * @brief Pushes the indices for the faces of the parallelogram into the indices array.
+     */
     pushFaces() {
         this.indices.push(
             0, 1, 2,

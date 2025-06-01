@@ -1,6 +1,19 @@
 import { CGFobject } from '../../lib/CGF.js';
 
+/**
+ * @brief Class for a pyramid object.
+ *
+ * This class creates a pyramid with a specified number of faces, radius, and height.
+ */
 export class MyPyramid extends CGFobject {
+    /**
+     * @brief Constructs a pyramid object.
+     *
+     * @param {CGFscene} scene - The scene to which the pyramid belongs.
+     * @param {number} faces - The number of triangular faces of the pyramid.
+     * @param {number} radius - The radius of the base of the pyramid.
+     * @param {number} height - The height of the pyramid.
+     */
     constructor(scene, faces, radius, height) {
         super(scene);
         this.faces = faces;
@@ -10,6 +23,9 @@ export class MyPyramid extends CGFobject {
         this.initBuffers();
     }
 
+    /**
+     * @brief Pushes the vertices, normals, and texture coordinates for the pyramid.
+     */
     pushVertices() {
         for (let face = 0; face < this.faces; face++) {
             const alpha = 2 * Math.PI * face / this.faces;
@@ -39,12 +55,18 @@ export class MyPyramid extends CGFobject {
         }
     }
 
+    /**
+     * @brief Pushes the indices for the pyramid faces.
+     */
     pushFaces() {
         for (let face = 0; face < this.faces; face++) {
             this.indices.push(face * 3, face * 3 + 1, face * 3 + 2);
         }
     }
 
+    /**
+     * @brief Initializes the buffers for the pyramid object.
+     */
     initBuffers() {
         this.vertices = [];
         this.normals = [];

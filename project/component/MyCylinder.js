@@ -1,6 +1,22 @@
 import { CGFobject } from "../../lib/CGF.js";
 
+/**
+ * @brief Class representing a cylinder object.
+ *
+ * This class creates a cylinder with specified radius, height, slices, and stacks.
+ * It can be rendered with double-sided faces if specified.
+ */
 export class MyCylinder extends CGFobject {
+    /**
+     * @brief Creates a cylinder object.
+     *
+     * @param {CGFscene} scene - The scene to which the cylinder belongs.
+     * @param {number} radius - The radius of the cylinder.
+     * @param {number} height - The height of the cylinder.
+     * @param {number} slices - The number of slices around the cylinder.
+     * @param {number} stacks - The number of stacks along the height of the cylinder.
+     * @param {boolean} [doubleSided=false] - Whether the cylinder should be double-sided.
+     */
     constructor(scene, radius, height, slices, stacks, doubleSided = false) {
         super(scene);
 
@@ -13,6 +29,9 @@ export class MyCylinder extends CGFobject {
         this.initBuffers();
     }
 
+    /**
+     * @brief Pushes vertices, normals, and texture coordinates for the cylinder.
+     */
     pushVertices() {
         for (let stack = 0; stack <= this.stacks; stack++) {
             const y = this.height * stack / this.stacks;
@@ -37,6 +56,9 @@ export class MyCylinder extends CGFobject {
         this.texCoords.push(...this.texCoords);
     }
 
+    /**
+     * @brief Pushes indices to create the cylinder's faces.
+     */
     pushFaces() {
         // Outside faces
         for (let stack = 0; stack < this.stacks; stack++) {
@@ -68,6 +90,9 @@ export class MyCylinder extends CGFobject {
         }
     }
 
+    /**
+     * @brief Initializes the buffers for the cylinder.
+     */
     initBuffers() {
         this.vertices = [];
         this.normals = [];

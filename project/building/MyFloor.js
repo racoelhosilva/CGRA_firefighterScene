@@ -1,14 +1,32 @@
-import { CGFappearance, CGFobject } from "../../lib/CGF.js";
+import { CGFappearance, CGFobject, CGFscene, CGFtexture } from "../../lib/CGF.js";
 import { MyRectangle } from "../component/MyRectangle.js";
 
+/**
+ * @brief Class representing a floor in a building.
+ */
 export class MyFloor extends CGFobject {
-    constructor(scene, width, depth, height, numWindows, windowTexture, backWindows, doorTexture, bannerTexture) {
+    /**
+     * @brief Creates a floor object.
+     *
+     * @param {CGFscene} scene - The scene to which the floor belongs.
+     * @param {number} width - The width of the floor.
+     * @param {number} depth - The depth of the floor.
+     * @param {number} height - The height of the floor.
+     * @param {number} numWindows - The number of windows on the floor.
+     * @param {CGFappearance} buildingMaterial - The material for the building.
+     * @param {CGFtexture} windowTexture - The texture for the windows.
+     * @param {boolean} backWindows - Whether the floor has windows on the back face.
+     * @param {CGFtexture} doorTexture - The texture for the door.
+     * @param {CGFtexture} bannerTexture - The texture for the front banner.
+     */
+    constructor(scene, width, depth, height, numWindows, buildingMaterial, windowTexture, backWindows, doorTexture, bannerTexture) {
         super(scene);
         this.width = width;
         this.depth = depth;
         this.height = height;
         this.numWindows = numWindows;
         this.backWindows = backWindows;
+        this.buildingMaterial = buildingMaterial;
 
         // Floor
         this.xFloor = new MyRectangle(this.scene, depth, height);
@@ -59,8 +77,13 @@ export class MyFloor extends CGFobject {
         this.windowMaterial.setTextureWrap("REPEAT", "REPEAT");
     }
 
-    display(displayWindows, buildingMaterial) {
-        buildingMaterial.apply();
+    /**
+     * @brief Displays the floor object.
+     *
+     * @param {boolean} displayWindows - Whether to display windows on the front face.
+     */
+    display(displayWindows) {
+        this.buildingMaterial.apply();
 
         // Positive Z Face
         this.scene.pushMatrix();
@@ -130,6 +153,13 @@ export class MyFloor extends CGFobject {
         this.scene.popMatrix();
     }
 
+    /**
+     * @brief Updates the size of the floor.
+     *
+     * @param {number} width - The new width of the floor.
+     * @param {number} depth - The new depth of the floor.
+     * @param {number} height - The new height of the floor.
+     */
     updateSize(width, depth, height) {
         // Update dimensions of walls
         this.width = width;
@@ -158,24 +188,58 @@ export class MyFloor extends CGFobject {
 
     }
 
+    /**
+     * @brief Updates the number of windows on the floor.
+     *
+     * @param {number} windows - The new number of windows on the floor.
+     */
     updateWindowNumber(windows) {
         this.numWindows = windows;
         this.windowHorizontalSpacing = (this.width - (windows * this.windowSize)) / (windows + 1);
     }
 
+    /**
+     * @brief Updates the texture of the door.
+     *
+     * @param {CGFtexture} texture - The new texture to apply to the door.
+     */
     updateDoorTexture(texture) {
         this.doorMaterial.setTexture(texture);
     }
 
+    /**
+     * @brief Updates the texture of the banner.
+     *
+     * @param {CGFtexture} texture - The new texture to apply to the banner.
+     */
     updateBannerTexture(texture) {
         this.bannerMaterial.setTexture(texture);
     }
 
+    /**
+     * @brief Updates the texture of the windows.
+     *
+     * @param {CGFtexture} texture - The new texture to apply to the windows.
+     */
     updateWindowTexture(texture) {
         this.windowMaterial.setTexture(texture);
     }
 
+    /**
+     * @brief Updates the back windows of the floor.
+     *
+     * @param {boolean} backWindows - Whether the floor has windows on the back face or not.
+     */
     updateBackWindows(backWindows) {
         this.backWindows = backWindows;
+    }
+
+    /**
+     * @brief Updates the building material of the floor.
+     *
+     * @param {CGFappearance} buildingMaterial - The new material to apply to the floor.
+     */
+    updateBuildingMaterial(buildingMaterial) {
+        this.buildingMaterial = buildingMaterial;
     }
 }
