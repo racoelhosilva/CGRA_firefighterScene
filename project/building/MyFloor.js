@@ -115,18 +115,19 @@ export class MyFloor extends CGFobject {
             this.scene.popMatrix();
         }
 
-        if (this.backWindows) {
-            // Display windows on the back face if enabled
-            //this.windowMaterial.apply();
-            this.scene.pushMatrix();
-            this.scene.rotate(Math.PI, 0, 1, 0);
-            this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
-            for (let i = 0; i < this.numWindows; i++) {
-                this.window.display();
-                this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
-            }
-            this.scene.popMatrix();
+        if (!this.backWindows)
+            return;
+
+        // Display windows on the back face if enabled
+        //this.windowMaterial.apply();
+        this.scene.pushMatrix();
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.scene.translate(-this.windowHorizontalSpacing - this.windowSize, this.windowVerticalSpacing, this.scene.Z_CLASHING_OFFSET);
+        for (let i = 0; i < this.numWindows; i++) {
+            this.window.display();
+            this.scene.translate(-this.windowSize - this.windowHorizontalSpacing, 0, 0);
         }
+        this.scene.popMatrix();
     }
 
     updateSize(width, depth, height) {

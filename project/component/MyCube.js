@@ -10,7 +10,6 @@ export class MyCube extends CGFobject {
     }
 
     display() {
-
         // Face in positive zz
         this.scene.pushMatrix();
         this.scene.translate(0, 0, this.size);
@@ -51,6 +50,5 @@ export class MyCube extends CGFobject {
         this.scene.translate(0, this.size, 0);
         this.face.display();
         this.scene.popMatrix();
-
     }
 }
