@@ -29,7 +29,8 @@ export class MyBlaze extends CGFobject {
     }
 
     buildGreen(topVertex, minHeight, maxHeight) {
-        return this.FIRE_MIN_GREEN + ((maxHeight - topVertex[1]) / (maxHeight - minHeight)) * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN);
+        const heightRatio = (maxHeight - topVertex[1]) / (maxHeight - minHeight);
+        return this.FIRE_MIN_GREEN + heightRatio * (this.FIRE_MAX_GREEN - this.FIRE_MIN_GREEN);
     }
 
     buildRandomBaseVertex(radius) {
