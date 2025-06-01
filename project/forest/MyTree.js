@@ -5,7 +5,7 @@ import { MyRegularPolygon } from "../component/MyRegularPolygon.js";
 
 export class MyTree extends CGFobject {
     CROWN_SIDES = 6;
-    ROOT_HEIGHT2 = 8;
+    ROOT_HEIGHT = 8;
 
     constructor(scene, tilt, tiltAxis, trunkRadius, height, crownColor, trunkTexture, crownTexture) {
         super(scene);
