@@ -21,6 +21,23 @@
 
 ## Controls Overview
 
+The following keyboard controls are available for interacting with the helicopter:
+
+|  Key  | Action                                                                                          |
+| :---: | ----------------------------------------------------------------------------------------------- |
+| **W** | Accelerate helicopter forward (when flying)                                                     |
+| **S** | Decelerate (move backward) helicopter (when flying)                                             |
+| **A** | Turn helicopter left (when flying)                                                              |
+| **D** | Turn helicopter right (when flying)                                                             |
+| **P** | Initiate helicopter takeoff (both from heliport and lake)                                       |
+| **L** | Land helicopter (if above land, empty and still) or lower helicopter (if above water and still) |
+| **O** | Open the helicopter's bucket (must have water)                                                  |
+| **R** | Reset helicopter to initial state                                                               |
+
+> **Note:**  
+> - Movement keys (**W**, **S**, **A**, **D**) only affect the helicopter when it is in the "FLYING" state.
+> - The **L** key will either land the helicopter (if it is empty, still and above land) or lower it (if it is still and above water).
+
 ## Implemented Functionalities
 
 - Panorama
